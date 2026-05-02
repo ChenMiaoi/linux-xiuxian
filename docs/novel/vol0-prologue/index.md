@@ -25,7 +25,7 @@ title: 前传：根基篇
 | 一 | 指针之道 | 指针、数组、内存布局、栈与堆 |
 | 二 | 结构之术 | 结构体对齐、位域、`container_of`、链表 |
 | 三 | 编译器秘法 | GCC 扩展：`__attribute__`、`typeof`、`__builtin_` |
-| 四 | 寄存器与指令 | x86-64 汇编基础、寄存器、常用指令 |
+| 四 | 寄存器与指令 | RISC-V 64 汇编基础、寄存器、常用指令 |
 | 五 | 内联汇编 | `asm` 语法、约束、C 与汇编的融合 |
 | 六 | 位运算与原子操作 | 位操作、CAS、`atomic_t`、自旋锁基础 |
 | 七 | 屏障与无常 | `volatile`、内存屏障、编译器屏障、乱序执行 |
@@ -52,4 +52,4 @@ title: 前传：根基篇
 - `include/linux/list.h` — 内核链表
 - `include/linux/container_of.h` — `container_of` 宏
 - `include/asm-generic/barrier.h` — 内存屏障
-- `arch/x86/include/asm/` — x86 架构相关汇编
+- `arch/riscv/include/asm/` — RISC-V 架构相关汇编

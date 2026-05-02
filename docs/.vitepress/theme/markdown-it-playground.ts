@@ -1,5 +1,5 @@
 import type MarkdownIt from 'markdown-it'
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, statSync } from 'node:fs'
 import { resolve, join } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '../../..')
@@ -9,13 +9,28 @@ const MANIFEST = join(ROOT, '.tmp/playgrounds.json')
 // 按 chapterId 分组，每组内部按序号索引
 // blockIndex["novel_vol1-chaos_ch01"][0] = { id, chapterId, ... }
 let blockIndex: Record<string, { id: number; chapterId: string }[]> = {}
+let manifestMtime = 0
 
-if (existsSync(MANIFEST)) {
+function loadBlockIndex(): Record<string, { id: number; chapterId: string }[]> {
+  if (!existsSync(MANIFEST)) {
+    blockIndex = {}
+    manifestMtime = 0
+    return blockIndex
+  }
+
+  const mtime = statSync(MANIFEST).mtimeMs
+  if (mtime === manifestMtime) return blockIndex
+
+  const nextIndex: Record<string, { id: number; chapterId: string }[]> = {}
   const all: { id: number; chapterId: string }[] = JSON.parse(readFileSync(MANIFEST, 'utf-8'))
   for (const b of all) {
-    if (!blockIndex[b.chapterId]) blockIndex[b.chapterId] = []
-    blockIndex[b.chapterId].push(b)
+    if (!nextIndex[b.chapterId]) nextIndex[b.chapterId] = []
+    nextIndex[b.chapterId].push(b)
   }
+
+  blockIndex = nextIndex
+  manifestMtime = mtime
+  return blockIndex
 }
 
 function escape(s: string): string {
@@ -29,8 +44,6 @@ function readOut(chapterId: string, blockId: number, file: string): string {
 }
 
 export default function playgroundPlugin(md: MarkdownIt): void {
-  const chapterCounters: Record<string, number> = {}
-
   const defaultFence = md.renderer.rules.fence!
 
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
@@ -53,11 +66,12 @@ export default function playgroundPlugin(md: MarkdownIt): void {
     // 章节 ID + 章内序号
     const pagePath = (env as any)?.relativePath || 'unknown'
     const chapterId = pagePath.replace(/\.md$/, '').replace(/\//g, '_')
+    const chapterCounters = ((env as any).__playgroundCounters ||= {}) as Record<string, number>
     if (!chapterCounters[chapterId]) chapterCounters[chapterId] = 0
     const localIdx = chapterCounters[chapterId]++
 
     // 从 manifest 中找到对应的 block ID
-    const blocks = blockIndex[chapterId]
+    const blocks = loadBlockIndex()[chapterId]
     const block = blocks?.[localIdx]
     const blockId = block?.id
 
@@ -83,26 +97,34 @@ export default function playgroundPlugin(md: MarkdownIt): void {
       }).join('\n').trim()
     }
 
-    // 拼接 HTML
-    let extra = `<div class="playground-output">`
-    extra += `<div class="playground-output-label">运行结果</div>`
+    // 拼接 HTML：参考 Rust 文档的 Run 入口，但本项目使用构建期产物在页面内运行。
+    let extra = `<div class="playground-panel">`
+
+    if (hasWasm) {
+      const wasmDir = `playground-src/${chapterId}/block${blockId}`
+      extra += `<div class="playground-actions">`
+      extra += `<button class="playground-run" type="button" data-wasm="${wasmDir}">运行</button>`
+      extra += `<span class="playground-status">浏览器 WASM 沙箱执行；架构相关结果以 RISC-V 64 参考输出/汇编为准</span>`
+      extra += `</div>`
+      extra += `<pre class="playground-run-output" hidden><code></code></pre>`
+    } else {
+      extra += `<div class="playground-actions playground-actions-muted">`
+      extra += `<span class="playground-status">此示例未生成可运行 WASM，仅提供构建期输出</span>`
+      extra += `</div>`
+    }
+
+    extra += `<details class="playground-output">`
+    extra += `<summary class="playground-output-label">参考输出</summary>`
     extra += `<pre class="playground-output-pre"><code>${escape(output || '(无输出)')}</code></pre>`
-    extra += `</div>`
+    extra += `</details>`
 
     if (asm) {
       extra += `<details class="playground-asm">`
-      extra += `<summary class="playground-asm-label">汇编 (x86-64 Intel)</summary>`
+      extra += `<summary class="playground-asm-label">汇编 (RISC-V 64)</summary>`
       extra += `<pre class="playground-asm-pre"><code>${escape(asm)}</code></pre>`
       extra += `</details>`
     }
-
-    if (hasWasm) {
-      const wasmDir = `assets/src/${chapterId}/block${blockId}`
-      extra += `<div class="playground-actions">`
-      extra += `<button class="playground-run" data-wasm="${wasmDir}">交互运行</button>`
-      extra += `<div class="playground-run-output" style="display:none"></div>`
-      extra += `</div>`
-    }
+    extra += `</div>`
 
     html = html.replace(/<\/div>\s*$/, extra + '</div>')
 

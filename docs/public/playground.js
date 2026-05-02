@@ -1,10 +1,44 @@
 /**
- * Playground WASM 运行时
- * 点击"运行"按钮，在浏览器中执行编译好的 WASM
+ * Playground WASM runtime.
+ * Runs each sample in a fresh iframe so Emscripten globals do not collide.
  */
 (function () {
-  // 已加载的 WASM 目录缓存
-  var loaded = {};
+  var currentScript = document.currentScript;
+  var baseUrl = currentScript ? new URL('.', currentScript.src) : new URL('/', window.location.href);
+  var runSeq = 0;
+
+  function resolveAsset(path) {
+    return new URL(String(path || '').replace(/^\/+/, ''), baseUrl).href;
+  }
+
+  function setOutput(output, text) {
+    var code = output.querySelector('code') || output;
+    code.textContent = text;
+  }
+
+  function buildRunnerHtml(token, scriptUrl, wasmUrl) {
+    var safeScriptUrl = JSON.stringify(scriptUrl);
+    var safeWasmUrl = JSON.stringify(wasmUrl);
+    return [
+      '<!doctype html><meta charset="utf-8">',
+      '<script>',
+      'var stdout = "";',
+      'var finished = false;',
+      'function send(kind, text) { parent.postMessage({ type: "xiuxian-playground", token: "' + token + '", kind: kind, text: text || "" }, "*"); }',
+      'function done(text) { if (finished) return; finished = true; send("done", text || stdout || "(无输出)\\n"); }',
+      'window.onerror = function(message) { done(String(message || "运行失败")); };',
+      'var Module = {',
+      '  locateFile: function(path) { return path.endsWith(".wasm") ? ' + safeWasmUrl + ' : path; },',
+      '  print: function(text) { stdout += text + "\\n"; send("output", stdout); },',
+      '  printErr: function(text) { stdout += text + "\\n"; send("output", stdout); },',
+      '  postRun: [function() { done(); }],',
+      '  onAbort: function(reason) { done("运行中止: " + reason); },',
+      '  onExit: function() { done(); }',
+      '};',
+      '<\/script>',
+      '<script src=' + safeScriptUrl + ' onerror="send(\'error\', \'加载失败\')"><\/script>'
+    ].join('');
+  }
 
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.playground-run');
@@ -13,52 +47,49 @@
     var wasmDir = btn.getAttribute('data-wasm');
     if (!wasmDir) return;
 
-    var outputDiv = btn.parentElement.querySelector('.playground-run-output');
-    if (!outputDiv) return;
+    var panel = btn.closest('.playground-panel');
+    var output = panel && panel.querySelector('.playground-run-output');
+    if (!output) return;
 
-    // 切换显示
-    if (outputDiv.style.display !== 'none') {
-      outputDiv.style.display = 'none';
-      btn.textContent = '运行';
-      return;
+    var token = 'run-' + (++runSeq);
+    var scriptUrl = resolveAsset(wasmDir + '/prog.js');
+    var wasmUrl = resolveAsset(wasmDir + '/prog.wasm');
+    var previousFrame = panel.querySelector('iframe[data-playground-runner]');
+    if (previousFrame) previousFrame.remove();
+
+    output.hidden = false;
+    setOutput(output, '执行中...\n');
+    btn.disabled = true;
+    btn.textContent = '运行中';
+
+    var frame = document.createElement('iframe');
+    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    frame.setAttribute('data-playground-runner', token);
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    frame.hidden = true;
+    panel.appendChild(frame);
+
+    function onMessage(event) {
+      var data = event.data || {};
+      if (data.type !== 'xiuxian-playground' || data.token !== token) return;
+
+      if (data.kind === 'output') {
+        setOutput(output, data.text);
+        return;
+      }
+
+      if (data.kind === 'error') {
+        setOutput(output, data.text);
+      } else {
+        setOutput(output, data.text || '(无输出)\n');
+      }
+      btn.disabled = false;
+      btn.textContent = '再次运行';
+      window.removeEventListener('message', onMessage);
     }
 
-    outputDiv.style.display = 'block';
-    outputDiv.textContent = '执行中...\n';
-    btn.textContent = '停止';
-
-    var stdout = '';
-
-    // Emscripten Module 配置 — 必须在加载 glue JS 之前设置
-    window.Module = {
-      print: function (text) {
-        stdout += text + '\n';
-        outputDiv.textContent = stdout;
-      },
-      printErr: function (text) {
-        stdout += text + '\n';
-        outputDiv.textContent = stdout;
-      },
-      onRuntimeInitialized: function () {
-        try {
-          window.Module.callMain();
-        } catch (err) {
-          // EXIT_RUNTIME=1 时 exit() 会抛 ExitStatus，忽略
-        }
-        if (!stdout) {
-          outputDiv.textContent = '(无输出)';
-        }
-        btn.textContent = '运行';
-      }
-    };
-
-    // 加载 Emscripten glue JS（它会自动 fetch 同目录的 .wasm）
-    var script = document.createElement('script');
-    script.src = '/' + wasmDir + '/prog.js';
-    script.onerror = function () {
-      outputDiv.textContent = '加载失败: ' + wasmDir;
-      btn.textContent = '运行';
-    };
-    document.head.appendChild(script);
+    window.addEventListener('message', onMessage);
+    frame.srcdoc = buildRunnerHtml(token, scriptUrl, wasmUrl);
   });
 })();

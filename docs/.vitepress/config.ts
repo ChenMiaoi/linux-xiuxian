@@ -1,8 +1,10 @@
 import { defineConfig } from 'vitepress'
 import playgroundPlugin from './theme/markdown-it-playground'
 
+const base = '/linux-xiuxian/'
+
 export default defineConfig({
-  base: '/linux-xiuxian/',
+  base,
   title: 'Linux 内核修仙传',
   description: '以修仙之名，悟内核之道',
   lang: 'zh-CN',
@@ -13,7 +15,7 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap', rel: 'stylesheet' }],
-    ['script', { src: '/playground.js', defer: '' }],
+    ['script', { src: `${base}playground.js`, defer: '' }],
   ],
 
   markdown: {

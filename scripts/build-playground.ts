@@ -1,6 +1,6 @@
 /**
  * build-playground.ts
- * 构建 playground: 提取代码 → Docker 编译 → 输出到 public/assets/src/
+ * 构建 playground: 提取代码 → Docker 编译 → 输出到 public/playground-src/
  *
  * 用法: npx tsx scripts/build-playground.ts
  */
@@ -11,8 +11,9 @@ import { join, resolve } from 'node:path'
 const ROOT = resolve(import.meta.dirname, '..')
 const TMP = join(ROOT, '.tmp')
 const DOCS = join(ROOT, 'docs')
-const ASSETS = join(DOCS, 'public/assets/src')
+const ASSETS = join(DOCS, 'public/playground-src')
 const DOCKERFILE = join(ROOT, 'scripts/Dockerfile.playground')
+const IMAGE = 'xiuxian-playground'
 
 const ENV = { ...process.env, MSYS_NO_PATHCONV: '1' }
 
@@ -21,8 +22,26 @@ function run(cmd: string) {
   execSync(cmd, { cwd: ROOT, stdio: 'inherit', timeout: 600000, env: ENV })
 }
 
-function runCapture(cmd: string): string {
-  return execSync(cmd, { cwd: ROOT, encoding: 'utf-8', timeout: 600000, maxBuffer: 10 * 1024 * 1024, env: ENV }).trim()
+function buildDockerImage() {
+  if (process.env.PLAYGROUND_DOCKER_SKIP_BUILD === '1') {
+    console.log(`  跳过 Docker 构建，使用已有镜像 ${IMAGE}`)
+    return
+  }
+
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    run([
+      'docker buildx build',
+      '--load',
+      `--tag ${IMAGE}`,
+      '--cache-from type=gha',
+      '--cache-to type=gha,mode=max',
+      `-f "${DOCKERFILE}"`,
+      'scripts/',
+    ].join(' '))
+    return
+  }
+
+  run(`docker build -t ${IMAGE} -f "${DOCKERFILE}" scripts/`)
 }
 
 async function main() {
@@ -45,7 +64,7 @@ async function main() {
 
   // 3. 构建 Docker 镜像
   console.log('[2/4] 构建 Docker 镜像...')
-  run(`docker build -t xiuxian-playground -f "${DOCKERFILE}" scripts/`)
+  buildDockerImage()
 
   // 4. 运行 Docker 编译
   console.log('\n[3/4] Docker 批量编译...')
@@ -57,10 +76,10 @@ async function main() {
   const srcMount = isWin ? srcDir.replace(/\\/g, '/') : srcDir
   const outMount = isWin ? outDir.replace(/\\/g, '/') : outDir
 
-  run(`docker run --rm -v "${srcMount}:/src" -v "${outMount}:/out" xiuxian-playground`)
+  run(`docker run --rm -v "${srcMount}:/src" -v "${outMount}:/out" ${IMAGE}`)
 
-  // 5. 复制结果到 public/assets/src/
-  console.log('\n[4/4] 复制输出到 public/assets/src/...')
+  // 5. 复制结果到 public/playground-src/
+  console.log('\n[4/4] 复制输出到 public/playground-src/...')
   mkdirSync(ASSETS, { recursive: true })
   cpSync(outDir, ASSETS, { recursive: true })
 

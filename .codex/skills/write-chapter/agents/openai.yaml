@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Chapter"
+  short_description: "编写带小节考核的 Linux 内核修仙传章节"
+  default_prompt: "Use $write-chapter to 为《Linux 内核修仙传》编写一个带每节互动考核的新章节。"

@@ -1,5 +1,49 @@
 /* ===== 修仙风格全局样式 ===== */
 
+@font-face {
+  font-family: 'Cascadia Code';
+  src: url('./fonts/CascadiaCode.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cascadia Mono';
+  src: url('./fonts/CascadiaMono.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Consolas';
+  src: url('./fonts/consola.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Consolas';
+  src: url('./fonts/consolab.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Consolas';
+  src: url('./fonts/consolai.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Consolas';
+  src: url('./fonts/consolaz.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   /* 主色调 - 靛紫 */
   --vp-c-brand-1: #7c3aed;
@@ -22,10 +66,99 @@
 
   /* 字体 */
   --vp-font-family-base: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
-  --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --xiuxian-code-font-family: 'Cascadia Code';
+  --xiuxian-code-font-size: 14pt;
+  --vp-font-family-mono: var(--xiuxian-code-font-family), 'Cascadia Mono', Consolas, 'Courier New', monospace;
 
   /* 行高 */
   --vp-line-height: 1.9;
+}
+
+/* ===== 代码字体设置 ===== */
+
+.vp-doc div[class*='language-'] pre,
+.vp-doc div[class*='language-'] code,
+.vp-doc pre,
+.vp-doc pre code,
+.vp-doc :not(pre) > code,
+.playground-output-pre,
+.playground-output-pre code,
+.playground-asm-pre,
+.playground-asm-pre code,
+.playground-run-output,
+.chapter-gate-code,
+.kernel-source {
+  font-family: var(--vp-font-family-mono);
+}
+
+.vp-doc div[class*='language-'] pre,
+.vp-doc div[class*='language-'] code,
+.vp-doc pre,
+.vp-doc pre code,
+.playground-output-pre,
+.playground-output-pre code,
+.playground-asm-pre,
+.playground-asm-pre code,
+.playground-run-output,
+.chapter-gate-code {
+  font-size: var(--xiuxian-code-font-size);
+}
+
+.code-font-settings {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vp-c-bg) 92%, transparent);
+  box-shadow: var(--vp-shadow-2);
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.code-font-settings label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.code-font-settings select,
+.code-font-settings input {
+  height: 28px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font-size: 12px;
+}
+
+.code-font-settings select {
+  width: 128px;
+}
+
+.code-font-settings input {
+  width: 46px;
+  padding: 0 6px;
+}
+
+@media (max-width: 640px) {
+  .code-font-settings {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    justify-content: space-between;
+  }
+
+  .code-font-settings select {
+    width: 120px;
+  }
 }
 
 .dark {
@@ -230,9 +363,13 @@
 
 /* ===== Playground: 运行结果 & 汇编 ===== */
 
-.playground-output {
+.playground-panel {
   border-top: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-alt);
+}
+
+.playground-output {
+  border-top: 1px solid var(--vp-c-divider);
 }
 
 .playground-output-label {
@@ -241,13 +378,14 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--xiuxian-gold);
-  border-bottom: 1px solid var(--vp-c-divider);
+  cursor: pointer;
+  user-select: none;
 }
 
 .playground-output-pre {
   margin: 0;
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: var(--xiuxian-code-font-size);
   line-height: 1.6;
   overflow-x: auto;
   background: transparent !important;
@@ -259,7 +397,6 @@
 
 .playground-asm {
   border-top: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg-alt);
 }
 
 .playground-asm-label {
@@ -279,7 +416,7 @@
 .playground-asm-pre {
   margin: 0;
   padding: 12px 16px;
-  font-size: 12.5px;
+  font-size: var(--xiuxian-code-font-size);
   line-height: 1.5;
   max-height: 400px;
   overflow-x: auto;
@@ -293,9 +430,14 @@
 /* ===== Playground: 交互运行按钮 ===== */
 
 .playground-actions {
-  border-top: 1px solid var(--vp-c-divider);
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 8px 16px;
-  background: var(--vp-c-bg-alt);
+}
+
+.playground-actions-muted {
+  color: var(--vp-c-text-2);
 }
 
 .playground-run {
@@ -311,22 +453,145 @@
   transition: all 0.25s;
 }
 
-.playground-run:hover {
+.playground-run:hover:not(:disabled) {
   background: var(--xiuxian-gold);
   color: #fff;
 }
 
+.playground-run:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.playground-status {
+  font-size: 12px;
+  color: var(--vp-c-text-2);
+}
+
 .playground-run-output {
-  margin-top: 8px;
+  margin: 0 16px 10px;
   padding: 10px 14px;
   border-radius: 6px;
   background: #1a1a2e;
   color: #4ade80;
   font-family: var(--vp-font-family-mono);
-  font-size: 13px;
+  font-size: var(--xiuxian-code-font-size);
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-all;
   max-height: 300px;
   overflow-y: auto;
+}
+
+iframe[data-playground-runner] {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ===== 章节互动门禁 ===== */
+
+.chapter-gate {
+  margin: 2.5em 0 1.5em;
+  padding: 18px 20px;
+  border: 1px solid var(--xiuxian-gold);
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--xiuxian-gold-soft), transparent);
+}
+
+.chapter-gate-head {
+  margin-bottom: 12px;
+}
+
+.chapter-gate-kicker {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--xiuxian-gold);
+}
+
+.chapter-gate h3 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 18px;
+}
+
+.chapter-gate-prompt {
+  margin: 0 0 14px;
+  color: var(--vp-c-text-2);
+}
+
+.chapter-gate-answer,
+.chapter-gate-code {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font: inherit;
+}
+
+.chapter-gate-code {
+  min-height: 140px;
+  resize: vertical;
+  font-family: var(--vp-font-family-mono);
+  font-size: var(--xiuxian-code-font-size);
+  line-height: 1.6;
+}
+
+.chapter-gate-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.chapter-gate-actions button {
+  padding: 5px 16px;
+  border: 1px solid var(--vp-c-brand-1);
+  border-radius: 4px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chapter-gate-actions button:disabled {
+  border-color: var(--xiuxian-gold);
+  background: var(--xiuxian-gold-soft);
+  color: var(--xiuxian-gold);
+  cursor: default;
+}
+
+.chapter-gate-message {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+}
+
+.chapter-gate-message.error {
+  color: #dc2626;
+}
+
+.chapter-gate-unlocked {
+  border-color: var(--vp-c-brand-1);
+}
+
+.chapter-nav .nav-locked {
+  color: var(--vp-c-text-2);
+  cursor: not-allowed;
+}
+
+.VPDocFooter .prev-next {
+  display: none;
 }

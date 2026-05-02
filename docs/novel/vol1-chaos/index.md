@@ -39,7 +39,7 @@ title: 第一卷：混沌初开
 
 ## 涉及内核源码
 
-- `arch/x86/boot/` — 启动引导
+- `arch/riscv/kernel/head.S` — RISC-V 早期启动入口
 - `init/main.c` — `start_kernel()`, `rest_init()`
 - `kernel/init_task.c` — idle 进程定义
 - `include/linux/init_task.h` — `task_struct` 初始化
