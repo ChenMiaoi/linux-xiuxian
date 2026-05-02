@@ -1,0 +1,229 @@
+/* ===== 修仙风格全局样式 ===== */
+
+:root {
+  /* 主色调 - 靛紫 */
+  --vp-c-brand-1: #7c3aed;
+  --vp-c-brand-2: #6d28d9;
+  --vp-c-brand-3: #4a1a8a;
+  --vp-c-brand-soft: rgba(124, 58, 237, 0.14);
+
+  /* 背景 - 暖纸色 */
+  --vp-c-bg: #faf7f0;
+  --vp-c-bg-alt: #f5f0e6;
+  --vp-c-bg-elv: #f0ead8;
+
+  /* 文字 */
+  --vp-c-text-1: #1a1a2e;
+  --vp-c-text-2: #3d3d56;
+
+  /* 金色点缀 */
+  --xiuxian-gold: #d4a017;
+  --xiuxian-gold-soft: rgba(212, 160, 23, 0.15);
+
+  /* 字体 */
+  --vp-font-family-base: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* 行高 */
+  --vp-line-height: 1.9;
+}
+
+.dark {
+  --vp-c-bg: #0f0a1a;
+  --vp-c-bg-alt: #160f28;
+  --vp-c-bg-elv: #1e1535;
+  --vp-c-text-1: #e4e0ec;
+  --vp-c-text-2: #b8b0c8;
+}
+
+/* ===== 正文排版 ===== */
+
+.vp-doc p {
+  line-height: 1.9;
+  font-size: 16.5px;
+  margin-bottom: 1.2em;
+}
+
+.vp-doc h1 {
+  font-size: 2em;
+  border-bottom: 2px solid var(--xiuxian-gold);
+  padding-bottom: 0.3em;
+}
+
+.vp-doc h2 {
+  margin-top: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* ===== 首页 Hero 区域 ===== */
+
+.VPHero .name {
+  font-family: 'Noto Serif SC', serif !important;
+}
+
+.VPHero .name .clip {
+  background: linear-gradient(135deg, var(--xiuxian-gold) 0%, var(--vp-c-brand-1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.VPHero .tagline {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1em !important;
+  color: var(--vp-c-text-2);
+}
+
+/* ===== 特性卡片 ===== */
+
+.VPFeature .title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+}
+
+/* ===== 侧边栏样式 ===== */
+
+.VPSidebar .text {
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* ===== 道藏笔记 Callout ===== */
+
+.vp-doc .custom-block.tip {
+  border-color: var(--xiuxian-gold);
+  background-color: var(--xiuxian-gold-soft);
+}
+
+.vp-doc .custom-block.tip .custom-block-title {
+  color: var(--xiuxian-gold);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+}
+
+/* ===== 境界徽章 ===== */
+
+.cultivation-badge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Noto Serif SC', serif;
+  border: 1px solid;
+}
+
+.realm-qi {
+  color: #4ade80;
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.realm-foundation {
+  color: #60a5fa;
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.realm-core {
+  color: #c084fc;
+  border-color: #c084fc;
+  background: rgba(192, 132, 252, 0.1);
+}
+
+.realm-nascent {
+  color: #f472b6;
+  border-color: #f472b6;
+  background: rgba(244, 114, 182, 0.1);
+}
+
+.realm-spirit {
+  color: #fb923c;
+  border-color: #fb923c;
+  background: rgba(251, 146, 60, 0.1);
+}
+
+.realm-dao {
+  color: #facc15;
+  border-color: #facc15;
+  background: rgba(250, 204, 21, 0.1);
+}
+
+.realm-merge {
+  color: #a78bfa;
+  border-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.realm-tribulation {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.realm-mahayana {
+  color: #d4a017;
+  border-color: #d4a017;
+  background: rgba(212, 160, 23, 0.15);
+}
+
+.realm-immortal {
+  color: #ffffff;
+  border-color: #d4a017;
+  background: linear-gradient(135deg, rgba(212, 160, 23, 0.3), rgba(124, 58, 237, 0.3));
+}
+
+/* ===== 章节导航 ===== */
+
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.chapter-nav a {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px;
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.chapter-nav a:hover {
+  color: var(--xiuxian-gold);
+}
+
+/* ===== 内核源码链接 ===== */
+
+.kernel-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: var(--vp-font-family-mono);
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+  border: 1px solid var(--vp-c-divider);
+  transition: all 0.25s;
+}
+
+.kernel-source:hover {
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+}
+
+/* ===== 装饰分隔线 ===== */
+
+.xiuxian-divider {
+  text-align: center;
+  margin: 2em 0;
+  color: var(--xiuxian-gold);
+  font-size: 1.2em;
+  letter-spacing: 0.5em;
+}
