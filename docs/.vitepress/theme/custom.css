@@ -227,3 +227,106 @@
   font-size: 1.2em;
   letter-spacing: 0.5em;
 }
+
+/* ===== Playground: 运行结果 & 汇编 ===== */
+
+.playground-output {
+  border-top: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-alt);
+}
+
+.playground-output-label {
+  padding: 6px 16px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--xiuxian-gold);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.playground-output-pre {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  background: transparent !important;
+}
+
+.playground-output-pre code {
+  color: var(--vp-c-text-1);
+}
+
+.playground-asm {
+  border-top: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-alt);
+}
+
+.playground-asm-label {
+  padding: 8px 16px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.playground-asm-label:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.playground-asm-pre {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-x: auto;
+  background: transparent !important;
+}
+
+.playground-asm-pre code {
+  color: var(--vp-c-text-2);
+}
+
+/* ===== Playground: 交互运行按钮 ===== */
+
+.playground-actions {
+  border-top: 1px solid var(--vp-c-divider);
+  padding: 8px 16px;
+  background: var(--vp-c-bg-alt);
+}
+
+.playground-run {
+  padding: 4px 16px;
+  border: 1px solid var(--xiuxian-gold);
+  border-radius: 4px;
+  background: var(--xiuxian-gold-soft);
+  color: var(--xiuxian-gold);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.playground-run:hover {
+  background: var(--xiuxian-gold);
+  color: #fff;
+}
+
+.playground-run-output {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #1a1a2e;
+  color: #4ade80;
+  font-family: var(--vp-font-family-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow-y: auto;
+}

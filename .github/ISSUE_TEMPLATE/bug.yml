@@ -1,0 +1,55 @@
+name: "\U0001F41B Bug 报告"
+description: "报告网站的问题或异常"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量详细描述问题，方便快速定位。
+
+  - type: input
+    id: page
+    attributes:
+      label: "发生问题的页面"
+      description: "出现问题的页面 URL 或路径"
+      placeholder: "例如: /novel/vol1-chaos/ch01.html"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "问题描述"
+      description: "请描述你看到的问题"
+      placeholder: "例如: 点击“运行”按钮后，iframe 无法加载……"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "期望行为"
+      description: "你期望发生什么？"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: "浏览器"
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - "其他"
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "截图"
+      description: "如有截图，请上传帮助复现"
+    validations:
+      required: false

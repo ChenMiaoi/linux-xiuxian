@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import playgroundPlugin from './theme/markdown-it-playground'
 
 export default defineConfig({
   title: 'Linux 内核修仙传',
@@ -11,7 +12,14 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap', rel: 'stylesheet' }],
+    ['script', { src: '/playground.js', defer: '' }],
   ],
+
+  markdown: {
+    config: (md) => {
+      playgroundPlugin(md)
+    },
+  },
 
   themeConfig: {
     logo: '/logo.svg',
@@ -24,6 +32,7 @@ export default defineConfig({
       {
         text: '正文',
         items: [
+          { text: '前传：根基篇', link: '/novel/vol0-prologue/' },
           { text: '第一卷：混沌初开', link: '/novel/vol1-chaos/' },
           { text: '第二卷：万物之基', link: '/novel/vol2-foundation/' },
           { text: '第三卷：天道均衡', link: '/novel/vol3-scheduler/' },
@@ -62,6 +71,20 @@ export default defineConfig({
         },
       ],
       '/novel/': [
+        {
+          text: '前传：根基篇',
+          collapsed: false,
+          items: [
+            { text: '卷首语', link: '/novel/vol0-prologue/' },
+            { text: '第一章：指针之道', link: '/novel/vol0-prologue/ch001' },
+            { text: '第二章：结构之术', link: '/novel/vol0-prologue/ch002' },
+            { text: '第三章：编译器秘法', link: '/novel/vol0-prologue/ch003' },
+            { text: '第四章：寄存器与指令', link: '/novel/vol0-prologue/ch004' },
+            { text: '第五章：内联汇编', link: '/novel/vol0-prologue/ch005' },
+            { text: '第六章：位运算与原子操作', link: '/novel/vol0-prologue/ch006' },
+            { text: '第七章：屏障与无常', link: '/novel/vol0-prologue/ch007' },
+          ],
+        },
         {
           text: '第一卷：混沌初开',
           collapsed: false,

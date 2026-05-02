@@ -1,0 +1,37 @@
+name: "✨ 功能建议"
+description: "新功能、新章节或网站改进建议"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        有关于网站功能或内容的新想法？欢迎分享。
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "建议类型"
+      options:
+        - "网站功能（Playground、搜索、导航等）"
+        - "新章节/内容"
+        - "视觉/样式"
+        - "其他"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "建议描述"
+      description: "详细描述你的想法"
+      placeholder: "例如: 希望在“道藏笔记”中增加内核源码跳转链接……"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "动机"
+      description: "为什么需要这个功能？解决什么问题？"
+    validations:
+      required: false

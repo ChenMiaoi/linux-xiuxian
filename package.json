@@ -1,9 +1,12 @@
 {
   "name": "linux-xiuxian",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
+    "dev": "vitepress dev docs --host",
+    "build": "npx tsx scripts/build-playground.ts && vitepress build docs",
+    "build:site": "vitepress build docs",
+    "build:playground": "npx tsx scripts/build-playground.ts",
     "preview": "vitepress preview docs"
   },
   "devDependencies": {

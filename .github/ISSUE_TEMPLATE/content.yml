@@ -1,0 +1,49 @@
+name: "\U0001F4D6 内容反馈"
+description: "报告技术错误、结构混乱或建议改进"
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        发现小说中的技术错误、叙述不清或有改进建议？请在此反馈。
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: "反馈类型"
+      options:
+        - "技术错误（内核机制描述不准确）"
+        - "叙述问题（行文混乱、逻辑断裂）"
+        - "建议改进（新内容、优化建议）"
+        - "源码注解问题"
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: "位置"
+      description: "具体章节或页面"
+      placeholder: "例如: 第一卷 第一章，“道藏笔记”部分"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: "问题描述"
+      description: "具体说明哪里有问题，建议引用内核源码或文档作为依据"
+      placeholder: |
+        例如:
+        - “fork 会复制父进程的所有内存”—— 这不准确，实际上 Linux 采用 COW（写时复制）
+        - 参考: kernel/fork.c -> copy_process()
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "修改建议"
+      description: "你认为应该怎么改？"
+    validations:
+      required: false
