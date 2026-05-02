@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import playgroundPlugin from './theme/markdown-it-playground'
 
 export default defineConfig({
+  base: '/linux-xiuxian/',
   title: 'Linux 内核修仙传',
   description: '以修仙之名，悟内核之道',
   lang: 'zh-CN',
