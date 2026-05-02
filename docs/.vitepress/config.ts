@@ -77,6 +77,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: '卷首语', link: '/novel/vol0-prologue/' },
+            { text: '缘起·道生一', link: '/novel/vol0-prologue/ch000' },
             { text: '第一章：指针之道', link: '/novel/vol0-prologue/ch001' },
             { text: '第二章：结构之术', link: '/novel/vol0-prologue/ch002' },
             { text: '第三章：编译器秘法', link: '/novel/vol0-prologue/ch003' },
@@ -84,6 +85,10 @@ export default defineConfig({
             { text: '第五章：内联汇编', link: '/novel/vol0-prologue/ch005' },
             { text: '第六章：位运算与原子操作', link: '/novel/vol0-prologue/ch006' },
             { text: '第七章：屏障与无常', link: '/novel/vol0-prologue/ch007' },
+            { text: '第八章：预处理器之道', link: '/novel/vol0-prologue/ch008' },
+            { text: '第九章：内存布局', link: '/novel/vol0-prologue/ch009' },
+            { text: '第十章：ELF 之道', link: '/novel/vol0-prologue/ch010' },
+            { text: '终章·筑基归一', link: '/novel/vol0-prologue/ch011' },
           ],
         },
         {
