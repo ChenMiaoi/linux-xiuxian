@@ -37,6 +37,83 @@ function escape(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+function stripMarkers(source: string): string {
+  return source
+    .replace(/^[ \t]*\/\*\s*xiuxian-hide-start\s*\*\/[ \t]*\r?\n/gm, '')
+    .replace(/^[ \t]*\/\*\s*xiuxian-hide-end\s*\*\/[ \t]*\r?\n/gm, '')
+    .replace(/[ \t]*\/\*\s*xiuxian-hide-line\s*\*\//g, '')
+    .trim()
+}
+
+function normalizeIndent(lines: string[]): string {
+  const trimmedEdges = [...lines]
+  while (trimmedEdges.length && !trimmedEdges[0].trim()) trimmedEdges.shift()
+  while (trimmedEdges.length && !trimmedEdges[trimmedEdges.length - 1].trim()) trimmedEdges.pop()
+
+  const indents = trimmedEdges
+    .filter(line => line.trim())
+    .map(line => line.match(/^[ \t]*/)?.[0].replace(/\t/g, '    ').length || 0)
+  const minIndent = indents.length ? Math.min(...indents) : 0
+
+  return trimmedEdges
+    .map(line => line.slice(Math.min(minIndent, line.match(/^[ \t]*/)?.[0].length || 0)))
+    .join('\n')
+    .trim()
+}
+
+function visibleCode(source: string): string {
+  const lines = source.replace(/\r\n/g, '\n').split('\n')
+  const visible: string[] = []
+  let hidden = false
+
+  for (const line of lines) {
+    if (/xiuxian-hide-start/.test(line)) {
+      hidden = true
+      continue
+    }
+
+    if (/xiuxian-hide-end/.test(line)) {
+      hidden = false
+      continue
+    }
+
+    if (/xiuxian-hide-line/.test(line)) {
+      continue
+    }
+
+    if (hidden) {
+      continue
+    }
+
+    visible.push(line)
+  }
+
+  return normalizeIndent(visible)
+}
+
+function renderCodeFence(md: MarkdownIt, code: string, env: unknown): string {
+  if (!code.trim()) return ''
+  return md.render(`\`\`\`c\n${code.trim()}\n\`\`\``, env)
+}
+
+function renderDisplayCode(md: MarkdownIt, source: string, env: unknown): string {
+  const visible = visibleCode(source)
+  const full = stripMarkers(source)
+  const hasHidden = visible !== full
+  const visibleHtml = renderCodeFence(md, visible, env)
+  const fullHtml = hasHidden ? renderCodeFence(md, full, env) : ''
+
+  if (!hasHidden) return visibleHtml
+
+  return [
+    '<div class="playground-code-toggle-row">',
+    '<button class="playground-code-toggle" type="button" aria-pressed="false">显示完整代码</button>',
+    '</div>',
+    `<div class="playground-code-view playground-code-key">${visibleHtml}</div>`,
+    `<div class="playground-code-view playground-code-full" hidden>${fullHtml}</div>`,
+  ].join('')
+}
+
 function readOut(chapterId: string, blockId: number, file: string): string {
   const p = join(OUT_DIR, chapterId, `block${blockId}`, file)
   if (!existsSync(p)) return ''
@@ -56,12 +133,8 @@ export default function playgroundPlugin(md: MarkdownIt): void {
 
     const title = info.slice('c:playground'.length).replace(/^:/, '').trim()
 
-    // Shiki 用 c 高亮
-    const originalInfo = token.info
-    token.info = 'c'
-    let html = defaultFence(tokens, idx, options, env, self)
-    token.info = originalInfo
-    html = html.replace(/language-c(?=\s|")/g, `language-${info}`)
+    let html = renderDisplayCode(md, token.content, env)
+    html = `<div class="language-${info} vp-adaptive-theme">${html}</div>`
 
     // 章节 ID + 章内序号
     const pagePath = (env as any)?.relativePath || 'unknown'

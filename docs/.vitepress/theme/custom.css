@@ -67,7 +67,7 @@
   /* 字体 */
   --vp-font-family-base: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
   --xiuxian-code-font-family: 'Cascadia Code';
-  --xiuxian-code-font-size: 14pt;
+  --xiuxian-code-font-size: 12pt;
   --vp-font-family-mono: var(--xiuxian-code-font-family), 'Cascadia Mono', Consolas, 'Courier New', monospace;
 
   /* 行高 */
@@ -366,6 +366,36 @@
 .playground-panel {
   border-top: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-alt);
+}
+
+.playground-code-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 12px 0;
+  background: var(--vp-code-block-bg);
+}
+
+.playground-code-toggle {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  padding: 3px 10px;
+  background: color-mix(in srgb, var(--vp-c-bg) 72%, transparent);
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.playground-code-toggle:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+.playground-code-view[hidden] {
+  display: none;
+}
+
+.playground-code-view > div[class*='language-'] {
+  margin-top: 0;
 }
 
 .playground-output {

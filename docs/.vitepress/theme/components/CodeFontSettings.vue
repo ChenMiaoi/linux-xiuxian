@@ -31,11 +31,13 @@ const STORAGE_FONT = 'xiuxian:code-font-family'
 const STORAGE_SIZE = 'xiuxian:code-font-size-pt'
 
 const fontChoice = ref('Cascadia Code')
-const fontSize = ref(14)
+const DEFAULT_FONT_SIZE = 12
+
+const fontSize = ref(DEFAULT_FONT_SIZE)
 
 function clampSize(value) {
   const n = Number(value)
-  if (!Number.isFinite(n)) return 14
+  if (!Number.isFinite(n)) return DEFAULT_FONT_SIZE
   return Math.min(22, Math.max(10, Math.round(n)))
 }
 
@@ -57,7 +59,7 @@ onMounted(() => {
   if (savedFont === 'Consolas' || savedFont === 'Cascadia Mono' || savedFont === 'Cascadia Code') {
     fontChoice.value = savedFont
   }
-  fontSize.value = clampSize(savedSize || 14)
+  fontSize.value = clampSize(savedSize || DEFAULT_FONT_SIZE)
   applySettings()
 })
 </script>

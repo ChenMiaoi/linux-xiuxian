@@ -41,6 +41,23 @@
   }
 
   document.addEventListener('click', function (e) {
+    var toggle = e.target.closest('.playground-code-toggle');
+    if (toggle) {
+      var codeRoot = toggle.closest('[class*="language-c:playground"]');
+      if (!codeRoot) return;
+
+      var keyCode = codeRoot.querySelector('.playground-code-key');
+      var fullCode = codeRoot.querySelector('.playground-code-full');
+      if (!keyCode || !fullCode) return;
+
+      var showFull = fullCode.hidden;
+      fullCode.hidden = !showFull;
+      keyCode.hidden = showFull;
+      toggle.setAttribute('aria-pressed', showFull ? 'true' : 'false');
+      toggle.textContent = showFull ? '隐藏完整代码' : '显示完整代码';
+      return;
+    }
+
     var btn = e.target.closest('.playground-run');
     if (!btn) return;
 
