@@ -1,3 +1,4 @@
+import './config.js'
 import crypto from 'node:crypto'
 import { db, publicUser } from './db.js'
 import { getCurrentUser, requireUser } from './auth.js'

@@ -1,3 +1,4 @@
+import './config.js'
 import Fastify from 'fastify'
 import cookie from '@fastify/cookie'
 import rateLimit from '@fastify/rate-limit'
@@ -5,10 +6,12 @@ import staticPlugin from '@fastify/static'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getCurrentUser, registerAuthRoutes } from './auth.js'
+import { bootstrapAdminUsers, getCurrentUser, registerAuthRoutes } from './auth.js'
 import { db, publicUser } from './db.js'
 import { registerCommentRoutes } from './comments.js'
 import { registerGitHubRoutes } from './github.js'
+import { registerAdminRoutes } from './admin.js'
+import { registerMailboxRoutes } from './mailbox.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
@@ -33,9 +36,12 @@ await app.register(rateLimit, {
 
 app.get('/api/health', async () => ({ ok: true }))
 
+bootstrapAdminUsers()
 registerAuthRoutes(app)
 registerCommentRoutes(app)
 registerGitHubRoutes(app)
+registerAdminRoutes(app)
+registerMailboxRoutes(app)
 
 app.get('/api/rank/me', async (request) => {
   return { user: getCurrentUser(request) }

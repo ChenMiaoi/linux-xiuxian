@@ -11,6 +11,8 @@ import AuthWidget from './components/AuthWidget.vue'
 import CommentSection from './components/CommentSection.vue'
 import RankLeaderboard from './components/RankLeaderboard.vue'
 import RankRulesHelp from './components/RankRulesHelp.vue'
+import AdminPanel from './components/AdminPanel.vue'
+import MailboxPanel from './components/MailboxPanel.vue'
 import type { EnhanceAppContext } from 'vitepress'
 import { h } from 'vue'
 
@@ -36,5 +38,7 @@ export default {
     app.component('CommentSection', CommentSection)
     app.component('RankLeaderboard', RankLeaderboard)
     app.component('RankRulesHelp', RankRulesHelp)
+    app.component('AdminPanel', AdminPanel)
+    app.component('MailboxPanel', MailboxPanel)
   },
 }

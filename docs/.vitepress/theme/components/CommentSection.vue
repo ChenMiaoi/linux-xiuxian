@@ -112,13 +112,20 @@ const replyTarget = ref(null)
 const emojis = ['😀', '😂', '👍', '🙏', '🔥', '💡', '🎉', '🤔']
 
 const pagePath = computed(() => {
-  if (typeof window === 'undefined') return route.path
-  return window.location.pathname.replace(/^\/linux-xiuxian(?=\/)/, '') || '/'
+  const rawPath = typeof window === 'undefined'
+    ? route.path
+    : window.location.pathname.replace(/^\/linux-xiuxian(?=\/)/, '')
+  return normalizePagePath(rawPath || '/')
 })
 
 const show = computed(() => {
   const path = pagePath.value
-  return path !== '/' && path !== '/rank' && path !== '/en/rank' && !path.endsWith('/404.html')
+  return path !== '/'
+    && path !== '/rank'
+    && path !== '/en/rank'
+    && path !== '/admin'
+    && path !== '/mailbox'
+    && !path.endsWith('/404.html')
 })
 
 const commentTree = computed(() => {
@@ -228,6 +235,13 @@ function cancelReply() {
 
 function insertEmoji(emoji) {
   content.value = `${content.value}${emoji}`
+}
+
+function normalizePagePath(value) {
+  let path = value.split('?')[0].split('#')[0]
+  path = path.replace(/\/index\.html$/, '/')
+  path = path.replace(/\.html$/, '')
+  return path || '/'
 }
 
 function formatTime(value) {

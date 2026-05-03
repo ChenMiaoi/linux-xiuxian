@@ -1,3 +1,4 @@
+import './config.js'
 import crypto from 'node:crypto'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
@@ -69,6 +70,7 @@ export function getCurrentUser(request) {
     WHERE sessions.token_hash = ? AND sessions.expires_at > CURRENT_TIMESTAMP
   `).get(hashToken(token))
 
+  if (row?.status === 'banned') return null
   return publicUser(row)
 }
 
@@ -76,6 +78,31 @@ export function requireUser(request, reply) {
   const user = getCurrentUser(request)
   if (!user) {
     reply.code(401).send({ error: 'UNAUTHORIZED', message: '请先登录' })
+    return null
+  }
+  return user
+}
+
+export function bootstrapAdminUsers() {
+  const usernames = (process.env.ADMIN_USERNAMES || '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean)
+
+  for (const username of usernames) {
+    db.prepare(`
+      UPDATE users
+      SET role = 'admin', updated_at = CURRENT_TIMESTAMP
+      WHERE lower(username) = lower(?)
+    `).run(username)
+  }
+}
+
+export function requireAdmin(request, reply) {
+  const user = requireUser(request, reply)
+  if (!user) return null
+  if (user.role !== 'admin') {
+    reply.code(403).send({ error: 'FORBIDDEN', message: '需要管理员权限' })
     return null
   }
   return user
@@ -120,6 +147,7 @@ export function registerAuthRoutes(app) {
       refType: 'user',
       refId: result.lastInsertRowid,
     })
+    bootstrapAdminUsers()
 
     const token = createSession(result.lastInsertRowid)
     const user = publicUser(db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid))
@@ -141,14 +169,19 @@ export function registerAuthRoutes(app) {
     }
 
     const row = db.prepare('SELECT * FROM users WHERE lower(username) = lower(?)').get(parsed.data.username)
+    if (row?.status === 'banned') {
+      return reply.code(403).send({ error: 'USER_BANNED', message: '该账号已被封禁' })
+    }
     const ok = row ? await bcrypt.compare(parsed.data.password, row.password_hash) : false
     if (!ok) {
       return reply.code(401).send({ error: 'BAD_CREDENTIALS', message: '道号或口令不正确' })
     }
 
+    bootstrapAdminUsers()
+    const freshRow = db.prepare('SELECT * FROM users WHERE id = ?').get(row.id)
     const token = createSession(row.id)
     reply.setCookie(SESSION_COOKIE, token, sessionCookieOptions())
-    return { user: publicUser(row) }
+    return { user: publicUser(freshRow) }
   })
 
   app.post('/api/auth/logout', async (request, reply) => {

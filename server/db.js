@@ -1,3 +1,4 @@
+import './config.js'
 import Database from 'better-sqlite3'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -66,11 +67,34 @@ CREATE TABLE IF NOT EXISTS rank_levels (
   sort_order INTEGER NOT NULL UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS user_moderation_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  admin_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  action TEXT NOT NULL,
+  reason TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS system_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  sender_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  kind TEXT NOT NULL DEFAULT 'system',
+  subject TEXT NOT NULL,
+  body TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'open',
+  read_at TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS idx_sessions_token_hash ON sessions(token_hash);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_comments_page_path ON comments(page_path, created_at);
 CREATE INDEX IF NOT EXISTS idx_comment_likes_user_id ON comment_likes(user_id);
 CREATE INDEX IF NOT EXISTS idx_point_events_user_source_created ON point_events(user_id, source, created_at);
+CREATE INDEX IF NOT EXISTS idx_moderation_events_user ON user_moderation_events(user_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_system_messages_user ON system_messages(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_users_points ON users(cultivation_points DESC, created_at ASC);
 `)
 
@@ -87,6 +111,15 @@ if (!userColumnSet.has('github_avatar_url')) {
 }
 if (!userColumnSet.has('github_connected_at')) {
   db.exec('ALTER TABLE users ADD COLUMN github_connected_at TEXT')
+}
+if (!userColumnSet.has('status')) {
+  db.exec("ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'active'")
+}
+if (!userColumnSet.has('muted_until')) {
+  db.exec('ALTER TABLE users ADD COLUMN muted_until TEXT')
+}
+if (!userColumnSet.has('moderation_note')) {
+  db.exec('ALTER TABLE users ADD COLUMN moderation_note TEXT')
 }
 db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_github_id ON users(github_id) WHERE github_id IS NOT NULL')
 const duplicateUsernames = db.prepare(`
@@ -117,6 +150,9 @@ export function publicUser(row) {
     username: row.username,
     displayName: row.display_name,
     role: row.role,
+    status: row.status || 'active',
+    mutedUntil: row.muted_until,
+    moderationNote: row.moderation_note,
     cultivationPoints: row.cultivation_points,
     rank: rankForPoints(row.cultivation_points),
     github: row.github_id ? {

@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { awardCommentPoints, db } from './db.js'
 import { getCurrentUser, requireUser } from './auth.js'
+import { normalizePagePath, pagePathAliases } from './page-path.js'
+import { softDeleteCommentTree } from './comment-store.js'
 
 const pagePathSchema = z.string().trim().min(1).max(300).startsWith('/')
 const commentSchema = z.object({
@@ -36,6 +38,8 @@ export function registerCommentRoutes(app) {
     }
 
     const currentUser = getCurrentUser(request)
+    const aliases = pagePathAliases(parsed.data)
+    const placeholders = aliases.map(() => '?').join(', ')
     const rows = db.prepare(`
       SELECT
         comments.*,
@@ -47,11 +51,11 @@ export function registerCommentRoutes(app) {
       FROM comments
       JOIN users ON users.id = comments.user_id
       LEFT JOIN comment_likes ON comment_likes.comment_id = comments.id
-      WHERE comments.page_path = ? AND comments.status = 'active'
+      WHERE comments.page_path IN (${placeholders}) AND comments.status = 'active'
       GROUP BY comments.id
       ORDER BY comments.created_at ASC, comments.id ASC
       LIMIT 100
-    `).all(currentUser?.id || 0, parsed.data)
+    `).all(currentUser?.id || 0, ...aliases)
 
     return { comments: rows.map(commentRow) }
   })
@@ -59,16 +63,20 @@ export function registerCommentRoutes(app) {
   app.post('/api/comments', async (request, reply) => {
     const user = requireUser(request, reply)
     if (!user) return
+    if (user.status === 'muted' || (user.mutedUntil && new Date(user.mutedUntil) > new Date())) {
+      return reply.code(403).send({ error: 'USER_MUTED', message: '该账号暂时不能发言' })
+    }
 
     const parsed = commentSchema.safeParse(request.body)
     if (!parsed.success) {
       return reply.code(400).send({ error: 'BAD_REQUEST', message: '评论内容不符合要求' })
     }
 
+    const pagePath = normalizePagePath(parsed.data.pagePath)
     const result = db.prepare(`
       INSERT INTO comments (page_path, user_id, parent_id, content)
       VALUES (?, ?, ?, ?)
-    `).run(parsed.data.pagePath, user.id, parsed.data.parentId || null, parsed.data.content)
+    `).run(pagePath, user.id, parsed.data.parentId || null, parsed.data.content)
 
     const pointAward = awardCommentPoints(user.id, result.lastInsertRowid)
 
@@ -153,11 +161,7 @@ async function deleteComment(request, reply) {
       return reply.code(403).send({ error: 'FORBIDDEN', message: '无权删除该评论' })
     }
 
-    db.prepare(`
-      UPDATE comments
-      SET status = 'deleted', updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `).run(id)
+    const result = softDeleteCommentTree(id)
 
-    return { ok: true }
+    return { ok: true, deletedCount: result.changes }
 }

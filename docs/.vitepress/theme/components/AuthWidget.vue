@@ -18,6 +18,7 @@
           <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
           <span v-else class="auth-muted">未绑定</span>
         </div>
+        <a class="auth-secondary auth-link-button" href="/linux-xiuxian/mailbox">信箱</a>
         <button v-if="authState.user.github" class="auth-secondary" type="button" @click.stop.prevent="handleGitHubUnlink">解绑 GitHub</button>
         <button v-else class="auth-secondary" type="button" @click.stop.prevent="handleGitHubLink">绑定 GitHub</button>
         <button class="auth-secondary" type="button" @click.stop.prevent="handleLogout">退出登录</button>

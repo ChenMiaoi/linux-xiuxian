@@ -12,5 +12,7 @@ docs/public/kernel-snippets.json
 .tmp/
 data/
 .deploy.env
+.deploy.yaml
+.deploy.yml
 .idea/
 *.log

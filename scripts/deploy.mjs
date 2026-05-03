@@ -1,13 +1,15 @@
 import crypto from 'node:crypto'
+import path from 'node:path'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
+import YAML from 'yaml'
 
 const imageName = process.env.IMAGE_NAME || 'linux-xiuxian:latest'
 const containerName = process.env.CONTAINER_NAME || 'linux-xiuxian'
 const volumeName = process.env.VOLUME_NAME || 'linux-xiuxian-data'
 const hostPort = process.env.HOST_PORT || '3000'
 const containerPort = process.env.CONTAINER_PORT || '3000'
-const envFile = process.env.DEPLOY_ENV_FILE || '.deploy.env'
+const configFile = process.env.DEPLOY_CONFIG_FILE || '.deploy.yaml'
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -20,43 +22,55 @@ function run(command, args, options = {}) {
   }
 }
 
-function ensureDeployEnv() {
-  if (existsSync(envFile)) return
+function ensureDeployConfig() {
+  if (existsSync(configFile)) return
 
   const cookieSecret = crypto.randomBytes(32).toString('base64url')
-  writeFileSync(envFile, [
-    'NODE_ENV=production',
-    'HOST=0.0.0.0',
-    `PORT=${containerPort}`,
-    'DATABASE_PATH=/data/app.db',
-    'SITE_BASE=/linux-xiuxian/',
-    `COOKIE_SECRET=${cookieSecret}`,
-    'COOKIE_SECURE=false',
-    'TRUST_PROXY=false',
-    'RATE_LIMIT_MAX=120',
-    'RATE_LIMIT_WINDOW=1 minute',
-    '',
-    '# GitHub OAuth linking. Create an OAuth App with callback URL:',
-    '# https://your-domain.example/api/github/callback',
-    'APP_ORIGIN=',
-    'GITHUB_CLIENT_ID=',
-    'GITHUB_CLIENT_SECRET=',
-    'GITHUB_CALLBACK_URL=',
-    '',
-  ].join('\n'))
+  writeFileSync(configFile, YAML.stringify({
+    node_env: 'production',
+    host: '0.0.0.0',
+    port: Number(containerPort),
+    database_path: '/data/app.db',
+    site_base: '/linux-xiuxian/',
+    cookie: {
+      secret: cookieSecret,
+      secure: false,
+    },
+    trust_proxy: false,
+    rate_limit: {
+      max: 120,
+      window: '1 minute',
+    },
+    admin_usernames: [],
+    app_origin: '',
+    github: {
+      client_id: '',
+      client_secret: '',
+      callback_url: '',
+    },
+  }))
 }
 
-function printDeployEnvHint() {
-  const content = readFileSync(envFile, 'utf8')
-  const secure = /^COOKIE_SECURE=true$/m.test(content)
-  const proxy = /^TRUST_PROXY=true$/m.test(content)
+function readDeployConfig() {
+  return YAML.parse(readFileSync(configFile, 'utf8')) || {}
+}
+
+function printDeployConfigHint() {
+  const config = readDeployConfig()
+  const secure = config.cookie?.secure === true
+  const proxy = config.trust_proxy === true
 
   if (!secure || !proxy) {
-    console.log(`\n提示: 如果服务器前面有 HTTPS 反代，请把 ${envFile} 改成 COOKIE_SECURE=true 和 TRUST_PROXY=true 后重新部署。`)
+    console.log(`\n提示: 如果服务器前面有 HTTPS 反代，请把 ${configFile} 里的 cookie.secure 和 trust_proxy 改成 true 后重新部署。`)
   }
 }
 
-ensureDeployEnv()
+function dockerMountPath(filePath) {
+  const resolved = path.resolve(filePath)
+  return process.platform === 'win32' ? resolved.replace(/\\/g, '/') : resolved
+}
+
+ensureDeployConfig()
 
 console.log(`\n[1/4] 构建镜像 ${imageName}`)
 run('docker', ['build', '-t', imageName, '.'])
@@ -72,11 +86,12 @@ run('docker', [
   '--restart', 'unless-stopped',
   '-p', `${hostPort}:${containerPort}`,
   '-v', `${volumeName}:/data`,
-  '--env-file', envFile,
+  '-v', `${dockerMountPath(configFile)}:/app/.deploy.yaml:ro`,
+  '-e', 'CONFIG_FILE=/app/.deploy.yaml',
   imageName,
 ])
 
 console.log('\n[4/4] 部署完成')
 console.log(`访问地址: http://服务器IP:${hostPort}/linux-xiuxian/`)
 console.log(`查看日志: docker logs -f ${containerName}`)
-printDeployEnvHint()
+printDeployConfigHint()

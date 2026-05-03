@@ -84,6 +84,7 @@ export default defineConfig({
       },
       { text: '排行榜', link: '/rank' },
       { text: '道藏', link: '/reference/kernel-map' },
+      { text: '管理', link: '/admin' },
     ],
 
     sidebar: getZhSidebar(),
