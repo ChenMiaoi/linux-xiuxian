@@ -72,5 +72,7 @@ export function canOpenNovelPath(path: string): boolean {
 export function dispatchGateChange(): void {
   if (typeof window === 'undefined') return
   window.dispatchEvent(new CustomEvent(GATE_CHANGE_EVENT))
-  window.dispatchEvent(new CustomEvent(NOVEL_PROGRESS_EVENT))
+  window.requestAnimationFrame(() => {
+    window.dispatchEvent(new CustomEvent(NOVEL_PROGRESS_EVENT))
+  })
 }

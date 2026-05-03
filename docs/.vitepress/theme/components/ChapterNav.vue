@@ -31,7 +31,7 @@ const nextHref = computed(() => props.next ? withBase(props.next) : '')
 
 function refreshLock() {
   if (typeof document === 'undefined') return
-  locked.value = document.querySelectorAll('.chapter-gate[data-solved="false"]').length > 0
+  locked.value = document.querySelectorAll('.section-gate[data-solved="false"], .chapter-gate[data-solved="false"]').length > 0
 }
 
 function handleNext(event) {
@@ -39,7 +39,7 @@ function handleNext(event) {
   if (!locked.value) return
 
   event.preventDefault()
-  const gate = document.querySelector('.chapter-gate[data-solved="false"]')
+  const gate = document.querySelector('.section-gate[data-solved="false"], .chapter-gate[data-solved="false"]')
   gate?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
