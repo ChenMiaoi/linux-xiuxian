@@ -211,3 +211,12 @@ export function awardCommentPoints(userId, commentId) {
     refId: commentId,
   })
 }
+
+export function awardChapterUnlockPoints(userId, chapterPath) {
+  return awardPoints(userId, {
+    source: 'chapter_unlock',
+    points: POINT_RULES.chapterUnlock.points,
+    refType: 'chapter',
+    refId: chapterPath,
+  })
+}

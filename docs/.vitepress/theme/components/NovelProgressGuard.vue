@@ -14,6 +14,7 @@ import {
   pageCompleteKey,
   setPageComplete,
 } from '../novel-progress'
+import { apiPost, authState, loadMe } from '../auth-state'
 
 const router = useRouter()
 const { page } = useData()
@@ -21,6 +22,7 @@ const { page } = useData()
 let removeSidebarHandler: (() => void) | null = null
 let scrollTimer = 0
 let refreshTimer = 0
+const awardedInSession = new Set<string>()
 
 function currentPath(): string {
   if (typeof window === 'undefined') return ''
@@ -38,9 +40,31 @@ function updatePageCompletion(): void {
   const hasUnsolved = !!firstUnsolvedGate()
   if (!hasUnsolved) {
     setPageComplete(path, true)
+    awardChapterUnlock(path)
   } else {
     window.localStorage.removeItem(pageCompleteKey(path))
     window.dispatchEvent(new CustomEvent(NOVEL_PROGRESS_EVENT))
+  }
+}
+
+async function awardChapterUnlock(path: string): Promise<void> {
+  if (!authState.user) return
+
+  const normalized = normalizePath(path)
+  const awardKey = `xiuxian:chapter-award:${normalized}`
+  if (awardedInSession.has(normalized) || window.localStorage.getItem(awardKey) === '1') return
+
+  awardedInSession.add(normalized)
+  try {
+    const data = await apiPost('/api/progress/chapter-unlock', { pagePath: normalized })
+    if (data.pointAward?.awarded || data.pointAward?.reason === 'duplicate') {
+      window.localStorage.setItem(awardKey, '1')
+    }
+    if (data.pointAward?.awarded) {
+      await loadMe()
+    }
+  } catch {
+    awardedInSession.delete(normalized)
   }
 }
 

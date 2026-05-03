@@ -12,6 +12,7 @@ import { registerCommentRoutes } from './comments.js'
 import { registerGitHubRoutes } from './github.js'
 import { registerAdminRoutes } from './admin.js'
 import { registerMailboxRoutes } from './mailbox.js'
+import { registerProgressRoutes } from './progress.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
@@ -42,6 +43,7 @@ registerCommentRoutes(app)
 registerGitHubRoutes(app)
 registerAdminRoutes(app)
 registerMailboxRoutes(app)
+registerProgressRoutes(app)
 
 app.get('/api/rank/me', async (request) => {
   return { user: getCurrentUser(request) }
