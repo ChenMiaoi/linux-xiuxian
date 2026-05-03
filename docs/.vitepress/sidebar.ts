@@ -299,17 +299,43 @@ const novelVolumes: Record<string, { label: string; chapters: { text: string; li
   },
 }
 
-function buildNovelSidebar(prefix: string = ''): SidebarGroup[] {
+const enVolumeLabels: Record<string, string> = {
+  'vol0-prologue': 'Prologue: Foundations',
+  'vol1-chaos': 'Volume 1: Chaos Begins',
+  'vol2-foundation': 'Volume 2: The Root of All Things',
+  'vol3-scheduler': 'Volume 3: The Dao of Balance',
+  'vol4-memory': 'Volume 4: Inner Worlds',
+  'vol5-filesystem': 'Volume 5: The Eternal Forest',
+  'vol6-network': 'Volume 6: Across the Sea',
+  'vol7-drivers': 'Volume 7: Bridges of Devices',
+  'vol8-security': 'Volume 8: Tribulation Descends',
+  'vol9-architecture': 'Volume 9: The Formless Dao',
+  'vol10-ascension': 'Volume 10: The Road to Ascension',
+}
+
+function toEnglishChapterText(text: string): string {
+  if (text === '卷首语') return 'Foreword'
+  if (text.startsWith('缘起')) return 'Origin'
+  if (text.startsWith('终章')) return 'Final Chapter'
+
+  const chapter = text.match(/^第(.+?)章[：:](.+)$/)
+  if (chapter) return `Chapter ${chapter[1]}: ${chapter[2].trim()}`
+
+  return text
+}
+
+function buildNovelSidebar(prefix: string = '', locale: 'zh' | 'en' = 'zh'): SidebarGroup[] {
   const groups: SidebarGroup[] = []
   const volumeKeys = Object.keys(novelVolumes)
 
   for (let i = 0; i < volumeKeys.length; i++) {
-    const vol = novelVolumes[volumeKeys[i]]
+    const key = volumeKeys[i]
+    const vol = novelVolumes[key]
     groups.push({
-      text: vol.label,
+      text: locale === 'en' ? (enVolumeLabels[key] ?? vol.label) : vol.label,
       collapsed: i > 0,
       items: vol.chapters.map((ch) => ({
-        text: ch.text,
+        text: locale === 'en' ? toEnglishChapterText(ch.text) : ch.text,
         link: `${prefix}${ch.link}`,
       })),
     })
@@ -363,14 +389,6 @@ export function getEnSidebar(): SidebarConfig {
         ],
       },
     ],
-    '/en/novel/': [
-      {
-        text: 'Novel',
-        collapsed: false,
-        items: [
-          { text: 'Overview', link: '/en/novel/' },
-        ],
-      },
-    ],
+    '/en/novel/': buildNovelSidebar('/en', 'en'),
   }
 }

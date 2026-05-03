@@ -1,0 +1,13 @@
+---
+title: "Translation Pending: 第八卷：天劫降临"
+---
+
+<!-- xiuxian-i18n-generated -->
+
+# Translation Pending: 第八卷：天劫降临
+
+This English translation has not been written yet.
+
+The Chinese source page is available here: [第八卷：天劫降临](/novel/vol8-security/).
+
+Translators can replace this generated placeholder with a real English chapter while keeping the same path.
