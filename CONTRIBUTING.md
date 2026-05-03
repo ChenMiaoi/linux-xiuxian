@@ -82,9 +82,13 @@ title: 第X章：章节标题
 
 <!-- 兼容符号名写法：构建时会在文件中定位符号并抽取片段 -->
 <KernelSourceLink path="init/main.c" line="start_kernel" />
+
+<!-- 正文内联术语/字段悬浮预览 -->
+<KernelSourceTerm label="task_struct" path="include/linux/sched.h" symbol="task_struct" />
+<KernelSourceTerm label="state" path="include/linux/sched.h" symbol="state" note="进程状态字段" />
 ```
 
-带 `line` 的引用会在构建时从 `vendor/linux/` 抽取源码片段，写入 `docs/public/kernel-snippets.json`。页面中鼠标悬浮源码链接时展示片段；正文 Markdown 只保留引用标签，不直接内嵌源码。
+带 `line` 或 `symbol` 的引用会在构建时从 `vendor/linux/` 抽取源码片段，写入 `docs/public/kernel-snippets.json`。页面中鼠标悬浮源码链接或内联术语时向下展示片段；正文 Markdown 只保留引用标签，不直接内嵌源码。
 
 ## 写作风格
 

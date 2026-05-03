@@ -99,6 +99,8 @@ description: 为《Linux 内核修仙传》编写、续写或修订章节的写�
 - 用 `<KernelSourceLink>` 引用 `vendor/linux/` 中的真实源码；正文只写引用标签，不直接粘贴大段内核源码。
 - 推荐写法：`<KernelSourceLink path="init/main.c" line="1017" endLine="1044" symbol="start_kernel" />`。
 - 兼容符号写法：`<KernelSourceLink path="init/main.c" line="start_kernel" />`；构建脚本会在对应文件中定位符号并抽取默认长度片段。
+- 正文提到真实内核结构、函数或字段时，使用内联写法：`<KernelSourceTerm label="task_struct" path="include/linux/sched.h" symbol="task_struct" />`。
+- 字段名需要更精确时优先给行号范围，例如：`<KernelSourceTerm label="state" path="include/linux/sched.h" line="748" endLine="760" symbol="state" />`。
 - `endLine` 只用于需要精确裁剪的关键片段；缺省时构建器默认抽取从命中行开始的上下文。
 - `note` 可写一句非常短的提示，例如 `note="内核启动主线"`，但不要替代正文解释。
 

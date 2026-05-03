@@ -6,18 +6,24 @@
     @focusin="showPreview"
     @focusout="hidePreview"
   >
-    <a
-      :href="sourceUrl"
-      target="_blank"
-      rel="noopener"
-      class="kernel-source"
+    <button
+      type="button"
+      :class="['kernel-source', { 'kernel-source-term': label }]"
+      :aria-expanded="open ? 'true' : 'false'"
+      @click="togglePinned"
     >
-      📄 {{ path }}<template v-if="line">:{{ line }}</template>
-    </a>
+      <template v-if="label">{{ label }}</template>
+      <template v-else>📄 {{ path }}<template v-if="line">:{{ line }}</template></template>
+    </button>
 
     <span v-if="open && hasPreviewRef" class="kernel-source-popover" role="tooltip">
-      <span class="kernel-source-popover-title">
-        {{ snippetTitle }}
+      <span class="kernel-source-popover-head">
+        <span class="kernel-source-popover-title">
+          {{ snippetTitle }}
+        </span>
+        <button type="button" class="kernel-source-close" aria-label="关闭源码预览" @click="closePreview">
+          ×
+        </button>
       </span>
       <span v-if="note" class="kernel-source-note">{{ note }}</span>
       <span v-if="loading" class="kernel-source-state">正在读取源码片段...</span>
@@ -43,9 +49,11 @@ const props = defineProps({
   end: { type: [String, Number], default: '' },
   symbol: { type: String, default: '' },
   note: { type: String, default: '' },
+  label: { type: String, default: '' },
 })
 
 const open = ref(false)
+const pinned = ref(false)
 const loading = ref(false)
 const snippet = ref(null)
 
@@ -118,6 +126,21 @@ async function showPreview() {
 }
 
 function hidePreview() {
+  if (pinned.value) return
+  open.value = false
+}
+
+async function togglePinned() {
+  pinned.value = !pinned.value
+  if (pinned.value) {
+    await showPreview()
+    return
+  }
+  open.value = false
+}
+
+function closePreview() {
+  pinned.value = false
   open.value = false
 }
 </script>

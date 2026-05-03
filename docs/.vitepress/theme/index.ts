@@ -21,5 +21,6 @@ export default {
     app.component('CodeFontSettings', CodeFontSettings)
     app.component('CultivationRealm', CultivationRealm)
     app.component('KernelSourceLink', KernelSourceLink)
+    app.component('KernelSourceTerm', KernelSourceLink)
   },
 }
