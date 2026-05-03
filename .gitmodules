@@ -1,3 +1,4 @@
 [submodule "vendor/linux"]
 	path = vendor/linux
 	url = git@github.com:ChenMiaoi/linux.git
+	branch = linux-xiuxian
