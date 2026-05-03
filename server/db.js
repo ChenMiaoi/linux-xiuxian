@@ -74,6 +74,22 @@ CREATE INDEX IF NOT EXISTS idx_point_events_user_source_created ON point_events(
 CREATE INDEX IF NOT EXISTS idx_users_points ON users(cultivation_points DESC, created_at ASC);
 `)
 
+const userColumns = db.prepare('PRAGMA table_info(users)').all().map((column) => column.name)
+const userColumnSet = new Set(userColumns)
+if (!userColumnSet.has('github_id')) {
+  db.exec('ALTER TABLE users ADD COLUMN github_id TEXT')
+}
+if (!userColumnSet.has('github_login')) {
+  db.exec('ALTER TABLE users ADD COLUMN github_login TEXT')
+}
+if (!userColumnSet.has('github_avatar_url')) {
+  db.exec('ALTER TABLE users ADD COLUMN github_avatar_url TEXT')
+}
+if (!userColumnSet.has('github_connected_at')) {
+  db.exec('ALTER TABLE users ADD COLUMN github_connected_at TEXT')
+}
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_github_id ON users(github_id) WHERE github_id IS NOT NULL')
+
 const insertRank = db.prepare(`
 INSERT INTO rank_levels (id, name, min_points, sort_order)
 VALUES (@id, @name, @minPoints, @id)
@@ -93,6 +109,12 @@ export function publicUser(row) {
     role: row.role,
     cultivationPoints: row.cultivation_points,
     rank: rankForPoints(row.cultivation_points),
+    github: row.github_id ? {
+      id: row.github_id,
+      login: row.github_login,
+      avatarUrl: row.github_avatar_url,
+      connectedAt: row.github_connected_at,
+    } : null,
     createdAt: row.created_at,
   }
 }

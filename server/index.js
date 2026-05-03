@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { getCurrentUser, registerAuthRoutes } from './auth.js'
 import { db, publicUser } from './db.js'
 import { registerCommentRoutes } from './comments.js'
+import { registerGitHubRoutes } from './github.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
@@ -34,6 +35,7 @@ app.get('/api/health', async () => ({ ok: true }))
 
 registerAuthRoutes(app)
 registerCommentRoutes(app)
+registerGitHubRoutes(app)
 
 app.get('/api/rank/me', async (request) => {
   return { user: getCurrentUser(request) }

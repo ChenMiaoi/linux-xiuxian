@@ -36,6 +36,13 @@ function ensureDeployEnv() {
     'RATE_LIMIT_MAX=120',
     'RATE_LIMIT_WINDOW=1 minute',
     '',
+    '# GitHub OAuth linking. Create an OAuth App with callback URL:',
+    '# https://your-domain.example/api/github/callback',
+    'APP_ORIGIN=',
+    'GITHUB_CLIENT_ID=',
+    'GITHUB_CLIENT_SECRET=',
+    'GITHUB_CALLBACK_URL=',
+    '',
   ].join('\n'))
 }
 

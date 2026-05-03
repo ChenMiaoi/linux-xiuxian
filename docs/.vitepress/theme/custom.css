@@ -1178,6 +1178,15 @@ iframe[data-playground-runner] {
   font-size: 12px;
 }
 
+.auth-github {
+  max-width: 120px;
+  overflow: hidden;
+  color: var(--vp-c-text-2);
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  text-overflow: ellipsis;
+}
+
 .auth-logout {
   min-height: 26px;
   padding: 0 8px;

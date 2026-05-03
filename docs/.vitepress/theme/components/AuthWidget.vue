@@ -7,6 +7,9 @@
           {{ authState.user.rank?.name || '炼气' }}
         </span>
         <span class="auth-points">{{ authState.user.cultivationPoints }} 修为</span>
+        <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
+        <button v-if="authState.user.github" class="auth-logout" type="button" @click.stop.prevent="handleGitHubUnlink">解绑</button>
+        <button v-else class="auth-logout" type="button" @click.stop.prevent="handleGitHubLink">绑定 GitHub</button>
         <button class="auth-logout" type="button" @click.stop.prevent="handleLogout">退出</button>
       </div>
     </template>
@@ -40,7 +43,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { authState, loadMe, login, logout, register } from '../auth-state'
+import { apiPost, authState, loadMe, login, logout, register } from '../auth-state'
 import { rankForPoints } from '../rank-utils'
 
 const open = ref(false)
@@ -77,5 +80,14 @@ async function handleSubmit() {
 async function handleLogout() {
   await logout()
   open.value = false
+}
+
+function handleGitHubLink() {
+  window.location.href = '/api/github/login'
+}
+
+async function handleGitHubUnlink() {
+  const data = await apiPost('/api/github/unlink', {})
+  authState.user = data.user
 }
 </script>
