@@ -105,6 +105,24 @@
   font-size: var(--xiuxian-code-font-size);
 }
 
+.vp-doc div[class*='language-'],
+.vp-doc pre,
+.playground-panel,
+.kernel-source-codebox,
+.chapter-gate-code {
+  max-width: 100%;
+}
+
+.vp-doc div[class*='language-'],
+.vp-doc pre,
+.playground-output-pre,
+.playground-asm-pre,
+.kernel-source-codebox,
+.chapter-gate-code {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .code-font-settings {
   position: fixed;
   right: 18px;
@@ -150,6 +168,27 @@
 }
 
 @media (max-width: 640px) {
+  :root {
+    --xiuxian-code-font-size: 13px;
+  }
+
+  .vp-doc div[class*='language-'] {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 6px;
+  }
+
+  .vp-doc div[class*='language-'] pre,
+  .vp-doc pre {
+    padding: 14px 12px;
+    line-height: 1.55;
+  }
+
+  .vp-doc div[class*='language-'] code,
+  .vp-doc pre code {
+    tab-size: 4;
+  }
+
   .code-font-settings {
     left: 12px;
     right: 12px;
@@ -671,6 +710,56 @@ iframe[data-playground-runner] {
   overflow: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+}
+
+@media (max-width: 640px) {
+  .playground-code-toggle-row {
+    justify-content: stretch;
+    padding: 8px 10px 0;
+  }
+
+  .playground-code-toggle {
+    width: 100%;
+    min-height: 34px;
+  }
+
+  .playground-actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .playground-run {
+    width: 100%;
+    min-height: 36px;
+  }
+
+  .playground-status {
+    line-height: 1.5;
+  }
+
+  .playground-output-label,
+  .playground-asm-label {
+    padding: 9px 12px;
+    white-space: normal;
+  }
+
+  .playground-output-pre,
+  .playground-asm-pre {
+    padding: 10px 12px;
+    line-height: 1.55;
+  }
+
+  .playground-run-output {
+    margin: 0 12px 12px;
+    padding: 10px 12px;
+  }
+
+  .kernel-source-codebox {
+    padding: 10px;
+    tab-size: 4;
+  }
 }
 
 /* ===== 章节互动门禁 ===== */
