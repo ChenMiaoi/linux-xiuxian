@@ -19,6 +19,11 @@ title: 第六卷：沧海横流
 
 | 章节 | 标题 | 主题 |
 |------|------|------|
+| 第一百零一章 | 文件尽头是 socket | fd、file 与 socket 的 VFS 接缝 |
+| 第一百零二章 | 协议族名册 | address family、socket type、proto_ops |
+| 第一百零三章 | 入海之门 | socket() 创建路径与 fd 安装 |
+| 第一百零四章 | 隔海有界 | 网络命名空间与 struct net |
+| 第一百零五章 | 第一枚报文 | 从用户缓冲到 sk_buff 的铺垫 |
 | 第一百零六章 | 望海 | socket 基础 |
 | 第一百零七章 | 造船之术 | socket 类型 |
 | 第一百零八章 | 商船 | TCP socket |
