@@ -13,11 +13,22 @@ const usernameSchema = z
   .min(3)
   .max(24)
   .regex(/^[a-zA-Z0-9_-]+$/)
+  .refine((value) => ![
+    'admin',
+    'administrator',
+    'api',
+    'auth',
+    'github',
+    'root',
+    'system',
+    'null',
+    'undefined',
+  ].includes(value.toLowerCase()))
 
 export const registerSchema = z.object({
   username: usernameSchema,
   password: z.string().min(8).max(128),
-  displayName: z.string().trim().min(1).max(32).optional(),
+  displayName: z.string().trim().min(1).max(32).regex(/^[^\u0000-\u001f\u007f]+$/).optional(),
 })
 
 export const loginSchema = z.object({
@@ -71,10 +82,17 @@ export function requireUser(request, reply) {
 }
 
 export function registerAuthRoutes(app) {
-  app.post('/api/auth/register', async (request, reply) => {
+  app.post('/api/auth/register', {
+    config: {
+      rateLimit: {
+        max: 5,
+        timeWindow: '10 minutes',
+      },
+    },
+  }, async (request, reply) => {
     const parsed = registerSchema.safeParse(request.body)
     if (!parsed.success) {
-      return reply.code(400).send({ error: 'BAD_REQUEST', message: '用户名或密码格式不正确' })
+      return reply.code(400).send({ error: 'BAD_REQUEST', message: '用户名、显示名或密码格式不正确' })
     }
 
     const username = parsed.data.username
@@ -84,10 +102,18 @@ export function registerAuthRoutes(app) {
     }
 
     const passwordHash = await bcrypt.hash(parsed.data.password, 10)
-    const result = db.prepare(`
-      INSERT INTO users (username, password_hash, display_name, cultivation_points)
-      VALUES (?, ?, ?, 0)
-    `).run(username, passwordHash, parsed.data.displayName || username)
+    let result
+    try {
+      result = db.prepare(`
+        INSERT INTO users (username, password_hash, display_name, cultivation_points)
+        VALUES (?, ?, ?, 0)
+      `).run(username, passwordHash, parsed.data.displayName || username)
+    } catch (error) {
+      if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        return reply.code(409).send({ error: 'USERNAME_EXISTS', message: '该道号已被占用' })
+      }
+      throw error
+    }
     awardPoints(result.lastInsertRowid, {
       source: 'register',
       points: POINT_RULES.register.points,
@@ -101,7 +127,14 @@ export function registerAuthRoutes(app) {
     return { user }
   })
 
-  app.post('/api/auth/login', async (request, reply) => {
+  app.post('/api/auth/login', {
+    config: {
+      rateLimit: {
+        max: 20,
+        timeWindow: '10 minutes',
+      },
+    },
+  }, async (request, reply) => {
     const parsed = loginSchema.safeParse(request.body)
     if (!parsed.success) {
       return reply.code(400).send({ error: 'BAD_REQUEST', message: '请输入道号和口令' })

@@ -89,6 +89,16 @@ if (!userColumnSet.has('github_connected_at')) {
   db.exec('ALTER TABLE users ADD COLUMN github_connected_at TEXT')
 }
 db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_github_id ON users(github_id) WHERE github_id IS NOT NULL')
+const duplicateUsernames = db.prepare(`
+  SELECT lower(username) AS normalized, COUNT(*) AS count
+  FROM users
+  GROUP BY lower(username)
+  HAVING count > 1
+  LIMIT 1
+`).get()
+if (!duplicateUsernames) {
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_lower ON users(lower(username))')
+}
 
 const insertRank = db.prepare(`
 INSERT INTO rank_levels (id, name, min_points, sort_order)

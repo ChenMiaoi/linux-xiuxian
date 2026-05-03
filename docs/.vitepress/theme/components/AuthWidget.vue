@@ -1,16 +1,26 @@
 <template>
   <div class="auth-widget">
     <template v-if="authState.user">
-      <div class="auth-inline">
+      <button class="auth-inline auth-user-trigger" type="button" @click="open = !open">
         <span class="auth-name">{{ authState.user.displayName }}</span>
         <span :class="['cultivation-badge', authState.user.rank?.name ? rankForPoints(authState.user.cultivationPoints).className : 'realm-qi']">
           {{ authState.user.rank?.name || '炼气' }}
         </span>
-        <span class="auth-points">{{ authState.user.cultivationPoints }} 修为</span>
-        <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
-        <button v-if="authState.user.github" class="auth-logout" type="button" @click.stop.prevent="handleGitHubUnlink">解绑</button>
-        <button v-else class="auth-logout" type="button" @click.stop.prevent="handleGitHubLink">绑定 GitHub</button>
-        <button class="auth-logout" type="button" @click.stop.prevent="handleLogout">退出</button>
+        <span class="auth-caret">▾</span>
+      </button>
+      <div v-if="open" class="auth-popover auth-account-popover">
+        <div class="auth-profile">
+          <strong>{{ authState.user.displayName }}</strong>
+          <span>{{ authState.user.cultivationPoints }} 修为</span>
+        </div>
+        <div class="auth-account-row">
+          <span>GitHub</span>
+          <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
+          <span v-else class="auth-muted">未绑定</span>
+        </div>
+        <button v-if="authState.user.github" class="auth-secondary" type="button" @click.stop.prevent="handleGitHubUnlink">解绑 GitHub</button>
+        <button v-else class="auth-secondary" type="button" @click.stop.prevent="handleGitHubLink">绑定 GitHub</button>
+        <button class="auth-secondary" type="button" @click.stop.prevent="handleLogout">退出登录</button>
       </div>
     </template>
 

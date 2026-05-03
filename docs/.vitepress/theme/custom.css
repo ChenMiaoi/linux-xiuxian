@@ -314,8 +314,8 @@
 .VPHero .name {
   font-family: 'Ma Shan Zheng', 'STXingkai', 'KaiTi', 'Noto Serif SC', serif !important;
   font-weight: 400 !important;
-  max-width: 980px;
-  font-size: 76px !important;
+  max-width: 1100px;
+  font-size: 88px !important;
   line-height: 1.02 !important;
   letter-spacing: 0;
 }
@@ -330,9 +330,9 @@
 .VPHero .text {
   font-family: 'Ma Shan Zheng', 'STXingkai', 'KaiTi', 'Noto Serif SC', serif !important;
   font-weight: 400 !important;
-  max-width: 760px;
+  max-width: 880px;
   margin-top: 8px;
-  font-size: 68px !important;
+  font-size: 78px !important;
   line-height: 1.06 !important;
   white-space: pre-line;
   letter-spacing: 0;
@@ -353,7 +353,7 @@
 }
 
 .VPHome .VPFeatures {
-  padding-top: 34px;
+  padding-top: 92px;
 }
 
 .VPHome .VPFeatures .items {
@@ -377,11 +377,11 @@
   }
 
   .VPHero .name {
-    font-size: 46px !important;
+    font-size: 52px !important;
   }
 
   .VPHero .text {
-    font-size: 38px !important;
+    font-size: 42px !important;
   }
 
   .VPHero .tagline {
@@ -1119,7 +1119,7 @@ iframe[data-playground-runner] {
   position: relative;
   display: inline-flex;
   align-items: center;
-  margin-left: 10px;
+  margin-left: auto;
   max-width: 100%;
 }
 
@@ -1158,18 +1158,30 @@ iframe[data-playground-runner] {
   align-items: center;
   gap: 8px;
   min-height: 32px;
-  max-width: min(420px, calc(100vw - 32px));
+  max-width: min(220px, calc(100vw - 32px));
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   padding: 3px 6px 3px 10px;
+  background: transparent;
   color: var(--vp-c-text-2);
   font-size: 13px;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .auth-inline .auth-name {
   color: var(--vp-c-text-1);
   font-weight: 700;
+}
+
+.auth-user-trigger:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.auth-caret {
+  color: var(--vp-c-text-2);
+  font-size: 11px;
 }
 
 .auth-points {
@@ -1205,6 +1217,11 @@ iframe[data-playground-runner] {
   border-radius: 8px;
   background: var(--vp-c-bg);
   box-shadow: var(--vp-shadow-4);
+}
+
+.auth-account-popover {
+  display: grid;
+  gap: 10px;
 }
 
 .auth-form {
@@ -1270,6 +1287,19 @@ iframe[data-playground-runner] {
 
 .auth-profile strong {
   color: var(--vp-c-text-1);
+}
+
+.auth-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.auth-muted {
+  color: var(--vp-c-text-3);
 }
 
 .auth-message,
