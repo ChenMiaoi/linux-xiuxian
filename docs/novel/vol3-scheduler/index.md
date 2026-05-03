@@ -5,13 +5,13 @@ title: 第三卷：天道均衡
 # 第三卷：天道均衡
 
 > **修炼阶段：** <CultivationRealm realm="结丹期" />
-> **内核焦点：** 调度器 (`kernel/sched/fair.c`, `kernel/sched/core.c`)
+> **内核焦点：** 调度器 (`kernel/sched/fair.c`, `kernel/sched/core.c`, EEVDF)
 
 ## 卷首语
 
 天道酬勤，亦酬公平。
 
-在调度竞技场中，每一个进程都渴望更多的 CPU 时间。但 CFS——完全公平调度器——以红黑树为天秤，不偏不倚地分配着时间片。想走捷径？RT 调度器的精英们早已占据了快车道。
+在调度竞技场中，每一个进程都渴望更多的 CPU 时间。旧日的 CFS 以 `vruntime` 和红黑树为天秤，试图模拟一台理想的多任务 CPU；新的 EEVDF 又把公平推进到 lag 与 virtual deadline 的尺度上，追问谁被亏欠、谁期限更近。想走捷径？RT 与 Deadline 的精英们早已占据了更严苛的通道。
 
 这是关于公平与效率的修行。
 
@@ -20,8 +20,8 @@ title: 第三卷：天道均衡
 | 章 | 标题 | 简介 |
 |---|---|---|
 | 三十六 | 竞技场 | 进入调度竞技场，理解 CPU 时间的竞争 |
-| 三十七 | 调度仙子 | CFS 调度器登场，红黑树的公平之道 |
-| 三十八 | 红黑树 | vruntime 与红黑树的实现细节 |
+| 三十七 | 调度仙子 | CFS 调度器登场，vruntime、lag 与 EEVDF 的公平新法 |
+| 三十八 | 红黑树 | 红黑树作为旧日天秤的实现细节 |
 | 三十九 | 时间片 | 时间片的分配、抢占与唤醒抢占 |
 | 四十 | 优先级 | nice 值、权重与调度精度 |
 | 四十一 | 运行队列 | per-CPU 运行队列的设计 |
@@ -44,6 +44,7 @@ title: 第三卷：天道均衡
 
 - `kernel/sched/core.c` — 调度核心
 - `kernel/sched/fair.c` — CFS 调度器
+- `Documentation/scheduler/sched-eevdf.rst` — EEVDF 调度文档
 - `kernel/sched/rt.c` — 实时调度器
 - `kernel/sched/deadline.c` — Deadline 调度器
 - `kernel/sched/stop_task.c` — Stop 调度类
