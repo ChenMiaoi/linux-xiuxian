@@ -3,19 +3,34 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare": "git config core.hooksPath .githooks",
+    "prepare": "node scripts/setup-git-hooks.mjs",
     "check:commit-msg": "node scripts/validate-commit-msg.mjs",
     "dev": "npx tsx scripts/sync-novel-i18n.ts && npx tsx scripts/build-kernel-snippets.ts && npx tsx scripts/build-playground.ts && vitepress dev docs --host",
     "dev:site": "vitepress dev docs --host",
     "build": "npx tsx scripts/sync-novel-i18n.ts && npx tsx scripts/build-kernel-snippets.ts && npx tsx scripts/build-playground.ts && vitepress build docs",
     "build:site": "vitepress build docs",
+    "build:docker": "npm run build:site",
     "build:playground": "npx tsx scripts/build-playground.ts",
     "build:i18n": "npx tsx scripts/sync-novel-i18n.ts",
     "build:snippets": "npx tsx scripts/build-kernel-snippets.ts",
-    "preview": "vitepress preview docs"
+    "preview": "vitepress preview docs",
+    "server:start": "node server/index.js",
+    "docker:build": "docker build -t linux-xiuxian .",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:logs": "docker logs -f linux-xiuxian",
+    "deploy:stop": "docker rm -f linux-xiuxian"
   },
   "devDependencies": {
     "vitepress": "^1.6.0",
     "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/static": "^9.1.3",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
+    "fastify": "^5.8.5",
+    "zod": "^4.4.2"
   }
 }
