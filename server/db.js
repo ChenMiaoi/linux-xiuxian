@@ -3,6 +3,7 @@ import Database from 'better-sqlite3'
 import fs from 'node:fs'
 import path from 'node:path'
 import { POINT_RULES, RANK_LEVELS, rankForPoints } from './rank.js'
+import { buildUserTitles } from './titles.js'
 
 const databasePath = process.env.DATABASE_PATH || path.resolve('data/app.db')
 fs.mkdirSync(path.dirname(databasePath), { recursive: true })
@@ -145,6 +146,7 @@ for (const level of RANK_LEVELS) insertRank.run(level)
 
 export function publicUser(row) {
   if (!row) return null
+  const titles = buildUserTitles(row, userTitleStats(row.id))
   return {
     id: row.id,
     username: row.username,
@@ -155,6 +157,8 @@ export function publicUser(row) {
     moderationNote: row.moderation_note,
     cultivationPoints: row.cultivation_points,
     rank: rankForPoints(row.cultivation_points),
+    title: titles.primary,
+    titles,
     github: row.github_id ? {
       id: row.github_id,
       login: row.github_login,
@@ -162,6 +166,41 @@ export function publicUser(row) {
       connectedAt: row.github_connected_at,
     } : null,
     createdAt: row.created_at,
+  }
+}
+
+function userTitleStats(userId) {
+  const pointStats = db.prepare(`
+    SELECT
+      SUM(CASE WHEN source = 'chapter_unlock' THEN 1 ELSE 0 END) AS chapter_unlock_count,
+      SUM(CASE WHEN source = 'github_issue_accepted' THEN 1 ELSE 0 END) AS github_issue_count,
+      SUM(CASE WHEN source = 'github_pr_merged' THEN 1 ELSE 0 END) AS github_pr_count
+    FROM point_events
+    WHERE user_id = ?
+  `).get(userId)
+
+  const commentStats = db.prepare(`
+    SELECT
+      COUNT(*) AS comment_count,
+      SUM(CASE WHEN status = 'deleted' THEN 1 ELSE 0 END) AS deleted_comment_count
+    FROM comments
+    WHERE user_id = ?
+  `).get(userId)
+
+  const moderationStats = db.prepare(`
+    SELECT
+      SUM(CASE WHEN action = 'admin_privilege_attempt' THEN 1 ELSE 0 END) AS admin_privilege_attempt_count
+    FROM user_moderation_events
+    WHERE user_id = ?
+  `).get(userId)
+
+  return {
+    chapterUnlockCount: pointStats?.chapter_unlock_count || 0,
+    githubIssueCount: pointStats?.github_issue_count || 0,
+    githubPrCount: pointStats?.github_pr_count || 0,
+    commentCount: commentStats?.comment_count || 0,
+    deletedCommentCount: commentStats?.deleted_comment_count || 0,
+    adminPrivilegeAttemptCount: moderationStats?.admin_privilege_attempt_count || 0,
   }
 }
 

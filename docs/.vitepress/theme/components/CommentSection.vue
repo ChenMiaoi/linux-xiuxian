@@ -42,6 +42,7 @@
         <div class="comment-item">
           <header>
             <strong>{{ comment.author.displayName }}</strong>
+            <span v-if="comment.author.title" class="cultivation-title-badge">{{ comment.author.title.name }}</span>
             <span :class="['cultivation-badge', rankForPoints(comment.author.cultivationPoints).className]">
               {{ rankForPoints(comment.author.cultivationPoints).name }}
             </span>
@@ -68,6 +69,7 @@
           <div v-for="reply in comment.children" :key="reply.id" class="comment-item comment-reply">
             <header>
               <strong>{{ reply.author.displayName }}</strong>
+              <span v-if="reply.author.title" class="cultivation-title-badge">{{ reply.author.title.name }}</span>
               <span :class="['cultivation-badge', rankForPoints(reply.author.cultivationPoints).className]">
                 {{ rankForPoints(reply.author.cultivationPoints).name }}
               </span>

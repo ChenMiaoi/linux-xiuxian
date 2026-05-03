@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { awardCommentPoints, db } from './db.js'
+import { awardCommentPoints, db, publicUser } from './db.js'
 import { getCurrentUser, requireUser } from './auth.js'
 import { normalizePagePath, pagePathAliases } from './page-path.js'
 import { softDeleteCommentTree } from './comment-store.js'
@@ -12,6 +12,22 @@ const commentSchema = z.object({
 })
 
 function commentRow(row) {
+  const author = publicUser({
+    id: row.user_id,
+    username: row.username,
+    display_name: row.display_name,
+    role: row.role || 'user',
+    status: row.user_status || 'active',
+    muted_until: row.muted_until,
+    moderation_note: row.moderation_note,
+    cultivation_points: row.cultivation_points,
+    github_id: row.github_id,
+    github_login: row.github_login,
+    github_avatar_url: row.github_avatar_url,
+    github_connected_at: row.github_connected_at,
+    created_at: row.user_created_at,
+  })
+
   return {
     id: row.id,
     pagePath: row.page_path,
@@ -21,12 +37,7 @@ function commentRow(row) {
     likedByMe: Boolean(row.liked_by_me),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-    author: {
-      id: row.user_id,
-      username: row.username,
-      displayName: row.display_name,
-      cultivationPoints: row.cultivation_points,
-    },
+    author,
   }
 }
 
@@ -45,7 +56,16 @@ export function registerCommentRoutes(app) {
         comments.*,
         users.username,
         users.display_name,
+        users.role,
+        users.status AS user_status,
+        users.muted_until,
+        users.moderation_note,
         users.cultivation_points,
+        users.github_id,
+        users.github_login,
+        users.github_avatar_url,
+        users.github_connected_at,
+        users.created_at AS user_created_at,
         COUNT(comment_likes.user_id) AS like_count,
         MAX(CASE WHEN comment_likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
       FROM comments
@@ -85,7 +105,16 @@ export function registerCommentRoutes(app) {
         comments.*,
         users.username,
         users.display_name,
+        users.role,
+        users.status AS user_status,
+        users.muted_until,
+        users.moderation_note,
         users.cultivation_points,
+        users.github_id,
+        users.github_login,
+        users.github_avatar_url,
+        users.github_connected_at,
+        users.created_at AS user_created_at,
         0 AS like_count,
         0 AS liked_by_me
       FROM comments

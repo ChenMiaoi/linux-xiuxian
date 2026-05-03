@@ -6,6 +6,7 @@
         <span :class="['cultivation-badge', authState.user.rank?.name ? rankForPoints(authState.user.cultivationPoints).className : 'realm-qi']">
           {{ authState.user.rank?.name || '炼气' }}
         </span>
+        <span v-if="authState.user.title" class="cultivation-title-badge">{{ authState.user.title.name }}</span>
         <span v-if="authState.unreadMessages" class="auth-alert-badge">{{ authState.unreadMessages }}</span>
         <span class="auth-caret">▾</span>
       </button>
@@ -13,6 +14,21 @@
         <div class="auth-profile">
           <strong>{{ authState.user.displayName }}</strong>
           <span>{{ authState.user.cultivationPoints }} 修为</span>
+        </div>
+        <div v-if="authState.user.title" class="auth-title-card">
+          <strong>{{ authState.user.title.name }}</strong>
+          <span>{{ authState.user.title.description }}</span>
+          <small>已解锁 {{ authState.user.titles?.count || 1 }} 个称号</small>
+          <div v-if="authState.user.titles?.unlocked?.length" class="auth-title-shelf">
+            <span
+              v-for="title in authState.user.titles.unlocked.slice(-8)"
+              :key="title.name"
+              class="cultivation-title-badge"
+              :title="title.description"
+            >
+              {{ title.name }}
+            </span>
+          </div>
         </div>
         <a v-if="authState.unreadRiskWarnings" class="auth-warning-link" href="/linux-xiuxian/mailbox">
           <strong>系统警告待查看</strong>

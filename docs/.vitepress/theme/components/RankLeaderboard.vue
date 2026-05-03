@@ -5,7 +5,10 @@
     <ol v-else-if="users.length" class="rank-list">
       <li v-for="(user, index) in users" :key="user.id">
         <span v-if="variant === 'page'" class="rank-place">#{{ index + 1 }}</span>
-        <span class="rank-user">{{ user.displayName }}</span>
+        <span class="rank-user">
+          <strong>{{ user.displayName }}</strong>
+          <small v-if="user.title">{{ user.title.name }}</small>
+        </span>
         <span :class="['cultivation-badge', rankForPoints(user.cultivationPoints).className]">
           {{ rankForPoints(user.cultivationPoints).name }}
         </span>

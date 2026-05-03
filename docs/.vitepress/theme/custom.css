@@ -456,6 +456,20 @@
   border: 1px solid;
 }
 
+.cultivation-title-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  border: 1px solid rgba(234, 179, 8, 0.55);
+  border-radius: 999px;
+  padding: 0 9px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.16), rgba(124, 58, 237, 0.12));
+  color: var(--xiuxian-gold);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .realm-qi {
   color: #4ade80;
   border-color: #4ade80;
@@ -1178,7 +1192,7 @@ iframe[data-playground-runner] {
   align-items: center;
   gap: 8px;
   min-height: 32px;
-  max-width: min(220px, calc(100vw - 32px));
+  max-width: min(320px, calc(100vw - 32px));
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   padding: 3px 6px 3px 10px;
@@ -1260,6 +1274,33 @@ iframe[data-playground-runner] {
 .auth-account-popover {
   display: grid;
   gap: 10px;
+}
+
+.auth-title-card {
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(234, 179, 8, 0.08);
+}
+
+.auth-title-card strong {
+  color: var(--xiuxian-gold);
+}
+
+.auth-title-card span,
+.auth-title-card small {
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.auth-title-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 
 .auth-warning-link {
@@ -1517,10 +1558,24 @@ iframe[data-playground-runner] {
 }
 
 .rank-user {
+  display: grid;
+  gap: 2px;
   overflow: hidden;
   color: var(--vp-c-text-1);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.rank-user strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-user small {
+  overflow: hidden;
+  color: var(--xiuxian-gold);
+  font-size: 12px;
+  text-overflow: ellipsis;
 }
 
 .rank-points {
