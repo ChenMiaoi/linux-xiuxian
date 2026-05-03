@@ -13,7 +13,7 @@ interface SidebarGroup {
 
 type SidebarConfig = Record<string, SidebarGroup[]>
 
-const novelVolumes: Record<string, { label: string; chapters: { text: string; link: string }[] }> = {
+export const novelVolumes: Record<string, { label: string; chapters: { text: string; link: string }[] }> = {
   'vol0-prologue': {
     label: '前传：根基篇',
     chapters: [
@@ -342,6 +342,13 @@ function buildNovelSidebar(prefix: string = '', locale: 'zh' | 'en' = 'zh'): Sid
   }
 
   return groups
+}
+
+export function getNovelChapterLinks(prefix: string = ''): string[] {
+  return Object.values(novelVolumes)
+    .flatMap((volume) => volume.chapters)
+    .map((chapter) => `${prefix}${chapter.link}`)
+    .filter((link) => /\/ch[^/]*$/.test(link))
 }
 
 export function getZhSidebar(): SidebarConfig {

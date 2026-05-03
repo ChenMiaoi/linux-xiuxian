@@ -683,6 +683,88 @@ iframe[data-playground-runner] {
   background: linear-gradient(180deg, var(--xiuxian-gold-soft), transparent);
 }
 
+.section-gate {
+  margin: 2em 0 1.5em;
+  padding: 16px 18px;
+  border: 1px solid var(--vp-c-divider);
+  border-left: 4px solid var(--xiuxian-gold);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+
+.section-gate-head {
+  margin-bottom: 10px;
+}
+
+.section-gate-kicker {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--xiuxian-gold);
+}
+
+.section-gate h3 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 17px;
+}
+
+.section-gate-prompt {
+  margin: 0 0 12px;
+  color: var(--vp-c-text-2);
+}
+
+.section-gate-answer {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 9px 11px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font: inherit;
+}
+
+.section-gate-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.section-gate-actions button {
+  padding: 5px 16px;
+  border: 1px solid var(--vp-c-brand-1);
+  border-radius: 4px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.section-gate-actions button:disabled {
+  border-color: var(--xiuxian-gold);
+  background: var(--xiuxian-gold-soft);
+  color: var(--xiuxian-gold);
+  cursor: default;
+}
+
+.section-gate-message {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+}
+
+.section-gate-message.error {
+  color: #dc2626;
+}
+
+.section-gate-unlocked {
+  border-left-color: var(--vp-c-brand-1);
+}
+
 .chapter-gate-head {
   margin-bottom: 12px;
 }
@@ -768,6 +850,24 @@ iframe[data-playground-runner] {
 .chapter-nav .nav-locked {
   color: var(--vp-c-text-2);
   cursor: not-allowed;
+}
+
+.VPSidebar a.xiuxian-sidebar-locked {
+  color: var(--vp-c-text-3);
+  cursor: not-allowed;
+}
+
+.VPSidebar a.xiuxian-sidebar-locked .text::after,
+.VPSidebar a.xiuxian-sidebar-locked span::after {
+  content: "封印";
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  color: var(--vp-c-text-3);
+  font-size: 11px;
+  line-height: 16px;
 }
 
 .VPDocFooter .prev-next {

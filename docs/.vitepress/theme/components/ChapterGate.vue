@@ -44,6 +44,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { dispatchGateChange } from '../novel-progress'
 
 const props = defineProps({
   id: { type: String, default: '' },
@@ -78,8 +79,7 @@ function normalize(value) {
 }
 
 function announce() {
-  if (typeof window === 'undefined') return
-  window.dispatchEvent(new CustomEvent('xiuxian-gate-change'))
+  dispatchGateChange()
 }
 
 function check() {
