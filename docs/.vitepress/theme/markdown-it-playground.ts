@@ -37,6 +37,10 @@ function escape(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+function escapeAttr(s: string): string {
+  return escape(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
 function stripMarkers(source: string): string {
   return source
     .replace(/^[ \t]*\/\*\s*xiuxian-hide-start\s*\*\/[ \t]*\r?\n/gm, '')
@@ -61,10 +65,31 @@ function normalizeIndent(lines: string[]): string {
     .trim()
 }
 
+function removeIndentColumns(line: string, columns: number): string {
+  let index = 0
+  let removed = 0
+
+  while (index < line.length && removed < columns) {
+    const ch = line[index]
+    if (ch === ' ') {
+      removed += 1
+      index += 1
+    } else if (ch === '\t') {
+      removed += 4
+      index += 1
+    } else {
+      break
+    }
+  }
+
+  return line.slice(index)
+}
+
 function visibleCode(source: string): string {
   const lines = source.replace(/\r\n/g, '\n').split('\n')
   const visible: string[] = []
   let hidden = false
+  let hiddenBraceDepth = 0
 
   for (const line of lines) {
     if (/xiuxian-hide-start/.test(line)) {
@@ -78,6 +103,9 @@ function visibleCode(source: string): string {
     }
 
     if (/xiuxian-hide-line/.test(line)) {
+      const opens = line.match(/\{/g)?.length || 0
+      const closes = line.match(/\}/g)?.length || 0
+      hiddenBraceDepth = Math.max(0, hiddenBraceDepth + opens - closes)
       continue
     }
 
@@ -85,7 +113,7 @@ function visibleCode(source: string): string {
       continue
     }
 
-    visible.push(line)
+    visible.push(hiddenBraceDepth ? removeIndentColumns(line, hiddenBraceDepth * 4) : line)
   }
 
   return normalizeIndent(visible)
@@ -134,7 +162,7 @@ export default function playgroundPlugin(md: MarkdownIt): void {
     const title = info.slice('c:playground'.length).replace(/^:/, '').trim()
 
     let html = renderDisplayCode(md, token.content, env)
-    html = `<div class="language-${info} vp-adaptive-theme">${html}</div>`
+    html = `<div class="language-${escapeAttr(info)} vp-adaptive-theme">${html}</div>`
 
     // 章节 ID + 章内序号
     const pagePath = (env as any)?.relativePath || 'unknown'
