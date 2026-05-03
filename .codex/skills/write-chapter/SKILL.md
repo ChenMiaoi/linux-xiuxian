@@ -94,6 +94,14 @@ description: 为《Linux 内核修仙传》编写、续写或修订章节的写�
 - 隐藏代码仍参与编译运行；不要为了展示简洁而删除运行所需代码。
 - 隐藏后要检查可见代码缩进；插件会按可见代码的公共缩进自动左移，但关键代码本身仍应保持内部层级清晰。
 
+### 内核源码悬浮预览
+
+- 用 `<KernelSourceLink>` 引用 `vendor/linux/` 中的真实源码；正文只写引用标签，不直接粘贴大段内核源码。
+- 推荐写法：`<KernelSourceLink path="init/main.c" line="1017" endLine="1044" symbol="start_kernel" />`。
+- 兼容符号写法：`<KernelSourceLink path="init/main.c" line="start_kernel" />`；构建脚本会在对应文件中定位符号并抽取默认长度片段。
+- `endLine` 只用于需要精确裁剪的关键片段；缺省时构建器默认抽取从命中行开始的上下文。
+- `note` 可写一句非常短的提示，例如 `note="内核启动主线"`，但不要替代正文解释。
+
 ## 章节格式
 
 章节 Markdown 使用以下结构：
@@ -107,7 +115,7 @@ title: 第X章：标题
 
 <CultivationRealm realm="境界名" />
 
-> **涉及内核源码：** <KernelSourceLink path="path/to/file" line="123" />
+> **涉及内核源码：** <KernelSourceLink path="path/to/file" line="123" endLine="150" symbol="function_name" />
 
 ## 楔子
 

@@ -76,7 +76,15 @@ title: 第X章：章节标题
 
 <!-- 链接到文件的特定行 -->
 <KernelSourceLink path="init/main.c" line="700" />
+
+<!-- 悬浮展示本地 vendor/linux 源码片段 -->
+<KernelSourceLink path="init/main.c" line="1017" endLine="1044" symbol="start_kernel" />
+
+<!-- 兼容符号名写法：构建时会在文件中定位符号并抽取片段 -->
+<KernelSourceLink path="init/main.c" line="start_kernel" />
 ```
+
+带 `line` 的引用会在构建时从 `vendor/linux/` 抽取源码片段，写入 `docs/public/kernel-snippets.json`。页面中鼠标悬浮源码链接时展示片段；正文 Markdown 只保留引用标签，不直接内嵌源码。
 
 ## 写作风格
 

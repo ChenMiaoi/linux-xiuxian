@@ -5,11 +5,12 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
     "check:commit-msg": "node scripts/validate-commit-msg.mjs",
-    "dev": "npx tsx scripts/build-playground.ts && vitepress dev docs --host",
+    "dev": "npx tsx scripts/build-kernel-snippets.ts && npx tsx scripts/build-playground.ts && vitepress dev docs --host",
     "dev:site": "vitepress dev docs --host",
-    "build": "npx tsx scripts/build-playground.ts && vitepress build docs",
+    "build": "npx tsx scripts/build-kernel-snippets.ts && npx tsx scripts/build-playground.ts && vitepress build docs",
     "build:site": "vitepress build docs",
     "build:playground": "npx tsx scripts/build-playground.ts",
+    "build:snippets": "npx tsx scripts/build-kernel-snippets.ts",
     "preview": "vitepress preview docs"
   },
   "devDependencies": {

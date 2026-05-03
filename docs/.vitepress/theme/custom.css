@@ -87,7 +87,8 @@
 .playground-asm-pre code,
 .playground-run-output,
 .chapter-gate-code,
-.kernel-source {
+.kernel-source,
+.kernel-source-codebox {
   font-family: var(--vp-font-family-mono);
 }
 
@@ -331,6 +332,12 @@
 
 /* ===== 内核源码链接 ===== */
 
+.kernel-source-wrap {
+  position: relative;
+  display: inline-flex;
+  vertical-align: baseline;
+}
+
 .kernel-source {
   display: inline-flex;
   align-items: center;
@@ -349,6 +356,101 @@
 .kernel-source:hover {
   color: var(--vp-c-brand-1);
   border-color: var(--vp-c-brand-1);
+}
+
+.kernel-source-popover {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  z-index: 40;
+  display: flex;
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(520px, 70vh);
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg);
+  box-shadow: var(--vp-shadow-4);
+  color: var(--vp-c-text-1);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.kernel-source-popover::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid var(--vp-c-divider);
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  transform: rotate(45deg);
+}
+
+.kernel-source-popover-title {
+  display: block;
+  padding-right: 8px;
+  color: var(--xiuxian-gold);
+  font-family: var(--vp-font-family-mono);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.kernel-source-note,
+.kernel-source-state {
+  color: var(--vp-c-text-2);
+  font-family: var(--vp-font-family-base);
+}
+
+.kernel-source-codebox {
+  display: block;
+  overflow: auto;
+  max-height: 380px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--vp-code-block-bg);
+  color: var(--vp-code-block-color);
+  white-space: pre;
+  tab-size: 8;
+}
+
+.kernel-source-codebox code {
+  display: block;
+  font-size: var(--xiuxian-code-font-size);
+  line-height: 1.55;
+}
+
+.kernel-source-full-link {
+  align-self: flex-start;
+  color: var(--vp-c-brand-1);
+  font-family: var(--vp-font-family-base);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.kernel-source-full-link:hover {
+  color: var(--xiuxian-gold);
+}
+
+@media (max-width: 768px) {
+  .kernel-source-popover {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    max-height: 65vh;
+  }
+
+  .kernel-source-popover::after {
+    display: none;
+  }
 }
 
 /* ===== 装饰分隔线 ===== */
