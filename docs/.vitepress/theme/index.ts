@@ -7,6 +7,10 @@ import CultivationRealm from './components/CultivationRealm.vue'
 import KernelSourceLink from './components/KernelSourceLink.vue'
 import NovelProgressGuard from './components/NovelProgressGuard.vue'
 import GitHubRepoStats from './components/GitHubRepoStats.vue'
+import AuthWidget from './components/AuthWidget.vue'
+import CommentSection from './components/CommentSection.vue'
+import RankLeaderboard from './components/RankLeaderboard.vue'
+import RankRulesHelp from './components/RankRulesHelp.vue'
 import type { EnhanceAppContext } from 'vitepress'
 import { h } from 'vue'
 
@@ -14,8 +18,9 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'nav-bar-content-after': () => h(GitHubRepoStats),
-      'nav-screen-content-after': () => h(GitHubRepoStats),
+      'nav-bar-content-after': () => [h(GitHubRepoStats), h(AuthWidget)],
+      'nav-screen-content-after': () => [h(GitHubRepoStats), h(AuthWidget)],
+      'doc-after': () => h(CommentSection),
       'layout-bottom': () => h(CodeFontSettings),
       'layout-top': () => h(NovelProgressGuard),
     })
@@ -27,5 +32,9 @@ export default {
     app.component('CultivationRealm', CultivationRealm)
     app.component('KernelSourceLink', KernelSourceLink)
     app.component('KernelSourceTerm', KernelSourceLink)
+    app.component('AuthWidget', AuthWidget)
+    app.component('CommentSection', CommentSection)
+    app.component('RankLeaderboard', RankLeaderboard)
+    app.component('RankRulesHelp', RankRulesHelp)
   },
 }

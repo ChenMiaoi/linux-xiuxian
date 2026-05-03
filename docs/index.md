@@ -3,7 +3,7 @@ layout: home
 title: Linux 内核修仙传
 hero:
   name: Linux 内核修仙传
-  text: 以修仙之名，悟内核之道
+  text: "以修仙之名\n　　悟内核之道"
   tagline: 从 idle 进程到大道飞升 —— 一个内核线程的修仙之路
   actions:
     - theme: brand

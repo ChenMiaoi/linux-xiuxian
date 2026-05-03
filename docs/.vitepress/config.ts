@@ -11,12 +11,12 @@ export default defineConfig({
   description: '以修仙之名，悟内核之道',
   lang: 'zh-CN',
   srcExclude: ['vendor/**'],
-  lastUpdated: true,
+  lastUpdated: process.env.VITEPRESS_LAST_UPDATED === 'false' ? false : true,
 
   head: [
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap', rel: 'stylesheet' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap', rel: 'stylesheet' }],
     ['script', { src: `${base}playground.js`, defer: '' }],
   ],
 
@@ -45,6 +45,7 @@ export default defineConfig({
           { text: 'Home', link: '/en/' },
           { text: 'Guide', link: '/en/guide/introduction' },
           { text: 'Novel', link: '/en/novel/' },
+          { text: 'Rank', link: '/en/rank' },
           { text: 'Reference', link: '/en/reference/kernel-map' },
         ],
         sidebar: getEnSidebar(),
@@ -81,6 +82,7 @@ export default defineConfig({
           { text: '第十卷：飞升大道', link: '/novel/vol10-ascension/' },
         ],
       },
+      { text: '排行榜', link: '/rank' },
       { text: '道藏', link: '/reference/kernel-map' },
     ],
 
