@@ -325,6 +325,54 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "kernel/sched/core.c",
     "note": "源码文件"
   },
+  "include/linux/types.h": {
+    "label": "include/linux/types.h",
+    "path": "include/linux/types.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/types.h",
+    "note": "源码文件"
+  },
+  "arch/riscv/include/asm/page.h": {
+    "label": "arch/riscv/include/asm/page.h",
+    "path": "arch/riscv/include/asm/page.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "arch/riscv/include/asm/page.h",
+    "note": "源码文件"
+  },
+  "include/linux/list.h": {
+    "label": "include/linux/list.h",
+    "path": "include/linux/list.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/list.h",
+    "note": "源码文件"
+  },
+  "include/linux/container_of.h": {
+    "label": "include/linux/container_of.h",
+    "path": "include/linux/container_of.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/container_of.h",
+    "note": "源码文件"
+  },
+  "include/linux/compiler.h": {
+    "label": "include/linux/compiler.h",
+    "path": "include/linux/compiler.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/compiler.h",
+    "note": "源码文件"
+  },
+  "include/asm-generic/barrier.h": {
+    "label": "include/asm-generic/barrier.h",
+    "path": "include/asm-generic/barrier.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/asm-generic/barrier.h",
+    "note": "源码文件"
+  },
   "kernel/sched/fair.c": {
     "label": "kernel/sched/fair.c",
     "path": "kernel/sched/fair.c",
@@ -485,46 +533,6 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "include/linux/rcupdate.h",
     "note": "源码文件"
   },
-  "include/linux/types.h": {
-    "label": "include/linux/types.h",
-    "path": "include/linux/types.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "include/linux/types.h",
-    "note": "源码文件"
-  },
-  "arch/riscv/include/asm/page.h": {
-    "label": "arch/riscv/include/asm/page.h",
-    "path": "arch/riscv/include/asm/page.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "arch/riscv/include/asm/page.h",
-    "note": "源码文件"
-  },
-  "include/linux/list.h": {
-    "label": "include/linux/list.h",
-    "path": "include/linux/list.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "include/linux/list.h",
-    "note": "源码文件"
-  },
-  "include/linux/container_of.h": {
-    "label": "include/linux/container_of.h",
-    "path": "include/linux/container_of.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "include/linux/container_of.h",
-    "note": "源码文件"
-  },
-  "include/linux/compiler.h": {
-    "label": "include/linux/compiler.h",
-    "path": "include/linux/compiler.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "include/linux/compiler.h",
-    "note": "源码文件"
-  },
   "include/linux/compiler_types.h": {
     "label": "include/linux/compiler_types.h",
     "path": "include/linux/compiler_types.h",
@@ -595,14 +603,6 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 1,
     "endLine": 24,
     "symbol": "include/linux/spinlock.h",
-    "note": "源码文件"
-  },
-  "include/asm-generic/barrier.h": {
-    "label": "include/asm-generic/barrier.h",
-    "path": "include/asm-generic/barrier.h",
-    "line": 1,
-    "endLine": 24,
-    "symbol": "include/asm-generic/barrier.h",
     "note": "源码文件"
   },
   "include/linux/stringify.h": {
@@ -725,6 +725,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "ipc/shm.c",
     "note": "源码文件"
   },
+  "Documentation/scheduler/sched-eevdf.rst": {
+    "label": "Documentation/scheduler/sched-eevdf.rst",
+    "path": "Documentation/scheduler/sched-eevdf.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-eevdf.rst",
+    "note": "源码文件"
+  },
   "kernel/sched/stop_task.c": {
     "label": "kernel/sched/stop_task.c",
     "path": "kernel/sched/stop_task.c",
@@ -773,6 +781,734 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "include/linux/mm_types.h",
     "note": "源码文件"
   },
+  "Documentation/index.rst": {
+    "label": "Documentation/index.rst",
+    "path": "Documentation/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/index.rst": {
+    "label": "Documentation/process/index.rst",
+    "path": "Documentation/process/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/index.rst": {
+    "label": "Documentation/core-api/index.rst",
+    "path": "Documentation/core-api/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/index.rst": {
+    "label": "Documentation/scheduler/index.rst",
+    "path": "Documentation/scheduler/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/index.rst": {
+    "label": "Documentation/mm/index.rst",
+    "path": "Documentation/mm/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/index.rst": {
+    "label": "Documentation/filesystems/index.rst",
+    "path": "Documentation/filesystems/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/index.rst": {
+    "label": "Documentation/networking/index.rst",
+    "path": "Documentation/networking/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/driver-api/index.rst": {
+    "label": "Documentation/driver-api/index.rst",
+    "path": "Documentation/driver-api/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/driver-api/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/LSM/index.rst": {
+    "label": "Documentation/admin-guide/LSM/index.rst",
+    "path": "Documentation/admin-guide/LSM/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/LSM/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/RCU/index.rst": {
+    "label": "Documentation/RCU/index.rst",
+    "path": "Documentation/RCU/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/RCU/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/locking/index.rst": {
+    "label": "Documentation/locking/index.rst",
+    "path": "Documentation/locking/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/locking/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/kernel-parameters.rst": {
+    "label": "Documentation/admin-guide/kernel-parameters.rst",
+    "path": "Documentation/admin-guide/kernel-parameters.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/kernel-parameters.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/boot-time-mm.rst": {
+    "label": "Documentation/core-api/boot-time-mm.rst",
+    "path": "Documentation/core-api/boot-time-mm.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/boot-time-mm.rst",
+    "note": "源码文件"
+  },
+  "kernel/sched/idle.c": {
+    "label": "kernel/sched/idle.c",
+    "path": "kernel/sched/idle.c",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "kernel/sched/idle.c",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/kernel-api.rst": {
+    "label": "Documentation/core-api/kernel-api.rst",
+    "path": "Documentation/core-api/kernel-api.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/kernel-api.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/cgroup-v2.rst": {
+    "label": "Documentation/admin-guide/cgroup-v2.rst",
+    "path": "Documentation/admin-guide/cgroup-v2.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/cgroup-v2.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-design-CFS.rst": {
+    "label": "Documentation/scheduler/sched-design-CFS.rst",
+    "path": "Documentation/scheduler/sched-design-CFS.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-design-CFS.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-deadline.rst": {
+    "label": "Documentation/scheduler/sched-deadline.rst",
+    "path": "Documentation/scheduler/sched-deadline.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-deadline.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-rt-group.rst": {
+    "label": "Documentation/scheduler/sched-rt-group.rst",
+    "path": "Documentation/scheduler/sched-rt-group.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-rt-group.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-domains.rst": {
+    "label": "Documentation/scheduler/sched-domains.rst",
+    "path": "Documentation/scheduler/sched-domains.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-domains.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/page_tables.rst": {
+    "label": "Documentation/mm/page_tables.rst",
+    "path": "Documentation/mm/page_tables.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/page_tables.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/process_addrs.rst": {
+    "label": "Documentation/mm/process_addrs.rst",
+    "path": "Documentation/mm/process_addrs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/process_addrs.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/page_allocation.rst": {
+    "label": "Documentation/mm/page_allocation.rst",
+    "path": "Documentation/mm/page_allocation.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/page_allocation.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/vmalloc.rst": {
+    "label": "Documentation/mm/vmalloc.rst",
+    "path": "Documentation/mm/vmalloc.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/vmalloc.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/slab.rst": {
+    "label": "Documentation/mm/slab.rst",
+    "path": "Documentation/mm/slab.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/slab.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/page_reclaim.rst": {
+    "label": "Documentation/mm/page_reclaim.rst",
+    "path": "Documentation/mm/page_reclaim.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/page_reclaim.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/swap.rst": {
+    "label": "Documentation/mm/swap.rst",
+    "path": "Documentation/mm/swap.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/swap.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/oom.rst": {
+    "label": "Documentation/mm/oom.rst",
+    "path": "Documentation/mm/oom.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/oom.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/memory-allocation.rst": {
+    "label": "Documentation/core-api/memory-allocation.rst",
+    "path": "Documentation/core-api/memory-allocation.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/memory-allocation.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/vfs.rst": {
+    "label": "Documentation/filesystems/vfs.rst",
+    "path": "Documentation/filesystems/vfs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/vfs.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/path-lookup.rst": {
+    "label": "Documentation/filesystems/path-lookup.rst",
+    "path": "Documentation/filesystems/path-lookup.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/path-lookup.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/proc.rst": {
+    "label": "Documentation/filesystems/proc.rst",
+    "path": "Documentation/filesystems/proc.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/proc.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/sysfs.rst": {
+    "label": "Documentation/filesystems/sysfs.rst",
+    "path": "Documentation/filesystems/sysfs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/sysfs.rst",
+    "note": "源码文件"
+  },
+  "fs/namei.c": {
+    "label": "fs/namei.c",
+    "path": "fs/namei.c",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "fs/namei.c",
+    "note": "源码文件"
+  },
+  "Documentation/networking/filter.rst": {
+    "label": "Documentation/networking/filter.rst",
+    "path": "Documentation/networking/filter.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/filter.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/napi.rst": {
+    "label": "Documentation/networking/napi.rst",
+    "path": "Documentation/networking/napi.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/napi.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/netdevices.rst": {
+    "label": "Documentation/networking/netdevices.rst",
+    "path": "Documentation/networking/netdevices.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/netdevices.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/dma-api.rst": {
+    "label": "Documentation/core-api/dma-api.rst",
+    "path": "Documentation/core-api/dma-api.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/dma-api.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/dma-api-howto.rst": {
+    "label": "Documentation/core-api/dma-api-howto.rst",
+    "path": "Documentation/core-api/dma-api-howto.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/dma-api-howto.rst",
+    "note": "源码文件"
+  },
+  "include/linux/dma-mapping.h": {
+    "label": "include/linux/dma-mapping.h",
+    "path": "include/linux/dma-mapping.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/dma-mapping.h",
+    "note": "源码文件"
+  },
+  "Documentation/process/security-bugs.rst": {
+    "label": "Documentation/process/security-bugs.rst",
+    "path": "Documentation/process/security-bugs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/security-bugs.rst",
+    "note": "源码文件"
+  },
+  "include/linux/lsm_hooks.h": {
+    "label": "include/linux/lsm_hooks.h",
+    "path": "include/linux/lsm_hooks.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/linux/lsm_hooks.h",
+    "note": "源码文件"
+  },
+  "include/uapi/linux/capability.h": {
+    "label": "include/uapi/linux/capability.h",
+    "path": "include/uapi/linux/capability.h",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "include/uapi/linux/capability.h",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/wrappers/memory-barriers.rst": {
+    "label": "Documentation/core-api/wrappers/memory-barriers.rst",
+    "path": "Documentation/core-api/wrappers/memory-barriers.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/wrappers/memory-barriers.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/refcount-vs-atomic.rst": {
+    "label": "Documentation/core-api/refcount-vs-atomic.rst",
+    "path": "Documentation/core-api/refcount-vs-atomic.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/refcount-vs-atomic.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/workqueue.rst": {
+    "label": "Documentation/core-api/workqueue.rst",
+    "path": "Documentation/core-api/workqueue.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/workqueue.rst",
+    "note": "源码文件"
+  },
+  "kernel/workqueue.c": {
+    "label": "kernel/workqueue.c",
+    "path": "kernel/workqueue.c",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "kernel/workqueue.c",
+    "note": "源码文件"
+  },
+  "Documentation/process/submitting-patches.rst": {
+    "label": "Documentation/process/submitting-patches.rst",
+    "path": "Documentation/process/submitting-patches.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/submitting-patches.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/submit-checklist.rst": {
+    "label": "Documentation/process/submit-checklist.rst",
+    "path": "Documentation/process/submit-checklist.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/submit-checklist.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/development-process.rst": {
+    "label": "Documentation/process/development-process.rst",
+    "path": "Documentation/process/development-process.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/development-process.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/coding-style.rst": {
+    "label": "Documentation/process/coding-style.rst",
+    "path": "Documentation/process/coding-style.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/coding-style.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/stable-api-nonsense.rst": {
+    "label": "Documentation/process/stable-api-nonsense.rst",
+    "path": "Documentation/process/stable-api-nonsense.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/stable-api-nonsense.rst",
+    "note": "源码文件"
+  },
+  "Documentation/firmware-guide/index.rst": {
+    "label": "Documentation/firmware-guide/index.rst",
+    "path": "Documentation/firmware-guide/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/firmware-guide/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/devicetree/index.rst": {
+    "label": "Documentation/devicetree/index.rst",
+    "path": "Documentation/devicetree/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/devicetree/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/accounting/psi.rst": {
+    "label": "Documentation/accounting/psi.rst",
+    "path": "Documentation/accounting/psi.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/accounting/psi.rst",
+    "note": "源码文件"
+  },
+  "Documentation/accounting/delay-accounting.rst": {
+    "label": "Documentation/accounting/delay-accounting.rst",
+    "path": "Documentation/accounting/delay-accounting.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/accounting/delay-accounting.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/cgroup.rst": {
+    "label": "Documentation/core-api/cgroup.rst",
+    "path": "Documentation/core-api/cgroup.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/cgroup.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-capacity.rst": {
+    "label": "Documentation/scheduler/sched-capacity.rst",
+    "path": "Documentation/scheduler/sched-capacity.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-capacity.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-energy.rst": {
+    "label": "Documentation/scheduler/sched-energy.rst",
+    "path": "Documentation/scheduler/sched-energy.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-energy.rst",
+    "note": "源码文件"
+  },
+  "Documentation/scheduler/sched-util-clamp.rst": {
+    "label": "Documentation/scheduler/sched-util-clamp.rst",
+    "path": "Documentation/scheduler/sched-util-clamp.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/scheduler/sched-util-clamp.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/multigen_lru.rst": {
+    "label": "Documentation/mm/multigen_lru.rst",
+    "path": "Documentation/mm/multigen_lru.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/multigen_lru.rst",
+    "note": "源码文件"
+  },
+  "Documentation/mm/damon/index.rst": {
+    "label": "Documentation/mm/damon/index.rst",
+    "path": "Documentation/mm/damon/index.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/mm/damon/index.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/locking.rst": {
+    "label": "Documentation/filesystems/locking.rst",
+    "path": "Documentation/filesystems/locking.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/locking.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/debugfs.rst": {
+    "label": "Documentation/filesystems/debugfs.rst",
+    "path": "Documentation/filesystems/debugfs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/debugfs.rst",
+    "note": "源码文件"
+  },
+  "Documentation/filesystems/configfs.rst": {
+    "label": "Documentation/filesystems/configfs.rst",
+    "path": "Documentation/filesystems/configfs.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/filesystems/configfs.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/checksum-offloads.rst": {
+    "label": "Documentation/networking/checksum-offloads.rst",
+    "path": "Documentation/networking/checksum-offloads.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/checksum-offloads.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/segmentation-offloads.rst": {
+    "label": "Documentation/networking/segmentation-offloads.rst",
+    "path": "Documentation/networking/segmentation-offloads.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/segmentation-offloads.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/bridge.rst": {
+    "label": "Documentation/networking/bridge.rst",
+    "path": "Documentation/networking/bridge.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/bridge.rst",
+    "note": "源码文件"
+  },
+  "Documentation/networking/bonding.rst": {
+    "label": "Documentation/networking/bonding.rst",
+    "path": "Documentation/networking/bonding.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/networking/bonding.rst",
+    "note": "源码文件"
+  },
+  "Documentation/driver-api/basics.rst": {
+    "label": "Documentation/driver-api/basics.rst",
+    "path": "Documentation/driver-api/basics.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/driver-api/basics.rst",
+    "note": "源码文件"
+  },
+  "Documentation/power/runtime_pm.rst": {
+    "label": "Documentation/power/runtime_pm.rst",
+    "path": "Documentation/power/runtime_pm.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/power/runtime_pm.rst",
+    "note": "源码文件"
+  },
+  "Documentation/security/credentials.rst": {
+    "label": "Documentation/security/credentials.rst",
+    "path": "Documentation/security/credentials.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/security/credentials.rst",
+    "note": "源码文件"
+  },
+  "Documentation/security/lsm.rst": {
+    "label": "Documentation/security/lsm.rst",
+    "path": "Documentation/security/lsm.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/security/lsm.rst",
+    "note": "源码文件"
+  },
+  "Documentation/security/lsm-development.rst": {
+    "label": "Documentation/security/lsm-development.rst",
+    "path": "Documentation/security/lsm-development.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/security/lsm-development.rst",
+    "note": "源码文件"
+  },
+  "Documentation/security/landlock.rst": {
+    "label": "Documentation/security/landlock.rst",
+    "path": "Documentation/security/landlock.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/security/landlock.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/LSM/SELinux.rst": {
+    "label": "Documentation/admin-guide/LSM/SELinux.rst",
+    "path": "Documentation/admin-guide/LSM/SELinux.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/LSM/SELinux.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/LSM/apparmor.rst": {
+    "label": "Documentation/admin-guide/LSM/apparmor.rst",
+    "path": "Documentation/admin-guide/LSM/apparmor.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/LSM/apparmor.rst",
+    "note": "源码文件"
+  },
+  "Documentation/security/self-protection.rst": {
+    "label": "Documentation/security/self-protection.rst",
+    "path": "Documentation/security/self-protection.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/security/self-protection.rst",
+    "note": "源码文件"
+  },
+  "Documentation/RCU/whatisRCU.rst": {
+    "label": "Documentation/RCU/whatisRCU.rst",
+    "path": "Documentation/RCU/whatisRCU.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/RCU/whatisRCU.rst",
+    "note": "源码文件"
+  },
+  "Documentation/RCU/rcu.rst": {
+    "label": "Documentation/RCU/rcu.rst",
+    "path": "Documentation/RCU/rcu.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/RCU/rcu.rst",
+    "note": "源码文件"
+  },
+  "Documentation/RCU/Design/Requirements/Requirements.rst": {
+    "label": "Documentation/RCU/Design/Requirements/Requirements.rst",
+    "path": "Documentation/RCU/Design/Requirements/Requirements.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/RCU/Design/Requirements/Requirements.rst",
+    "note": "源码文件"
+  },
+  "Documentation/locking/locktypes.rst": {
+    "label": "Documentation/locking/locktypes.rst",
+    "path": "Documentation/locking/locktypes.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/locking/locktypes.rst",
+    "note": "源码文件"
+  },
+  "Documentation/locking/lockdep-design.rst": {
+    "label": "Documentation/locking/lockdep-design.rst",
+    "path": "Documentation/locking/lockdep-design.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/locking/lockdep-design.rst",
+    "note": "源码文件"
+  },
+  "Documentation/locking/seqlock.rst": {
+    "label": "Documentation/locking/seqlock.rst",
+    "path": "Documentation/locking/seqlock.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/locking/seqlock.rst",
+    "note": "源码文件"
+  },
+  "Documentation/locking/rt-mutex-design.rst": {
+    "label": "Documentation/locking/rt-mutex-design.rst",
+    "path": "Documentation/locking/rt-mutex-design.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/locking/rt-mutex-design.rst",
+    "note": "源码文件"
+  },
+  "Documentation/memory-barriers.txt": {
+    "label": "Documentation/memory-barriers.txt",
+    "path": "Documentation/memory-barriers.txt",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/memory-barriers.txt",
+    "note": "源码文件"
+  },
+  "Documentation/process/handling-regressions.rst": {
+    "label": "Documentation/process/handling-regressions.rst",
+    "path": "Documentation/process/handling-regressions.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/handling-regressions.rst",
+    "note": "源码文件"
+  },
+  "Documentation/process/coding-assistants.rst": {
+    "label": "Documentation/process/coding-assistants.rst",
+    "path": "Documentation/process/coding-assistants.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/process/coding-assistants.rst",
+    "note": "源码文件"
+  },
+  "Documentation/admin-guide/abi.rst": {
+    "label": "Documentation/admin-guide/abi.rst",
+    "path": "Documentation/admin-guide/abi.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/admin-guide/abi.rst",
+    "note": "源码文件"
+  },
+  "Documentation/core-api/wrappers/atomic_t.rst": {
+    "label": "Documentation/core-api/wrappers/atomic_t.rst",
+    "path": "Documentation/core-api/wrappers/atomic_t.rst",
+    "line": 1,
+    "endLine": 24,
+    "symbol": "Documentation/core-api/wrappers/atomic_t.rst",
+    "note": "源码文件"
+  },
+  "input": {
+    "label": "input",
+    "path": "arch/riscv/boot/dts/starfive/jh7110-pinfunc.h",
+    "line": 17,
+    "endLine": 40,
+    "symbol": "input",
+    "note": "自动匹配的内核源码"
+  },
   "func": {
     "label": "func",
     "path": "arch/riscv/boot/dts/starfive/jh7110-pinfunc.h",
@@ -819,6 +1555,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 4,
     "endLine": 9,
     "symbol": "section",
+    "note": "自动匹配的内核源码"
+  },
+  "arch": {
+    "label": "arch",
+    "path": "arch/riscv/boot/loader.S",
+    "line": 7,
+    "endLine": 9,
+    "symbol": "arch",
     "note": "自动匹配的内核源码"
   },
   "file": {
@@ -885,6 +1629,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "dev",
     "note": "自动匹配的内核源码"
   },
+  "block": {
+    "label": "block",
+    "path": "arch/riscv/crypto/aes-macros.S",
+    "line": 45,
+    "endLine": 68,
+    "symbol": "block",
+    "note": "自动匹配的内核源码"
+  },
   "zero": {
     "label": "zero",
     "path": "arch/riscv/crypto/aes-macros.S",
@@ -907,6 +1659,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 91,
     "endLine": 114,
     "symbol": "beq",
+    "note": "自动匹配的内核源码"
+  },
+  "crypto": {
+    "label": "crypto",
+    "path": "arch/riscv/crypto/aes-riscv64-glue.c",
+    "line": 3,
+    "endLine": 26,
+    "symbol": "crypto",
     "note": "自动匹配的内核源码"
   },
   "const": {
@@ -955,6 +1715,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 98,
     "endLine": 121,
     "symbol": "false",
+    "note": "自动匹配的内核源码"
+  },
+  "virt": {
+    "label": "virt",
+    "path": "arch/riscv/crypto/aes-riscv64-glue.c",
+    "line": 102,
+    "endLine": 125,
+    "symbol": "virt",
     "note": "自动匹配的内核源码"
   },
   "available": {
@@ -1075,6 +1843,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 194,
     "endLine": 217,
     "symbol": "result",
+    "note": "自动匹配的内核源码"
+  },
+  "process": {
+    "label": "process",
+    "path": "arch/riscv/crypto/aes-riscv64-zvkned-zvbb-zvkg.S",
+    "line": 200,
+    "endLine": 223,
+    "symbol": "process",
     "note": "自动匹配的内核源码"
   },
   "select": {
@@ -1349,6 +2125,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "fence",
     "note": "自动匹配的内核源码"
   },
+  "scheduler": {
+    "label": "scheduler",
+    "path": "arch/riscv/include/asm/barrier.h",
+    "line": 29,
+    "endLine": 52,
+    "symbol": "scheduler",
+    "note": "自动匹配的内核源码"
+  },
   "spinlock": {
     "label": "spinlock",
     "path": "arch/riscv/include/asm/barrier.h",
@@ -1437,6 +2221,22 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "status",
     "note": "自动匹配的内核源码"
   },
+  "GFP_KERNEL": {
+    "label": "GFP_KERNEL",
+    "path": "arch/riscv/include/asm/dmi.h",
+    "line": 22,
+    "endLine": 25,
+    "symbol": "GFP_KERNEL",
+    "note": "自动匹配的内核源码"
+  },
+  "PAGE_SIZE": {
+    "label": "PAGE_SIZE",
+    "path": "arch/riscv/include/asm/elf.h",
+    "line": 45,
+    "endLine": 68,
+    "symbol": "PAGE_SIZE",
+    "note": "自动匹配的内核源码"
+  },
   "exec": {
     "label": "exec",
     "path": "arch/riscv/include/asm/elf.h",
@@ -1493,12 +2293,28 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "syscall",
     "note": "自动匹配的内核源码"
   },
+  "trace": {
+    "label": "trace",
+    "path": "arch/riscv/include/asm/ftrace.h",
+    "line": 62,
+    "endLine": 85,
+    "symbol": "trace",
+    "note": "自动匹配的内核源码"
+  },
   "vm_area_struct": {
     "label": "vm_area_struct",
     "path": "arch/riscv/include/asm/hugetlb.h",
     "line": 35,
     "endLine": 58,
     "symbol": "vm_area_struct",
+    "note": "自动匹配的内核源码"
+  },
+  "PCI": {
+    "label": "PCI",
+    "path": "arch/riscv/include/asm/io.h",
+    "line": 38,
+    "endLine": 61,
+    "symbol": "PCI",
     "note": "自动匹配的内核源码"
   },
   "interrupts": {
@@ -1547,6 +2363,22 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 165,
     "endLine": 188,
     "symbol": "spinlock_t",
+    "note": "自动匹配的内核源码"
+  },
+  "power": {
+    "label": "power",
+    "path": "arch/riscv/include/asm/kvm_host.h",
+    "line": 244,
+    "endLine": 267,
+    "symbol": "power",
+    "note": "自动匹配的内核源码"
+  },
+  "accounting": {
+    "label": "accounting",
+    "path": "arch/riscv/include/asm/kvm_host.h",
+    "line": 263,
+    "endLine": 286,
+    "symbol": "accounting",
     "note": "自动匹配的内核源码"
   },
   "perf": {
@@ -1909,12 +2741,28 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "max",
     "note": "自动匹配的内核源码"
   },
+  "ABI": {
+    "label": "ABI",
+    "path": "arch/riscv/include/uapi/asm/ptrace.h",
+    "line": 22,
+    "endLine": 45,
+    "symbol": "ABI",
+    "note": "自动匹配的内核源码"
+  },
   "sigreturn": {
     "label": "sigreturn",
     "path": "arch/riscv/include/uapi/asm/ptrace.h",
     "line": 75,
     "endLine": 98,
     "symbol": "sigreturn",
+    "note": "自动匹配的内核源码"
+  },
+  "kbuild": {
+    "label": "kbuild",
+    "path": "arch/riscv/Kconfig",
+    "line": 4,
+    "endLine": 27,
+    "symbol": "kbuild",
     "note": "自动匹配的内核源码"
   },
   "sysctl": {
@@ -1971,6 +2819,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 1249,
     "endLine": 1272,
     "symbol": "clock",
+    "note": "自动匹配的内核源码"
+  },
+  "devicetree": {
+    "label": "devicetree",
+    "path": "arch/riscv/Kconfig",
+    "line": 1290,
+    "endLine": 1313,
+    "symbol": "devicetree",
     "note": "自动匹配的内核源码"
   },
   "memblock": {
@@ -2165,6 +3021,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "kexec",
     "note": "自动匹配的内核源码"
   },
+  "tools": {
+    "label": "tools",
+    "path": "arch/riscv/kernel/kexec_elf.c",
+    "line": 9,
+    "endLine": 32,
+    "symbol": "tools",
+    "note": "自动匹配的内核源码"
+  },
   "PT_LOAD": {
     "label": "PT_LOAD",
     "path": "arch/riscv/kernel/kexec_elf.c",
@@ -2285,6 +3149,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "fork",
     "note": "自动匹配的内核源码"
   },
+  "locking": {
+    "label": "locking",
+    "path": "arch/riscv/kernel/ptrace.c",
+    "line": 326,
+    "endLine": 349,
+    "symbol": "locking",
+    "note": "自动匹配的内核源码"
+  },
   "htop": {
     "label": "htop",
     "path": "arch/riscv/kernel/sbi.c",
@@ -2371,6 +3243,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 263,
     "endLine": 265,
     "symbol": "cpu_startup_entry",
+    "note": "自动匹配的内核源码"
+  },
+  "completion": {
+    "label": "completion",
+    "path": "arch/riscv/kernel/sys_hwprobe.c",
+    "line": 8,
+    "endLine": 31,
+    "symbol": "completion",
     "note": "自动匹配的内核源码"
   },
   "atomic_inc": {
@@ -2493,6 +3373,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "TASK_INTERRUPTIBLE",
     "note": "自动匹配的内核源码"
   },
+  "RCU": {
+    "label": "RCU",
+    "path": "arch/riscv/kvm/vcpu.c",
+    "line": 743,
+    "endLine": 766,
+    "symbol": "RCU",
+    "note": "自动匹配的内核源码"
+  },
   "stat": {
     "label": "stat",
     "path": "arch/riscv/kvm/vcpu.c",
@@ -2579,6 +3467,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 358,
     "endLine": 381,
     "symbol": "VM_SHARED",
+    "note": "自动匹配的内核源码"
+  },
+  "bpf": {
+    "label": "bpf",
+    "path": "arch/riscv/mm/init.c",
+    "line": 1421,
+    "endLine": 1444,
+    "symbol": "bpf",
     "note": "自动匹配的内核源码"
   },
   "test_and_clear_bit": {
@@ -2875,6 +3771,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 361,
     "endLine": 384,
     "symbol": "atomic_sub",
+    "note": "自动匹配的内核源码"
+  },
+  "filesystems": {
+    "label": "filesystems",
+    "path": "block/blk-ioprio.c",
+    "line": 10,
+    "endLine": 33,
+    "symbol": "filesystems",
     "note": "自动匹配的内核源码"
   },
   "bus_type": {
@@ -3381,6 +4285,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "btrfs_file_read_iter",
     "note": "自动匹配的内核源码"
   },
+  "spi": {
+    "label": "spi",
+    "path": "fs/btrfs/disk-io.c",
+    "line": 512,
+    "endLine": 535,
+    "symbol": "spi",
+    "note": "自动匹配的内核源码"
+  },
   "rb_tree": {
     "label": "rb_tree",
     "path": "fs/btrfs/free-space-cache.c",
@@ -3427,6 +4339,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 9,
     "endLine": 32,
     "symbol": "kernel_thread",
+    "note": "自动匹配的内核源码"
+  },
+  "networking": {
+    "label": "networking",
+    "path": "fs/cachefiles/Kconfig",
+    "line": 8,
+    "endLine": 31,
+    "symbol": "networking",
     "note": "自动匹配的内核源码"
   },
   "do_exit": {
@@ -3579,6 +4499,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 238,
     "endLine": 261,
     "symbol": "ESTABLISHED",
+    "note": "自动匹配的内核源码"
+  },
+  "maintainer": {
+    "label": "maintainer",
+    "path": "fs/ecryptfs/mmap.c",
+    "line": 521,
+    "endLine": 535,
+    "symbol": "maintainer",
     "note": "自动匹配的内核源码"
   },
   "do_execveat_common": {
@@ -3741,6 +4669,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "exit_files",
     "note": "自动匹配的内核源码"
   },
+  "rust": {
+    "label": "rust",
+    "path": "fs/file.c",
+    "line": 1180,
+    "endLine": 1203,
+    "symbol": "rust",
+    "note": "自动匹配的内核源码"
+  },
   "dup2": {
     "label": "dup2",
     "path": "fs/file.c",
@@ -3819,6 +4755,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 31,
     "endLine": 54,
     "symbol": "SIGHUP",
+    "note": "自动匹配的内核源码"
+  },
+  "sound": {
+    "label": "sound",
+    "path": "fs/Kconfig",
+    "line": 196,
+    "endLine": 219,
+    "symbol": "sound",
     "note": "自动匹配的内核源码"
   },
   "vfs_write": {
@@ -4141,12 +5085,28 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "device_driver",
     "note": "自动匹配的内核源码"
   },
+  "hid": {
+    "label": "hid",
+    "path": "include/linux/acpi.h",
+    "line": 828,
+    "endLine": 851,
+    "symbol": "hid",
+    "note": "自动匹配的内核源码"
+  },
   "objtool": {
     "label": "objtool",
     "path": "include/linux/annotate.h",
     "line": 65,
     "endLine": 88,
     "symbol": "objtool",
+    "note": "自动匹配的内核源码"
+  },
+  "livepatch": {
+    "label": "livepatch",
+    "path": "include/linux/annotate.h",
+    "line": 109,
+    "endLine": 128,
+    "symbol": "livepatch",
     "note": "自动匹配的内核源码"
   },
   "NAK": {
@@ -4213,12 +5173,28 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "delta_exec",
     "note": "自动匹配的内核源码"
   },
+  "MAINTAINERS": {
+    "label": "MAINTAINERS",
+    "path": "include/linux/cgroup_subsys.h",
+    "line": 5,
+    "endLine": 28,
+    "symbol": "MAINTAINERS",
+    "note": "自动匹配的内核源码"
+  },
   "clocks": {
     "label": "clocks",
     "path": "include/linux/clk/davinci.h",
     "line": 14,
     "endLine": 18,
     "symbol": "clocks",
+    "note": "自动匹配的内核源码"
+  },
+  "usb": {
+    "label": "usb",
+    "path": "include/linux/comedi/comedi_usb.h",
+    "line": 12,
+    "endLine": 35,
+    "symbol": "usb",
     "note": "自动匹配的内核源码"
   },
   "sa_mask": {
@@ -4293,6 +5269,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "symbol": "bus_register",
     "note": "自动匹配的内核源码"
   },
+  "i2c": {
+    "label": "i2c",
+    "path": "include/linux/dma/qcom-gpi-dma.h",
+    "line": 58,
+    "endLine": 81,
+    "symbol": "i2c",
+    "note": "自动匹配的内核源码"
+  },
   "dma_sync_single_for_cpu": {
     "label": "dma_sync_single_for_cpu",
     "path": "include/linux/dma-mapping.h",
@@ -4347,6 +5331,22 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 565,
     "endLine": 588,
     "symbol": "netif_receive_skb",
+    "note": "自动匹配的内核源码"
+  },
+  "hwmon": {
+    "label": "hwmon",
+    "path": "include/linux/firmware/intel/stratix10-svc-client.h",
+    "line": 15,
+    "endLine": 38,
+    "symbol": "hwmon",
+    "note": "自动匹配的内核源码"
+  },
+  "gpu": {
+    "label": "gpu",
+    "path": "include/linux/firmware/qcom/qcom_scm.h",
+    "line": 159,
+    "endLine": 182,
+    "symbol": "gpu",
     "note": "自动匹配的内核源码"
   },
   "__builtin_": {
@@ -4411,6 +5411,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 93,
     "endLine": 116,
     "symbol": "ndo_start_xmit",
+    "note": "自动匹配的内核源码"
+  },
+  "iio": {
+    "label": "iio",
+    "path": "include/linux/hid-sensor-hub.h",
+    "line": 11,
+    "endLine": 34,
+    "symbol": "iio",
     "note": "自动匹配的内核源码"
   },
   "hrtimers_init": {
@@ -4507,6 +5515,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 149,
     "endLine": 172,
     "symbol": "poking_init",
+    "note": "自动匹配的内核源码"
+  },
+  "leds": {
+    "label": "leds",
+    "path": "include/linux/input.h",
+    "line": 58,
+    "endLine": 81,
+    "symbol": "leds",
     "note": "自动匹配的内核源码"
   },
   "TIMER_SOFTIRQ": {
@@ -4619,6 +5635,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 347,
     "endLine": 370,
     "symbol": "platform_get_irq",
+    "note": "自动匹配的内核源码"
+  },
+  "lag": {
+    "label": "lag",
+    "path": "include/linux/mlx5/driver.h",
+    "line": 604,
+    "endLine": 627,
+    "symbol": "lag",
     "note": "自动匹配的内核源码"
   },
   "ETH_P_IP": {
@@ -5003,6 +6027,14 @@ export const generatedKernelSourceTerms: Record<string, KernelSourceTerm> = {
     "line": 594,
     "endLine": 617,
     "symbol": "vruntime",
+    "note": "自动匹配的内核源码"
+  },
+  "vlag": {
+    "label": "vlag",
+    "path": "include/linux/sched.h",
+    "line": 596,
+    "endLine": 619,
+    "symbol": "vlag",
     "note": "自动匹配的内核源码"
   },
   "wake_up_new_task": {
