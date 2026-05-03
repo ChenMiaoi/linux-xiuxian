@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Conventions"
+  short_description: "检查并编写规范 Git 提交信息"
+  default_prompt: "Use $commit-conventions to inspect the current changes and create a compliant commit message."

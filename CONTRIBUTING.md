@@ -117,6 +117,46 @@ title: 第X章：章节标题
 - `style(theme): 调整境界徽章配色`
 - `chore: 更新 VitePress 版本`
 
+允许的 `type`：
+
+- `feat`：新增章节、功能或内容能力
+- `fix`：修复错误
+- `docs`：文档更新
+- `style`：样式、格式或展示调整
+- `refactor`：不改变行为的重构
+- `perf`：性能优化
+- `test`：测试相关
+- `build`：构建系统或依赖调整
+- `ci`：CI 配置
+- `chore`：维护性工作
+- `revert`：回滚提交
+
+提交信息第一行会由 `commit-msg` hook 自动检查。首次克隆后运行：
+
+```bash
+npm install
+```
+
+`prepare` 脚本会自动执行 `git config core.hooksPath .githooks`，启用仓库内的 Git hooks。也可以手动运行：
+
+```bash
+npm run prepare
+```
+
+手动检查某条提交信息：
+
+```bash
+COMMIT_MSG="fix(theme): 修复 playground 代码缩进" npm run check:commit-msg
+```
+
+PowerShell：
+
+```powershell
+$env:COMMIT_MSG="fix(theme): 修复 playground 代码缩进"; npm run check:commit-msg
+```
+
+使用 Codex agent 协助提交时，可以调用仓库内的 `$commit-conventions` skill，让 agent 先检查改动范围并生成符合本项目规范的提交信息。
+
 ## 提问与讨论
 
 - 报告 Issue：使用 GitHub Issues
