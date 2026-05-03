@@ -16,6 +16,9 @@ description: 为《Linux 内核修仙传》编写、续写或修订章节的写�
 - 项目目录：`D:\Code\src\note\linux-xiuxian\`
 - 章节目录：`docs/novel/vol{N}-{name}/`
 - 参考蒸馏：`docs/refs/修仙技法蒸馏.md`
+- 内核文档蒸馏：`docs/refs/linux-kernel-documentation-distilled.md`
+- 内核知识地图：`docs/refs/linux-kernel-documentation-knowledge-map.md`
+- 扩写分析：`docs/refs/novel-kernel-expansion-analysis.md`
 - 世界观：`docs/guide/world-building.md`
 - 人物志：`docs/guide/character-guide.md`
 - 修炼体系：`docs/guide/cultivation-system.md`
@@ -25,12 +28,16 @@ description: 为《Linux 内核修仙传》编写、续写或修订章节的写�
 当用户要求编写或修改章节时：
 
 1. 读取 `docs/refs/修仙技法蒸馏.md`，掌握本项目采用的修仙小说技法。
-2. 读取目标卷的 `index.md`，确认本卷主题、章节位置和技术主线。
-3. 读取前一章和必要的后一章，保证情节、人物状态、伏笔和术语延续。
-4. 读取 `docs/guide/character-guide.md`、`docs/guide/world-building.md`、`docs/guide/cultivation-system.md`，保持世界观一致。
-5. 按章节格式写作或修订，确保技术内容准确、修仙隐喻贴切。
-6. 在每个 `##` 技术小节结束后加入一个互动考核 `ChapterGate`，要求读者答题或补全代码后才能继续阅读后续内容。
-7. 在“道藏笔记”中自然融入技术总结和后续线索，不要显式标注“伏笔”。
+2. 读取 `docs/refs/linux-kernel-documentation-distilled.md`，定位本章涉及的官方文档入口。
+3. 读取 `docs/refs/linux-kernel-documentation-knowledge-map.md`，把章节关键知识点映射到官方文档知识域。
+4. 若是扩写或规划全书，读取 `docs/refs/novel-kernel-expansion-analysis.md`，优先处理技术密度不足的卷和章节。
+5. 回到 `vendor/linux/Documentation/` 中对应 `.rst` 文件确认机制边界；涉及结构、函数、字段时再查 `vendor/linux/` 源码。
+6. 读取目标卷的 `index.md`，确认本卷主题、章节位置和技术主线。
+7. 读取前一章和必要的后一章，保证情节、人物状态、伏笔和术语延续。
+8. 读取 `docs/guide/character-guide.md`、`docs/guide/world-building.md`、`docs/guide/cultivation-system.md`，保持世界观一致。
+9. 按章节格式写作或修订，确保技术内容准确、修仙隐喻贴切。
+10. 在每个 `##` 技术小节结束后加入一个互动考核 `ChapterGate`，要求读者答题或补全代码后才能继续阅读后续内容。
+11. 在“道藏笔记”中自然融入技术总结和后续线索，不要显式标注“伏笔”。
 
 ## 写作铁律
 
@@ -70,6 +77,9 @@ description: 为《Linux 内核修仙传》编写、续写或修订章节的写�
 - 每个关键概念都安排顿悟时刻：卡壳 -> 理解 -> 豁然开朗。
 - 生活流与技术流交替，避免连续多章纯技术。
 - 可以用修仙隐喻包装技术概念，但 Linux 内核细节必须准确。
+- 技术判断要能追溯到 `docs/refs/linux-kernel-documentation-knowledge-map.md`、`docs/refs/linux-kernel-documentation-distilled.md`、`vendor/linux/Documentation/*.rst` 或 `vendor/linux/` 源码。
+- 遇到官方文档标注的演进中机制，要写出新旧边界。例如第三卷调度器不能只写 CFS 红黑树，还要交代 EEVDF、lag 和 virtual deadline 的现代主线。
+- 扩写全书时优先参考 `docs/refs/novel-kernel-expansion-analysis.md`，先补第十卷、八卷、九卷、七卷、六卷等技术密度不足的部分。
 
 ### 互动考核
 
@@ -183,7 +193,7 @@ title: 第X章：标题
 提交章节前确认：
 
 - 章节承接前文，不重置人物关系和境界状态。
-- 技术解释与真实 Linux 内核机制一致。
+- 技术解释与真实 Linux 内核机制一致，并已按 `docs/refs/linux-kernel-documentation-knowledge-map.md` 回查官方文档。
 - 示例代码能体现主题，且不引入与章节无关的复杂度。
 - 每个 `##` 小节后都有 `ChapterGate`，题目与该小节内容直接对应。
 - `ChapterGate` 的 `id` 稳定唯一，`answer` 可验证，代码填空题设置 `mode="code"`。
