@@ -10,5 +10,7 @@ docs/public/assets/src/
 docs/public/playground-src/
 docs/public/kernel-snippets.json
 .tmp/
+data/
+.deploy.env
 .idea/
 *.log
