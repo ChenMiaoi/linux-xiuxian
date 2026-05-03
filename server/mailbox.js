@@ -19,22 +19,24 @@ export function createSystemMessage({ userId, subject, body, kind = 'system', se
 }
 
 export function ensureHighRiskWarning({ userId, reasons }) {
+  const subject = '系统警告：账号行为风险较高'
   const existing = db.prepare(`
     SELECT id
     FROM system_messages
     WHERE user_id = ?
       AND kind = 'risk_warning'
+      AND subject = ?
       AND created_at >= datetime('now', '-1 day')
     LIMIT 1
-  `).get(userId)
+  `).get(userId, subject)
 
   if (existing) return
 
   createSystemMessage({
     userId,
     kind: 'risk_warning',
-    subject: '系统警告：账号行为风险较高',
-    body: `系统检测到你的账号存在较高风险：${reasons.join('、')}。请停止刷屏、重复发言或其他异常行为。如有误判，可在信箱中向管理员申诉。`,
+    subject,
+    body: `系统检测到你的账号存在较高风险：${reasons.join('、')}。请停止刷屏、重复发言、越权访问或其他异常行为。如有误判，可在信箱中向管理员申诉。`,
   })
 }
 
@@ -128,6 +130,25 @@ export function registerMailboxRoutes(app) {
     return { messages: rows.map(messageRow) }
   })
 
+  app.post('/api/admin/mailbox/messages/:id/close', async (request, reply) => {
+    const admin = requireAdmin(request, reply)
+    if (!admin) return
+
+    const id = Number(request.params.id)
+    if (!Number.isInteger(id) || id <= 0) {
+      return reply.code(400).send({ error: 'BAD_REQUEST', message: '消息 ID 不正确' })
+    }
+
+    const result = db.prepare(`
+      UPDATE system_messages
+      SET status = 'closed'
+      WHERE id = ? AND kind IN ('appeal', 'risk_warning')
+    `).run(id)
+
+    if (result.changes === 0) return reply.code(404).send({ error: 'NOT_FOUND', message: '消息不存在' })
+    return { ok: true }
+  })
+
   app.post('/api/admin/mailbox/messages/:id/reply', async (request, reply) => {
     const admin = requireAdmin(request, reply)
     if (!admin) return
@@ -140,6 +161,9 @@ export function registerMailboxRoutes(app) {
 
     const original = db.prepare('SELECT * FROM system_messages WHERE id = ?').get(id)
     if (!original) return reply.code(404).send({ error: 'NOT_FOUND', message: '消息不存在' })
+    if (original.kind !== 'appeal') {
+      return reply.code(400).send({ error: 'BAD_REQUEST', message: '只有用户申诉需要回复' })
+    }
 
     createSystemMessage({
       userId: original.user_id,

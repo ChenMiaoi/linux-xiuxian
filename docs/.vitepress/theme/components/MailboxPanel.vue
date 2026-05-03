@@ -10,13 +10,14 @@
     <section class="mailbox-list">
       <h2>站内信</h2>
       <div v-if="loading" class="admin-muted">读取信箱中</div>
-      <article v-for="message in messages" :key="message.id" class="mailbox-message">
+      <article v-for="message in messages" :key="message.id" :class="['mailbox-message', { unread: !message.readAt, warning: message.kind === 'risk_warning' }]">
         <header>
           <strong>{{ message.subject }}</strong>
           <span>{{ labelKind(message.kind) }}</span>
           <time>{{ formatTime(message.createdAt) }}</time>
         </header>
         <p>{{ message.body }}</p>
+        <button v-if="!message.readAt" type="button" @click="markRead(message.id)">标记已读</button>
       </article>
       <div v-if="!loading && !messages.length" class="admin-empty">暂无消息</div>
     </section>
@@ -26,7 +27,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { apiGet, apiPost, authState, loadMe } from '../auth-state'
+import { apiGet, apiPost, authState, loadMe, refreshMailboxStatus } from '../auth-state'
 
 const loading = ref(true)
 const pending = ref(false)
@@ -49,6 +50,7 @@ onMounted(async () => {
 async function loadMessages() {
   const data = await apiGet('/api/mailbox/messages')
   messages.value = data.messages || []
+  await refreshMailboxStatus().catch(() => {})
 }
 
 async function submitAppeal() {
@@ -65,6 +67,12 @@ async function submitAppeal() {
   } finally {
     pending.value = false
   }
+}
+
+async function markRead(id) {
+  await apiPost(`/api/mailbox/messages/${id}/read`, {})
+  messages.value = messages.value.map((message) => message.id === id ? { ...message, readAt: new Date().toISOString() } : message)
+  await refreshMailboxStatus().catch(() => {})
 }
 
 function labelKind(kind) {

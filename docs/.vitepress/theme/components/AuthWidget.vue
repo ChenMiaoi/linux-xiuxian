@@ -1,11 +1,12 @@
 <template>
   <div class="auth-widget">
     <template v-if="authState.user">
-      <button class="auth-inline auth-user-trigger" type="button" @click="open = !open">
+      <button :class="['auth-inline', 'auth-user-trigger', { 'has-alert': authState.unreadRiskWarnings > 0 }]" type="button" @click="open = !open">
         <span class="auth-name">{{ authState.user.displayName }}</span>
         <span :class="['cultivation-badge', authState.user.rank?.name ? rankForPoints(authState.user.cultivationPoints).className : 'realm-qi']">
           {{ authState.user.rank?.name || '炼气' }}
         </span>
+        <span v-if="authState.unreadMessages" class="auth-alert-badge">{{ authState.unreadMessages }}</span>
         <span class="auth-caret">▾</span>
       </button>
       <div v-if="open" class="auth-popover auth-account-popover">
@@ -13,6 +14,10 @@
           <strong>{{ authState.user.displayName }}</strong>
           <span>{{ authState.user.cultivationPoints }} 修为</span>
         </div>
+        <a v-if="authState.unreadRiskWarnings" class="auth-warning-link" href="/linux-xiuxian/mailbox">
+          <strong>系统警告待查看</strong>
+          <span>{{ authState.unreadRiskWarnings }} 条高风险通知</span>
+        </a>
         <div class="auth-account-row">
           <span>GitHub</span>
           <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
@@ -53,8 +58,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { apiPost, authState, loadMe, login, logout, register } from '../auth-state'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { apiPost, authState, loadMe, login, logout, refreshMailboxStatus, register } from '../auth-state'
 import { rankForPoints } from '../rank-utils'
 
 const open = ref(false)
@@ -64,12 +69,33 @@ const displayName = ref('')
 const password = ref('')
 const pending = ref(false)
 const message = ref('')
+let mailboxTimer = null
 
 onMounted(() => {
-  if (!authState.ready) loadMe().catch(() => {
+  if (!authState.ready) {
+    loadMe().finally(() => {
+      refreshMailboxIfLoggedIn()
+    }).catch(() => {
+      authState.ready = true
+    })
+  } else if (authState.user) {
+    refreshMailboxStatus().catch(() => {
     authState.ready = true
-  })
+    })
+  }
+  mailboxTimer = window.setInterval(refreshMailboxIfLoggedIn, 60 * 1000)
+  window.addEventListener('focus', refreshMailboxIfLoggedIn)
 })
+
+onUnmounted(() => {
+  if (mailboxTimer) window.clearInterval(mailboxTimer)
+  window.removeEventListener('focus', refreshMailboxIfLoggedIn)
+})
+
+function refreshMailboxIfLoggedIn() {
+  if (!authState.user) return
+  refreshMailboxStatus().catch(() => {})
+}
 
 async function handleSubmit() {
   pending.value = true

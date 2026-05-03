@@ -71,9 +71,12 @@
               <span>{{ user.riskReasons.length ? user.riskReasons.join('、') : '暂无明显异常' }}</span>
             </div>
             <div class="admin-user-actions">
-              <button type="button" @click="moderateUser(user.id, 'mute')">禁言 24h</button>
-              <button type="button" @click="moderateUser(user.id, 'ban')">封号</button>
-              <button type="button" @click="moderateUser(user.id, 'restore')">恢复</button>
+              <template v-if="user.id !== authState.user.id">
+                <button type="button" :disabled="moderatingId === user.id" @click="moderateUser(user.id, 'mute')">禁言 24h</button>
+                <button type="button" :disabled="moderatingId === user.id" @click="moderateUser(user.id, 'ban')">封号</button>
+                <button type="button" :disabled="moderatingId === user.id" @click="moderateUser(user.id, 'restore')">恢复</button>
+              </template>
+              <span v-else class="admin-action-note">当前管理员账号不可自操作</span>
             </div>
           </article>
         </div>
@@ -96,17 +99,39 @@
 
       <section v-if="tab === 'mailbox'" class="admin-section">
         <h2>申诉与系统警告</h2>
-        <div class="admin-comments">
-          <article v-for="message in adminMessages" :key="message.id" class="admin-comment">
+        <div class="admin-mailbox-groups">
+          <div class="admin-mailbox-group">
+            <h3>用户申诉</h3>
+            <article v-for="message in appealMessages" :key="message.id" class="admin-comment admin-mailbox-item">
+              <header>
+                <strong>{{ message.user?.displayName || '用户' }}</strong>
+                <span>{{ message.subject }}</span>
+                <time>{{ formatTime(message.createdAt) }}</time>
+              </header>
+              <p>{{ message.body }}</p>
+              <textarea v-model="replyDrafts[message.id]" placeholder="回复用户" rows="3" />
+              <div class="admin-user-actions">
+                <button type="button" @click="replyMessage(message.id)">回复并关闭</button>
+                <button type="button" @click="closeMessage(message.id)">仅关闭</button>
+              </div>
+            </article>
+            <div v-if="!appealMessages.length" class="admin-empty">暂无待处理申诉</div>
+          </div>
+
+          <div class="admin-mailbox-group">
+            <h3>系统警告记录</h3>
+            <article v-for="message in warningMessages" :key="message.id" class="admin-comment admin-mailbox-item admin-warning-record">
             <header>
               <strong>{{ message.user?.displayName || '用户' }}</strong>
               <span>{{ message.subject }}</span>
+              <span>{{ statusText(message.status) }}</span>
               <time>{{ formatTime(message.createdAt) }}</time>
             </header>
             <p>{{ message.body }}</p>
-            <textarea v-model="replyDrafts[message.id]" placeholder="回复用户" rows="3" />
-            <button type="button" @click="replyMessage(message.id)">回复并关闭</button>
-          </article>
+              <button v-if="message.status !== 'closed'" type="button" @click="closeMessage(message.id)">关闭记录</button>
+            </article>
+            <div v-if="!warningMessages.length" class="admin-empty">暂无系统警告</div>
+          </div>
         </div>
       </section>
     </template>
@@ -115,7 +140,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { apiGet, apiPost, authState, loadMe } from '../auth-state'
 
 const loading = ref(true)
@@ -129,6 +154,9 @@ const ranks = ref([])
 const tab = ref('users')
 const rankFilter = ref('all')
 const statusFilter = ref('all')
+const moderatingId = ref(null)
+const appealMessages = computed(() => adminMessages.value.filter((item) => item.kind === 'appeal' && item.status !== 'closed'))
+const warningMessages = computed(() => adminMessages.value.filter((item) => item.kind === 'risk_warning'))
 
 onMounted(async () => {
   try {
@@ -174,12 +202,25 @@ async function deleteComment(id) {
 }
 
 async function moderateUser(id, action) {
-  const data = await apiPost(`/api/admin/users/${id}/moderate`, {
-    action,
-    hours: 24,
-    note: action === 'restore' ? '管理员恢复' : '管理员处理',
-  })
-  users.value = users.value.map((user) => user.id === id ? data.user : user)
+  message.value = ''
+  moderatingId.value = id
+  try {
+    const data = await apiPost(`/api/admin/users/${id}/moderate`, {
+      action,
+      hours: 24,
+      note: action === 'restore' ? '管理员恢复' : '管理员处理',
+    })
+    users.value = users.value.map((user) => user.id === id ? data.user : user)
+    message.value = {
+      mute: '已禁言该用户 24 小时。',
+      ban: '已封禁该用户。',
+      restore: '已恢复该用户。',
+    }[action]
+  } catch (error) {
+    message.value = error.message
+  } finally {
+    moderatingId.value = null
+  }
 }
 
 async function replyMessage(id) {
@@ -190,12 +231,21 @@ async function replyMessage(id) {
   delete replyDrafts.value[id]
 }
 
+async function closeMessage(id) {
+  await apiPost(`/api/admin/mailbox/messages/${id}/close`, {})
+  adminMessages.value = adminMessages.value.map((message) => message.id === id ? { ...message, status: 'closed' } : message)
+}
+
 function statusLabel(status) {
   return {
     active: '正常',
     muted: '禁言',
     banned: '封禁',
   }[status] || status
+}
+
+function statusText(status) {
+  return status === 'closed' ? '已关闭' : '待处理'
 }
 
 function formatTime(value) {

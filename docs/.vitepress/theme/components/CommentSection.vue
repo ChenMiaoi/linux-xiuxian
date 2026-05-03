@@ -120,12 +120,7 @@ const pagePath = computed(() => {
 
 const show = computed(() => {
   const path = pagePath.value
-  return path !== '/'
-    && path !== '/rank'
-    && path !== '/en/rank'
-    && path !== '/admin'
-    && path !== '/mailbox'
-    && !path.endsWith('/404.html')
+  return !isCommentDisabledPath(path)
 })
 
 const commentTree = computed(() => {
@@ -159,7 +154,10 @@ onUnmounted(() => {
 watch(() => route.path, loadComments)
 
 async function loadComments() {
-  if (!show.value) return
+  if (!show.value) {
+    comments.value = []
+    return
+  }
   loading.value = true
   try {
     const data = await apiGet(`/api/comments?pagePath=${encodeURIComponent(pagePath.value)}`)
@@ -242,6 +240,18 @@ function normalizePagePath(value) {
   path = path.replace(/\/index\.html$/, '/')
   path = path.replace(/\.html$/, '')
   return path || '/'
+}
+
+function isCommentDisabledPath(path) {
+  const normalized = normalizePagePath(path)
+  return normalized === '/'
+    || normalized === '/rank'
+    || normalized === '/en/rank'
+    || normalized === '/admin'
+    || normalized === '/mailbox'
+    || normalized.startsWith('/admin/')
+    || normalized.startsWith('/mailbox/')
+    || normalized.endsWith('/404')
 }
 
 function formatTime(value) {

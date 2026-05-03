@@ -211,12 +211,24 @@
 
 /* ===== GitHub repository stats ===== */
 
+.xiuxian-nav-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+:root:not(.xiuxian-admin-user) a[href$="/admin"],
+:root:not(.xiuxian-admin-user) a[href$="/admin.html"] {
+  display: none !important;
+}
+
 .github-repo-stats {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   height: 32px;
-  margin-left: 12px;
+  margin-left: 0;
   padding: 0 9px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
@@ -266,6 +278,14 @@
 }
 
 @media (max-width: 768px) {
+  .xiuxian-nav-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-left: 0;
+  }
+
   .github-repo-stats {
     margin: 16px 24px 0;
   }
@@ -1119,7 +1139,7 @@ iframe[data-playground-runner] {
   position: relative;
   display: inline-flex;
   align-items: center;
-  margin-left: auto;
+  margin-left: 0;
   max-width: 100%;
 }
 
@@ -1179,6 +1199,24 @@ iframe[data-playground-runner] {
   background: var(--vp-c-brand-soft);
 }
 
+.auth-user-trigger.has-alert {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.18);
+}
+
+.auth-alert-badge {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-family: var(--vp-font-family-mono);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
 .auth-caret {
   color: var(--vp-c-text-2);
   font-size: 11px;
@@ -1222,6 +1260,26 @@ iframe[data-playground-runner] {
 .auth-account-popover {
   display: grid;
   gap: 10px;
+}
+
+.auth-warning-link {
+  display: grid;
+  gap: 3px;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #fecaca;
+  text-decoration: none;
+}
+
+.auth-warning-link strong {
+  color: #fff;
+}
+
+.auth-warning-link span {
+  color: #fecaca;
+  font-size: 12px;
 }
 
 .auth-form {
@@ -1786,9 +1844,26 @@ iframe[data-playground-runner] {
 
 .admin-table,
 .admin-comments,
+.admin-mailbox-groups,
+.admin-mailbox-group,
 .admin-user-list {
   display: grid;
   gap: 10px;
+}
+
+.admin-mailbox-groups {
+  gap: 18px;
+}
+
+.admin-mailbox-group h3 {
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-size: 16px;
+}
+
+.admin-warning-record {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.06);
 }
 
 .admin-filters {
@@ -1874,9 +1949,19 @@ iframe[data-playground-runner] {
   padding: 0 10px;
 }
 
+.admin-user-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .admin-user-actions button:nth-child(2) {
   border-color: #dc2626;
   color: #dc2626;
+}
+
+.admin-action-note {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
 }
 
 .admin-row {
@@ -1998,6 +2083,25 @@ iframe[data-playground-runner] {
 .mailbox-message p {
   margin: 0;
   white-space: pre-wrap;
+}
+
+.mailbox-message.unread {
+  border-color: var(--vp-c-brand-1);
+}
+
+.mailbox-message.warning {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.mailbox-message button {
+  justify-self: start;
+  min-height: 30px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-2);
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

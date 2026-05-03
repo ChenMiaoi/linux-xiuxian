@@ -52,6 +52,10 @@ function adminUserRow(row) {
     riskScore += 25
     riskReasons.push('多次被管理员处理')
   }
+  if (row.admin_privilege_attempt_count >= 1) {
+    riskScore = 100
+    riskReasons.push('尝试访问管理员权限接口')
+  }
 
   const finalScore = Math.min(100, riskScore)
   if (finalScore >= 90) {
@@ -63,6 +67,7 @@ function adminUserRow(row) {
     deletedCommentCount: row.deleted_comment_count || 0,
     recentCommentCount: row.recent_comment_count || 0,
     moderationEventCount: row.moderation_event_count || 0,
+    adminPrivilegeAttemptCount: row.admin_privilege_attempt_count || 0,
     riskScore: finalScore,
     riskLevel: finalScore >= 90 ? '高风险' : finalScore >= 60 ? '可疑' : finalScore >= 30 ? '关注' : '正常',
     riskReasons,
@@ -118,10 +123,11 @@ export function registerAdminRoutes(app) {
     const rows = db.prepare(`
       SELECT
         users.*,
-        COUNT(comments.id) AS comment_count,
-        SUM(CASE WHEN comments.status = 'deleted' THEN 1 ELSE 0 END) AS deleted_comment_count,
-        SUM(CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN 1 ELSE 0 END) AS recent_comment_count,
-        COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count
+        COUNT(DISTINCT comments.id) AS comment_count,
+        COUNT(DISTINCT CASE WHEN comments.status = 'deleted' THEN comments.id END) AS deleted_comment_count,
+        COUNT(DISTINCT CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN comments.id END) AS recent_comment_count,
+        COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count,
+        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count
       FROM users
       LEFT JOIN comments ON comments.user_id = users.id
       LEFT JOIN user_moderation_events ON user_moderation_events.user_id = users.id
@@ -183,10 +189,11 @@ export function registerAdminRoutes(app) {
     const row = db.prepare(`
       SELECT
         users.*,
-        COUNT(comments.id) AS comment_count,
-        SUM(CASE WHEN comments.status = 'deleted' THEN 1 ELSE 0 END) AS deleted_comment_count,
-        SUM(CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN 1 ELSE 0 END) AS recent_comment_count,
-        COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count
+        COUNT(DISTINCT comments.id) AS comment_count,
+        COUNT(DISTINCT CASE WHEN comments.status = 'deleted' THEN comments.id END) AS deleted_comment_count,
+        COUNT(DISTINCT CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN comments.id END) AS recent_comment_count,
+        COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count,
+        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count
       FROM users
       LEFT JOIN comments ON comments.user_id = users.id
       LEFT JOIN user_moderation_events ON user_moderation_events.user_id = users.id

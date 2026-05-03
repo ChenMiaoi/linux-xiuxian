@@ -102,10 +102,41 @@ export function requireAdmin(request, reply) {
   const user = requireUser(request, reply)
   if (!user) return null
   if (user.role !== 'admin') {
+    recordAdminPrivilegeAttempt(user, request)
     reply.code(403).send({ error: 'FORBIDDEN', message: '需要管理员权限' })
     return null
   }
   return user
+}
+
+function recordAdminPrivilegeAttempt(user, request) {
+  const path = typeof request.url === 'string' ? request.url.split('?')[0] : '/api/admin'
+  const reason = `非管理员账号尝试访问管理员接口：${request.method} ${path}`.slice(0, 200)
+
+  db.prepare(`
+    INSERT INTO user_moderation_events (user_id, action, reason)
+    VALUES (?, 'admin_privilege_attempt', ?)
+  `).run(user.id, reason)
+
+  const existingWarning = db.prepare(`
+    SELECT id
+    FROM system_messages
+    WHERE user_id = ?
+      AND kind = 'risk_warning'
+      AND subject = '系统警告：管理员权限越权尝试'
+      AND created_at >= datetime('now', '-1 day')
+    LIMIT 1
+  `).get(user.id)
+
+  if (existingWarning) return
+
+  db.prepare(`
+    INSERT INTO system_messages (user_id, kind, subject, body)
+    VALUES (?, 'risk_warning', '系统警告：管理员权限越权尝试', ?)
+  `).run(
+    user.id,
+    '系统检测到你的账号尝试访问管理员权限接口，已将账号标记为最高风险。若这是误判，请通过信箱向管理员申诉。',
+  )
 }
 
 export function registerAuthRoutes(app) {

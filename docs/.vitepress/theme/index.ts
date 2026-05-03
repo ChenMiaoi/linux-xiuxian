@@ -19,9 +19,10 @@ import { h } from 'vue'
 export default {
   extends: DefaultTheme,
   Layout() {
+    const navTools = () => h('div', { class: 'xiuxian-nav-tools' }, [h(GitHubRepoStats), h(AuthWidget)])
     return h(DefaultTheme.Layout, null, {
-      'nav-bar-content-after': () => [h(GitHubRepoStats), h(AuthWidget)],
-      'nav-screen-content-after': () => [h(GitHubRepoStats), h(AuthWidget)],
+      'nav-bar-content-after': navTools,
+      'nav-screen-content-after': navTools,
       'doc-after': () => h(CommentSection),
       'layout-bottom': () => h(CodeFontSettings),
       'layout-top': () => h(NovelProgressGuard),
