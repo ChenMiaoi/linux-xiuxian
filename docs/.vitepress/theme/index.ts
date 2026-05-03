@@ -6,6 +6,7 @@ import CodeFontSettings from './components/CodeFontSettings.vue'
 import CultivationRealm from './components/CultivationRealm.vue'
 import KernelSourceLink from './components/KernelSourceLink.vue'
 import NovelProgressGuard from './components/NovelProgressGuard.vue'
+import GitHubRepoStats from './components/GitHubRepoStats.vue'
 import type { EnhanceAppContext } from 'vitepress'
 import { h } from 'vue'
 
@@ -13,6 +14,8 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
+      'nav-bar-content-after': () => h(GitHubRepoStats),
+      'nav-screen-content-after': () => h(GitHubRepoStats),
       'layout-bottom': () => h(CodeFontSettings),
       'layout-top': () => h(NovelProgressGuard),
     })

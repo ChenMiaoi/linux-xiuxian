@@ -209,6 +209,68 @@
   --vp-c-text-2: #b8b0c8;
 }
 
+/* ===== GitHub repository stats ===== */
+
+.github-repo-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  margin-left: 12px;
+  padding: 0 9px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.github-repo-stats:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+
+.github-repo-stats-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.github-repo-stats-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.github-repo-stats-count svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.github-repo-stats-placeholder {
+  min-width: 20px;
+  font-family: var(--vp-font-family-mono);
+  color: var(--vp-c-text-3);
+}
+
+@media (max-width: 768px) {
+  .github-repo-stats {
+    margin: 16px 24px 0;
+  }
+}
+
 /* ===== 正文排版 ===== */
 
 .vp-doc p {

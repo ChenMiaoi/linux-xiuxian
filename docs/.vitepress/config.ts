@@ -49,7 +49,6 @@ export default defineConfig({
         ],
         sidebar: getEnSidebar(),
         outline: [2, 3],
-        socialLinks: [{ icon: 'github', link: 'https://github.com/ChenMiaoi/linux-xiuxian' }],
         footer: {
           message: 'Enlightenment of the kernel through cultivation',
           copyright: 'Linux Kernel Cultivation Chronicle',
@@ -88,7 +87,6 @@ export default defineConfig({
     sidebar: getZhSidebar(),
 
     outline: [2, 3],
-    socialLinks: [{ icon: 'github', link: 'https://github.com/ChenMiaoi/linux-xiuxian' }],
     footer: {
       message: '以修仙之名，悟内核之道',
       copyright: 'Linux 内核修仙传',
