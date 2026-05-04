@@ -1,12 +1,25 @@
 <template>
   <section class="forum-board">
+    <section class="forum-search" aria-label="搜索问道坛帖子">
+      <input
+        v-model.trim="searchQuery"
+        type="search"
+        placeholder="搜索标题、正文、分类、作者或回复"
+      />
+      <button v-if="searchQuery" type="button" @click="searchQuery = ''">清空</button>
+      <button type="button" class="forum-new-post" @click="toggleComposer">
+        {{ isComposerOpen ? '收起' : '发帖' }}
+      </button>
+      <span>{{ searchQuery ? `${filteredPosts.length} / ${posts.length} 帖` : `共 ${posts.length} 帖` }}</span>
+    </section>
+
     <header class="forum-hero">
       <span>Forum</span>
       <h1>问道坛</h1>
       <p>交流修行 Linux 内核过程中遇到的卡点、疑惑和心得。</p>
     </header>
 
-    <section class="forum-compose" aria-labelledby="forum-compose-title">
+    <section v-if="isComposerOpen" class="forum-compose" aria-labelledby="forum-compose-title">
       <div class="forum-compose-head">
         <div>
           <span>发帖</span>
@@ -86,19 +99,90 @@
       <button type="submit" :disabled="reportPending">{{ reportPending ? '提交中' : '提交举报' }}</button>
     </form>
 
-    <section class="forum-search" aria-label="搜索问道坛帖子">
-      <input
-        v-model.trim="searchQuery"
-        type="search"
-        placeholder="搜索标题、正文、分类、作者或回复"
-      />
-      <button v-if="searchQuery" type="button" @click="searchQuery = ''">清空</button>
-      <span>{{ searchQuery ? `${filteredPosts.length} / ${posts.length} 帖` : `共 ${posts.length} 帖` }}</span>
-    </section>
-
     <div v-if="loading" class="forum-empty">读取帖子中</div>
+    <article v-else-if="selectedPost" class="forum-post forum-post-detail">
+      <button type="button" class="forum-back" @click="selectedPostId = null">返回帖子列表</button>
+      <header class="forum-post-head">
+        <div>
+          <span class="forum-category">{{ parsePost(selectedPost).category }}</span>
+          <h2>{{ parsePost(selectedPost).title }}</h2>
+        </div>
+        <time>{{ formatTime(selectedPost.createdAt) }}</time>
+      </header>
+      <div class="forum-author">
+        <strong>{{ selectedPost.author.displayName }}</strong>
+        <span v-if="selectedPost.author.title" class="cultivation-title-badge">{{ selectedPost.author.title.name }}</span>
+        <span :class="['cultivation-badge', rankForPoints(selectedPost.author.cultivationPoints).className]">
+          {{ rankForPoints(selectedPost.author.cultivationPoints).name }}
+        </span>
+      </div>
+      <div class="forum-markdown markdown-content" v-html="renderMarkdown(parsePost(selectedPost).body)" />
+      <div class="forum-tools">
+        <button type="button" :class="{ active: selectedPost.likedByMe }" @click="toggleLike(selectedPost)">
+          {{ selectedPost.likedByMe ? '已赞' : '点赞' }} {{ selectedPost.likeCount || 0 }}
+        </button>
+        <button type="button" :disabled="!authState.user" @click="startReply(selectedPost)">回复 {{ selectedPost.children.length }}</button>
+        <button type="button" :disabled="!authState.user || selectedPost.reportedByMe || authState.user.id === selectedPost.author.id" @click="startReport(selectedPost)">
+          {{ selectedPost.reportedByMe ? '已举报' : '举报' }}
+        </button>
+        <button
+          v-if="authState.user && (authState.user.id === selectedPost.author.id || authState.user.role === 'admin')"
+          class="forum-delete"
+          type="button"
+          @click="deleteComment(selectedPost.id)"
+        >
+          删除
+        </button>
+      </div>
+
+      <form v-if="replyTarget?.id === selectedPost.id" class="forum-reply-form" @submit.prevent="submitReply(selectedPost)">
+        <textarea v-model.trim="replyContent" :disabled="replyPending" maxlength="600" rows="3" placeholder="写下你的建议、追问或解法" />
+        <div class="forum-actions">
+          <button type="button" @click="cancelReply">取消</button>
+          <button type="submit" :disabled="replyPending || !replyContent">{{ replyPending ? '回复中' : '回复' }}</button>
+        </div>
+      </form>
+
+      <div v-if="selectedPost.children.length" class="forum-replies">
+        <article v-for="reply in selectedPost.children" :key="reply.id" class="forum-reply">
+          <header>
+            <strong>{{ reply.author.displayName }}</strong>
+            <span v-if="reply.author.title" class="cultivation-title-badge">{{ reply.author.title.name }}</span>
+            <time>{{ formatTime(reply.createdAt) }}</time>
+          </header>
+          <div class="forum-markdown markdown-content" v-html="renderMarkdown(reply.content)" />
+          <div class="forum-tools">
+            <button type="button" :class="{ active: reply.likedByMe }" @click="toggleLike(reply)">
+              {{ reply.likedByMe ? '已赞' : '点赞' }} {{ reply.likeCount || 0 }}
+            </button>
+            <button type="button" :disabled="!authState.user || reply.reportedByMe || authState.user.id === reply.author.id" @click="startReport(reply)">
+              {{ reply.reportedByMe ? '已举报' : '举报' }}
+            </button>
+            <button
+              v-if="authState.user && (authState.user.id === reply.author.id || authState.user.role === 'admin')"
+              class="forum-delete"
+              type="button"
+              @click="deleteComment(reply.id)"
+            >
+              删除
+            </button>
+          </div>
+        </article>
+      </div>
+      <div v-else class="forum-empty forum-reply-empty">暂无回复。</div>
+    </article>
+
     <div v-else-if="filteredPosts.length" class="forum-list">
-      <article v-for="post in filteredPosts" :key="post.id" class="forum-post">
+      <article
+        v-for="post in filteredPosts"
+        :key="post.id"
+        class="forum-post-card"
+        role="button"
+        tabindex="0"
+        @click="openPost(post.id)"
+        @keydown.enter.prevent="openPost(post.id)"
+        @keydown.space.prevent="openPost(post.id)"
+      >
         <header class="forum-post-head">
           <div>
             <span class="forum-category">{{ parsePost(post).category }}</span>
@@ -106,65 +190,10 @@
           </div>
           <time>{{ formatTime(post.createdAt) }}</time>
         </header>
-        <div class="forum-author">
-          <strong>{{ post.author.displayName }}</strong>
-          <span v-if="post.author.title" class="cultivation-title-badge">{{ post.author.title.name }}</span>
-          <span :class="['cultivation-badge', rankForPoints(post.author.cultivationPoints).className]">
-            {{ rankForPoints(post.author.cultivationPoints).name }}
-          </span>
-        </div>
-        <div class="forum-markdown markdown-content" v-html="renderMarkdown(parsePost(post).body)" />
-        <div class="forum-tools">
-          <button type="button" :class="{ active: post.likedByMe }" @click="toggleLike(post)">
-            {{ post.likedByMe ? '已赞' : '点赞' }} {{ post.likeCount || 0 }}
-          </button>
-          <button type="button" :disabled="!authState.user" @click="startReply(post)">回复 {{ post.children.length }}</button>
-          <button type="button" :disabled="!authState.user || post.reportedByMe || authState.user.id === post.author.id" @click="startReport(post)">
-            {{ post.reportedByMe ? '已举报' : '举报' }}
-          </button>
-          <button
-            v-if="authState.user && (authState.user.id === post.author.id || authState.user.role === 'admin')"
-            class="forum-delete"
-            type="button"
-            @click="deleteComment(post.id)"
-          >
-            删除
-          </button>
-        </div>
-
-        <form v-if="replyTarget?.id === post.id" class="forum-reply-form" @submit.prevent="submitReply(post)">
-          <textarea v-model.trim="replyContent" :disabled="replyPending" maxlength="600" rows="3" placeholder="写下你的建议、追问或解法" />
-          <div class="forum-actions">
-            <button type="button" @click="cancelReply">取消</button>
-            <button type="submit" :disabled="replyPending || !replyContent">{{ replyPending ? '回复中' : '回复' }}</button>
-          </div>
-        </form>
-
-        <div v-if="post.children.length" class="forum-replies">
-          <article v-for="reply in post.children" :key="reply.id" class="forum-reply">
-            <header>
-              <strong>{{ reply.author.displayName }}</strong>
-              <span v-if="reply.author.title" class="cultivation-title-badge">{{ reply.author.title.name }}</span>
-              <time>{{ formatTime(reply.createdAt) }}</time>
-            </header>
-            <div class="forum-markdown markdown-content" v-html="renderMarkdown(reply.content)" />
-            <div class="forum-tools">
-              <button type="button" :class="{ active: reply.likedByMe }" @click="toggleLike(reply)">
-                {{ reply.likedByMe ? '已赞' : '点赞' }} {{ reply.likeCount || 0 }}
-              </button>
-              <button type="button" :disabled="!authState.user || reply.reportedByMe || authState.user.id === reply.author.id" @click="startReport(reply)">
-                {{ reply.reportedByMe ? '已举报' : '举报' }}
-              </button>
-              <button
-                v-if="authState.user && (authState.user.id === reply.author.id || authState.user.role === 'admin')"
-                class="forum-delete"
-                type="button"
-                @click="deleteComment(reply.id)"
-              >
-                删除
-              </button>
-            </div>
-          </article>
+        <div class="forum-card-meta">
+          <span>{{ post.author.displayName }}</span>
+          <span>{{ post.children.length }} 回复</span>
+          <span>{{ post.likeCount || 0 }} 赞</span>
         </div>
       </article>
     </div>
@@ -190,6 +219,8 @@ const category = ref('求助')
 const title = ref('')
 const body = ref('')
 const searchQuery = ref('')
+const selectedPostId = ref(null)
+const isComposerOpen = ref(false)
 const replyTarget = ref(null)
 const replyContent = ref('')
 const reportTarget = ref(null)
@@ -235,6 +266,11 @@ const similarPosts = computed(() => {
     .slice(0, 3)
 })
 
+const selectedPost = computed(() => {
+  if (!selectedPostId.value) return null
+  return posts.value.find((post) => post.id === selectedPostId.value) || null
+})
+
 onMounted(() => {
   if (!authState.ready) loadMe().catch(() => {
     authState.ready = true
@@ -268,6 +304,8 @@ async function submitPost() {
       knowledgeAccepted: knowledgeAccepted.value,
     })
     comments.value.push(data.comment)
+    selectedPostId.value = data.comment.id
+    isComposerOpen.value = false
     title.value = ''
     body.value = ''
     knowledgeAccepted.value = false
@@ -313,6 +351,17 @@ async function toggleLike(comment) {
 async function deleteComment(id) {
   await apiPost(`/api/comments/${id}/delete`, {})
   comments.value = comments.value.filter((comment) => comment.id !== id && comment.parentId !== id)
+  if (selectedPostId.value === id) selectedPostId.value = null
+}
+
+function toggleComposer() {
+  isComposerOpen.value = !isComposerOpen.value
+}
+
+function openPost(id) {
+  selectedPostId.value = id
+  replyTarget.value = null
+  replyContent.value = ''
 }
 
 function startReply(post) {

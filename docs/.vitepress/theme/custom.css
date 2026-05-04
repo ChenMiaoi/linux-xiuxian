@@ -2298,6 +2298,7 @@ iframe[data-playground-runner] {
 }
 
 .forum-compose,
+.forum-post-card,
 .forum-post,
 .forum-report,
 .forum-empty {
@@ -2422,6 +2423,7 @@ iframe[data-playground-runner] {
 .forum-tools button,
 .forum-search button,
 .forum-similar button,
+.forum-back,
 .forum-report button {
   min-height: 32px;
   border: 1px solid var(--vp-c-divider);
@@ -2437,6 +2439,13 @@ iframe[data-playground-runner] {
   border-color: var(--vp-c-brand-1);
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
+}
+
+.forum-search .forum-new-post {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-weight: 700;
 }
 
 .forum-actions button:disabled,
@@ -2473,8 +2482,9 @@ iframe[data-playground-runner] {
 }
 
 .forum-search {
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
+  gap: 10px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   padding: 10px;
@@ -2497,6 +2507,30 @@ iframe[data-playground-runner] {
   gap: 12px;
 }
 
+.forum-post-detail {
+  gap: 14px;
+}
+
+.forum-post-card {
+  display: grid;
+  gap: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.forum-post-card:hover,
+.forum-post-card:focus-visible {
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 55%, var(--vp-c-divider));
+  background: color-mix(in srgb, var(--vp-c-bg) 88%, var(--vp-c-brand-soft));
+}
+
+.forum-post-card:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
 .forum-post-head {
   align-items: flex-start;
 }
@@ -2506,6 +2540,10 @@ iframe[data-playground-runner] {
   color: var(--vp-c-text-1);
   font-size: 22px;
   line-height: 1.35;
+}
+
+.forum-post-card .forum-post-head h2 {
+  font-size: 19px;
 }
 
 .forum-post-head time,
@@ -2529,12 +2567,24 @@ iframe[data-playground-runner] {
 }
 
 .forum-author,
+.forum-card-meta,
 .forum-tools,
 .forum-reply header {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.forum-card-meta {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.forum-card-meta span + span::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--vp-c-divider);
 }
 
 .forum-post p,
@@ -2580,6 +2630,14 @@ iframe[data-playground-runner] {
 .forum-report {
   border-color: rgba(239, 68, 68, 0.45);
   background: rgba(239, 68, 68, 0.07);
+}
+
+.forum-back {
+  justify-self: start;
+}
+
+.forum-reply-empty {
+  padding: 12px;
 }
 
 @media (max-width: 768px) {
