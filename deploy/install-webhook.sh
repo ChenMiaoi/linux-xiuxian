@@ -16,6 +16,7 @@ START_SCRIPT="${START_SCRIPT:-/usr/local/bin/linux-xiuxian-webhook-start}"
 HEALTHCHECK_URL="${HEALTHCHECK_URL:-http://127.0.0.1:8080/api/health}"
 SERVICE_USER="${SERVICE_USER:-ubuntu}"
 SERVICE_GROUP="${SERVICE_GROUP:-ubuntu}"
+NPM_BIN="${NPM_BIN:-}"
 NGINX_SITE_CONFIG="${NGINX_SITE_CONFIG:-}"
 
 if [[ "${EUID}" -ne 0 ]]; then
@@ -43,10 +44,35 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! runuser -u "${SERVICE_USER}" -- bash -lc 'command -v npm >/dev/null 2>&1'; then
-  echo "${SERVICE_USER} 用户环境里找不到 npm。请先用该用户安装 Node.js/npm，或设置 SERVICE_USER。"
+NPM_CHECK_SCRIPT="$(mktemp)"
+cat > "${NPM_CHECK_SCRIPT}" <<'EOF'
+set -e
+
+USER_HOME="$(getent passwd "$(id -un)" | cut -d: -f6)"
+export HOME="${USER_HOME}"
+
+if [[ -n "${NPM_BIN:-}" ]]; then
+  test -x "${NPM_BIN}"
+  exit 0
+fi
+
+export NVM_DIR="${NVM_DIR:-${HOME}/.nvm}"
+if [[ -s "${NVM_DIR}/nvm.sh" ]]; then
+  . "${NVM_DIR}/nvm.sh"
+fi
+
+command -v npm >/dev/null 2>&1
+EOF
+
+chmod 755 "${NPM_CHECK_SCRIPT}"
+if ! NPM_BIN="${NPM_BIN}" runuser -u "${SERVICE_USER}" -- bash "${NPM_CHECK_SCRIPT}"; then
+  rm -f "${NPM_CHECK_SCRIPT}"
+  echo "${SERVICE_USER} 用户环境里找不到 npm。"
+  echo "检测到 nvm 时脚本会自动加载 ~/.nvm/nvm.sh；如果仍失败，请显式指定:"
+  echo "  sudo NPM_BIN=/home/${SERVICE_USER}/.nvm/versions/node/v24.15.0/bin/npm bash deploy/install-webhook.sh"
   exit 1
 fi
+rm -f "${NPM_CHECK_SCRIPT}"
 
 WEBHOOK_SECRET="$(openssl rand -hex 32)"
 
@@ -60,6 +86,7 @@ DEPLOY_BRANCH=${DEPLOY_BRANCH}
 GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
 HEALTHCHECK_URL=${HEALTHCHECK_URL}
 DEPLOY_CONFIG_FILE=${DEPLOY_CONFIG_FILE}
+NPM_BIN=${NPM_BIN}
 EOF
 
 chmod 600 "${WEBHOOK_ENV_FILE}"
@@ -115,7 +142,16 @@ if [[ -f "\${HOME}/.bashrc" ]]; then
   source "\${HOME}/.bashrc"
 fi
 
+export NVM_DIR="\${NVM_DIR:-\${HOME}/.nvm}"
+if [[ -s "\${NVM_DIR}/nvm.sh" ]]; then
+  source "\${NVM_DIR}/nvm.sh"
+fi
+
 cd "${REPO_DIR}"
+if [[ -n "\${NPM_BIN:-}" ]]; then
+  exec "\${NPM_BIN}" run deploy:webhook
+fi
+
 exec npm run deploy:webhook
 EOF
 
