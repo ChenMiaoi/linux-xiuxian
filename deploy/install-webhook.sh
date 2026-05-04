@@ -12,6 +12,7 @@ WEBHOOK_PATH="${WEBHOOK_PATH:-/github-webhook}"
 WEBHOOK_ENV_FILE="${WEBHOOK_ENV_FILE:-/etc/linux-xiuxian-webhook.env}"
 DEPLOY_CONFIG_FILE="${DEPLOY_CONFIG_FILE:-/etc/linux-xiuxian.deploy.yaml}"
 SERVICE_FILE="${SERVICE_FILE:-/etc/systemd/system/linux-xiuxian-webhook.service}"
+START_SCRIPT="${START_SCRIPT:-/usr/local/bin/linux-xiuxian-webhook-start}"
 HEALTHCHECK_URL="${HEALTHCHECK_URL:-http://127.0.0.1:8080/api/health}"
 SERVICE_USER="${SERVICE_USER:-ubuntu}"
 SERVICE_GROUP="${SERVICE_GROUP:-ubuntu}"
@@ -32,13 +33,18 @@ if ! command -v openssl >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v npm >/dev/null 2>&1; then
-  echo "缺少 npm，请先安装 Node.js/npm"
+if ! id "${SERVICE_USER}" >/dev/null 2>&1; then
+  echo "服务用户不存在: ${SERVICE_USER}"
   exit 1
 fi
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "缺少 docker，请先安装 Docker"
+  exit 1
+fi
+
+if ! runuser -u "${SERVICE_USER}" -- bash -lc 'command -v npm >/dev/null 2>&1'; then
+  echo "${SERVICE_USER} 用户环境里找不到 npm。请先用该用户安装 Node.js/npm，或设置 SERVICE_USER。"
   exit 1
 fi
 
@@ -90,9 +96,31 @@ fi
 sed \
   -e "s|^WorkingDirectory=.*|WorkingDirectory=${REPO_DIR}|" \
   -e "s|^EnvironmentFile=.*|EnvironmentFile=${WEBHOOK_ENV_FILE}|" \
+  -e "s|^ExecStart=.*|ExecStart=${START_SCRIPT}|" \
   -e "s|^User=.*|User=${SERVICE_USER}|" \
   -e "s|^Group=.*|Group=${SERVICE_GROUP}|" \
   "${REPO_DIR}/deploy/linux-xiuxian-webhook.service" > "${SERVICE_FILE}"
+
+cat > "${START_SCRIPT}" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+export HOME="\$(getent passwd "${SERVICE_USER}" | cut -d: -f6)"
+
+if [[ -f "\${HOME}/.profile" ]]; then
+  source "\${HOME}/.profile"
+fi
+
+if [[ -f "\${HOME}/.bashrc" ]]; then
+  source "\${HOME}/.bashrc"
+fi
+
+cd "${REPO_DIR}"
+exec npm run deploy:webhook
+EOF
+
+chmod 755 "${START_SCRIPT}"
+chown root:root "${START_SCRIPT}"
 
 systemctl daemon-reload
 systemctl enable --now linux-xiuxian-webhook
