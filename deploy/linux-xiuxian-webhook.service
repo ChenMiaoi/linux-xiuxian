@@ -1,0 +1,18 @@
+[Unit]
+Description=Linux Xiuxian GitHub webhook deploy service
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/linux-xiuxian
+EnvironmentFile=/etc/linux-xiuxian-webhook.env
+ExecStart=/usr/bin/npm run deploy:webhook
+Restart=always
+RestartSec=5
+User=ubuntu
+Group=ubuntu
+SupplementaryGroups=docker
+
+[Install]
+WantedBy=multi-user.target

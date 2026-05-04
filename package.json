@@ -17,6 +17,7 @@
     "server:start": "node server/index.js",
     "docker:build": "docker build -t linux-xiuxian .",
     "deploy": "node scripts/deploy.mjs",
+    "deploy:webhook": "node deploy/webhook-deploy.mjs",
     "deploy:logs": "docker logs -f linux-xiuxian",
     "deploy:stop": "docker rm -f linux-xiuxian"
   },

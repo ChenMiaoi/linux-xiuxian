@@ -1,34 +1,34 @@
-name: Deploy to Server
+name: CI
 
 on:
   push:
     branches: [main]
+  pull_request:
 
 permissions:
   contents: read
 
 concurrency:
-  group: server-deploy
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          script: |
-            set -e
-            cd /opt/linux-xiuxian
-            git fetch origin main
-            git reset --hard origin/main
-            git submodule update --init --recursive
-            npm ci
-            npm run deploy
-            docker ps --filter name=linux-xiuxian
-            curl -fsS http://127.0.0.1:8080/api/health
+          submodules: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: NODE_OPTIONS=--max-old-space-size=4096 npm run build
