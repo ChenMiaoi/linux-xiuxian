@@ -150,7 +150,7 @@ const reportReasons = [
 const pagePath = computed(() => {
   const rawPath = typeof window === 'undefined'
     ? route.path
-    : window.location.pathname.replace(/^\/linux-xiuxian(?=\/)/, '')
+    : window.location.pathname
   return normalizePagePath(rawPath || '/')
 })
 
@@ -334,7 +334,7 @@ function insertEmoji(emoji) {
 }
 
 function normalizePagePath(value) {
-  let path = value.split('?')[0].split('#')[0]
+  let path = normalizePath(value).split('?')[0].split('#')[0]
   path = path.replace(/\/index\.html$/, '/')
   path = path.replace(/\.html$/, '')
   return path || '/'

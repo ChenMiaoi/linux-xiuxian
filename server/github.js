@@ -5,14 +5,23 @@ import { getCurrentUser, requireUser } from './auth.js'
 
 const GITHUB_STATE_COOKIE = 'xiuxian_github_state'
 
+function normalizeSiteBase(value) {
+  if (!value || value === '/') return '/'
+  return `/${String(value).replace(/^\/+|\/+$/g, '')}/`
+}
+
+function siteUrl(siteBase, query) {
+  return siteBase === '/' ? `/${query}` : `${siteBase.replace(/\/$/, '')}/${query}`
+}
+
 function githubConfig(request) {
   const clientId = process.env.GITHUB_CLIENT_ID
   const clientSecret = process.env.GITHUB_CLIENT_SECRET
-  const siteBase = process.env.SITE_BASE || '/linux-xiuxian/'
+  const siteBase = normalizeSiteBase(process.env.SITE_BASE)
   const origin = process.env.APP_ORIGIN || `${request.protocol}://${request.hostname}`
   const callbackUrl = process.env.GITHUB_CALLBACK_URL || `${origin}/api/github/callback`
-  const successUrl = `${siteBase.replace(/\/$/, '')}/?github=linked`
-  const failureUrl = `${siteBase.replace(/\/$/, '')}/?github=failed`
+  const successUrl = siteUrl(siteBase, '?github=linked')
+  const failureUrl = siteUrl(siteBase, '?github=failed')
 
   return { clientId, clientSecret, callbackUrl, successUrl, failureUrl }
 }

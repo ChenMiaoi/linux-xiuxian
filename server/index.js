@@ -17,9 +17,15 @@ import { registerProgressRoutes } from './progress.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
 const distRoot = path.join(rootDir, 'docs/.vitepress/dist')
-const siteBase = process.env.SITE_BASE || '/linux-xiuxian/'
 const port = Number(process.env.PORT || 3000)
 const host = process.env.HOST || '0.0.0.0'
+
+function normalizeSiteBase(value) {
+  if (!value || value === '/') return '/'
+  return `/${String(value).replace(/^\/+|\/+$/g, '')}/`
+}
+
+const siteBase = normalizeSiteBase(process.env.SITE_BASE)
 
 const app = Fastify({
   logger: process.env.NODE_ENV !== 'test',
@@ -65,7 +71,9 @@ if (fs.existsSync(distRoot)) {
     decorateReply: false,
   })
 
-  app.get('/', async (_request, reply) => reply.redirect(siteBase))
+  if (siteBase !== '/') {
+    app.get('/', async (_request, reply) => reply.redirect(siteBase))
+  }
 
   app.setNotFoundHandler(async (request, reply) => {
     if (request.method !== 'GET' || request.url.startsWith('/api/')) {

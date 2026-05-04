@@ -31,7 +31,7 @@ function ensureDeployConfig() {
     host: '0.0.0.0',
     port: Number(containerPort),
     database_path: '/data/app.db',
-    site_base: '/linux-xiuxian/',
+    site_base: '/',
     cookie: {
       secret: cookieSecret,
       secure: false,
@@ -92,6 +92,6 @@ run('docker', [
 ])
 
 console.log('\n[4/4] 部署完成')
-console.log(`访问地址: http://服务器IP:${hostPort}/linux-xiuxian/`)
+console.log(`访问地址: http://服务器IP:${hostPort}/`)
 console.log(`查看日志: docker logs -f ${containerName}`)
 printDeployConfigHint()

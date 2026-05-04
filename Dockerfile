@@ -6,6 +6,8 @@ RUN npm ci
 
 FROM deps AS builder
 WORKDIR /app
+ARG SITE_BASE=/
+ENV SITE_BASE=${SITE_BASE}
 COPY . .
 RUN VITEPRESS_LAST_UPDATED=false npm run build:docker
 
@@ -15,7 +17,7 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=8080
 ENV DATABASE_PATH=/data/app.db
-ENV SITE_BASE=/linux-xiuxian/
+ENV SITE_BASE=/
 
 COPY package*.json ./
 COPY scripts/setup-git-hooks.mjs ./scripts/setup-git-hooks.mjs

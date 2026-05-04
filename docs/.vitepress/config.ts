@@ -3,7 +3,12 @@ import playgroundPlugin from './theme/markdown-it-playground'
 import kernelSourcePlugin from './theme/markdown-it-kernel-source'
 import { getZhSidebar, getEnSidebar } from './sidebar'
 
-const base = '/linux-xiuxian/'
+function normalizeBase(value: string | undefined): string {
+  if (!value || value === '/') return '/'
+  return `/${value.replace(/^\/+|\/+$/g, '')}/`
+}
+
+const base = normalizeBase(process.env.SITE_BASE || process.env.VITEPRESS_BASE)
 
 export default defineConfig({
   base,
