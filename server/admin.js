@@ -31,41 +31,58 @@ function adminUserRow(row) {
   const riskReasons = []
   let riskScore = 0
 
+  function addRisk(points, reason) {
+    riskScore += points
+    riskReasons.push(reason)
+  }
+
   if (!user.github) {
-    riskScore += 10
-    riskReasons.push('未绑定 GitHub')
+    addRisk(3, '未绑定 GitHub')
   }
-  if (row.comment_count >= 20) {
-    riskScore += 20
-    riskReasons.push('评论数量较高')
+
+  if (row.comment_count >= 100) {
+    addRisk(10, '累计发言很多')
+  } else if (row.comment_count >= 50) {
+    addRisk(5, '累计发言较多')
   }
-  if (row.deleted_comment_count >= 3) {
-    riskScore += 35
-    riskReasons.push('多条评论被删除')
+
+  if (row.deleted_comment_count >= 10) {
+    addRisk(45, '删除评论数量过高')
+  } else if (row.deleted_comment_count >= 5) {
+    addRisk(25, '多条评论被删除')
+  } else if (row.deleted_comment_count >= 2) {
+    addRisk(10, '存在评论被删除')
   }
-  if (row.deleted_comment_count >= 8) {
-    riskScore += 35
-    riskReasons.push('删除评论数量过高')
+
+  if (row.recent_comment_count >= 50) {
+    addRisk(25, '24 小时内发言异常密集')
+  } else if (row.recent_comment_count >= 30) {
+    addRisk(15, '24 小时内发言密集')
+  } else if (row.recent_comment_count >= 15) {
+    addRisk(8, '24 小时内发言较多')
   }
-  if (row.recent_comment_count >= 10) {
-    riskScore += 35
-    riskReasons.push('24 小时内发言密集')
+
+  if (row.moderation_event_count >= 5) {
+    addRisk(35, '多次被管理员处理')
+  } else if (row.moderation_event_count >= 2) {
+    addRisk(15, '曾被管理员处理')
   }
-  if (row.moderation_event_count >= 2) {
-    riskScore += 25
-    riskReasons.push('多次被管理员处理')
+
+  if (row.rejected_report_count >= 10) {
+    addRisk(25, '多次举报未被采纳')
+  } else if (row.rejected_report_count >= 5) {
+    addRisk(12, '举报多次未被采纳')
   }
+
+  if (row.recent_report_count >= 50) {
+    addRisk(30, '24 小时内举报异常频繁')
+  } else if (row.recent_report_count >= 25) {
+    addRisk(15, '24 小时内举报较频繁')
+  }
+
   if (row.admin_privilege_attempt_count >= 1) {
     riskScore = 100
     riskReasons.push('尝试访问管理员权限接口')
-  }
-  if (row.rejected_report_count >= 3) {
-    riskScore += 30
-    riskReasons.push('多次举报未被采纳')
-  }
-  if (row.recent_report_count >= 20) {
-    riskScore += 35
-    riskReasons.push('24 小时内举报过于频繁')
   }
 
   const finalScore = Math.min(100, riskScore)
