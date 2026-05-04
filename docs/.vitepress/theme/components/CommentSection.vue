@@ -61,7 +61,7 @@
             </span>
             <time>{{ formatTime(comment.createdAt) }}</time>
           </header>
-          <p>{{ comment.content }}</p>
+          <div class="comment-markdown markdown-content" v-html="renderMarkdown(comment.content)" />
           <div class="comment-tools">
             <button type="button" :class="{ active: comment.likedByMe }" @click="toggleLike(comment)">
               {{ comment.likedByMe ? '已赞' : '点赞' }} {{ comment.likeCount || 0 }}
@@ -91,7 +91,7 @@
               </span>
               <time>{{ formatTime(reply.createdAt) }}</time>
             </header>
-            <p>{{ reply.content }}</p>
+            <div class="comment-markdown markdown-content" v-html="renderMarkdown(reply.content)" />
             <div class="comment-tools">
               <button type="button" :class="{ active: reply.likedByMe }" @click="toggleLike(reply)">
                 {{ reply.likedByMe ? '已赞' : '点赞' }} {{ reply.likeCount || 0 }}
@@ -122,6 +122,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vitepress'
 import { apiGet, apiPost, authState, loadMe } from '../auth-state'
 import { rankForPoints } from '../rank-utils'
+import { renderMarkdown } from '../markdown-render'
 
 const route = useRoute()
 const comments = ref([])

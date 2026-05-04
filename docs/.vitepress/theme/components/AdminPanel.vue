@@ -97,7 +97,7 @@
               <span>{{ reportReasonText(comment.reportReasons) }}</span>
               <time>{{ formatTime(comment.createdAt) }}</time>
             </header>
-            <p>{{ comment.content }}</p>
+            <div class="admin-markdown markdown-content" v-html="renderMarkdown(comment.content)" />
             <div class="admin-user-actions">
               <button type="button" @click="deleteComment(comment.id)">删除并采纳举报</button>
               <button type="button" @click="rejectReports(comment.id)">驳回举报</button>
@@ -118,7 +118,7 @@
                 <span>{{ message.subject }}</span>
                 <time>{{ formatTime(message.createdAt) }}</time>
               </header>
-              <p>{{ message.body }}</p>
+              <div class="admin-markdown markdown-content" v-html="renderMarkdown(message.body)" />
               <textarea v-model="replyDrafts[message.id]" placeholder="回复用户" rows="3" />
               <div class="admin-user-actions">
                 <button type="button" @click="replyMessage(message.id)">回复并关闭</button>
@@ -137,7 +137,7 @@
               <span>{{ statusText(message.status) }}</span>
               <time>{{ formatTime(message.createdAt) }}</time>
             </header>
-            <p>{{ message.body }}</p>
+            <div class="admin-markdown markdown-content" v-html="renderMarkdown(message.body)" />
               <button v-if="message.status !== 'closed'" type="button" @click="closeMessage(message.id)">关闭记录</button>
             </article>
             <div v-if="!warningMessages.length" class="admin-empty">暂无系统警告</div>
@@ -152,6 +152,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { apiGet, apiPost, authState, loadMe } from '../auth-state'
+import { renderMarkdown } from '../markdown-render'
 
 const loading = ref(true)
 const message = ref('')

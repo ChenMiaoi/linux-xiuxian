@@ -1767,9 +1767,73 @@ iframe[data-playground-runner] {
   font-size: 12px;
 }
 
-.comment-item p {
+.comment-item p,
+.markdown-content p {
   margin: 0;
-  white-space: pre-wrap;
+}
+
+.markdown-content {
+  color: var(--vp-c-text-1);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.markdown-content > * + * {
+  margin-top: 10px;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.markdown-content li + li {
+  margin-top: 4px;
+}
+
+.markdown-content blockquote {
+  margin: 0;
+  border-left: 3px solid var(--xiuxian-gold);
+  padding-left: 12px;
+  color: var(--vp-c-text-2);
+}
+
+.markdown-content pre {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--vp-code-block-bg);
+  color: var(--vp-code-block-color);
+  font-family: var(--vp-font-family-mono);
+  font-size: var(--xiuxian-code-font-size);
+  line-height: 1.55;
+}
+
+.markdown-content code {
+  font-family: var(--vp-font-family-mono);
+}
+
+.markdown-content :not(pre) > code {
+  border-radius: 4px;
+  padding: 1px 5px;
+  background: var(--vp-code-bg);
+  color: var(--vp-code-color);
+  font-size: 0.92em;
+}
+
+.markdown-content a {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-content hr {
+  margin: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--vp-c-divider);
 }
 
 .comment-tools {
@@ -2090,9 +2154,9 @@ iframe[data-playground-runner] {
   margin-bottom: 8px;
 }
 
-.admin-comment p {
+.admin-comment p,
+.admin-markdown {
   margin: 0 0 10px;
-  white-space: pre-wrap;
 }
 
 .admin-comment textarea,
@@ -2177,9 +2241,8 @@ iframe[data-playground-runner] {
   font-size: 13px;
 }
 
-.mailbox-message p {
+.mailbox-markdown {
   margin: 0;
-  white-space: pre-wrap;
 }
 
 .mailbox-message.unread {
@@ -2475,9 +2538,9 @@ iframe[data-playground-runner] {
 }
 
 .forum-post p,
-.forum-reply p {
+.forum-reply p,
+.forum-markdown {
   margin: 0;
-  white-space: pre-wrap;
 }
 
 .forum-tools button {

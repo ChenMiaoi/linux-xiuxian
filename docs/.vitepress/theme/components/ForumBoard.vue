@@ -113,7 +113,7 @@
             {{ rankForPoints(post.author.cultivationPoints).name }}
           </span>
         </div>
-        <p>{{ parsePost(post).body }}</p>
+        <div class="forum-markdown markdown-content" v-html="renderMarkdown(parsePost(post).body)" />
         <div class="forum-tools">
           <button type="button" :class="{ active: post.likedByMe }" @click="toggleLike(post)">
             {{ post.likedByMe ? '已赞' : '点赞' }} {{ post.likeCount || 0 }}
@@ -147,7 +147,7 @@
               <span v-if="reply.author.title" class="cultivation-title-badge">{{ reply.author.title.name }}</span>
               <time>{{ formatTime(reply.createdAt) }}</time>
             </header>
-            <p>{{ reply.content }}</p>
+            <div class="forum-markdown markdown-content" v-html="renderMarkdown(reply.content)" />
             <div class="forum-tools">
               <button type="button" :class="{ active: reply.likedByMe }" @click="toggleLike(reply)">
                 {{ reply.likedByMe ? '已赞' : '点赞' }} {{ reply.likeCount || 0 }}
@@ -176,6 +176,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { apiGet, apiPost, authState, loadMe } from '../auth-state'
 import { rankForPoints } from '../rank-utils'
+import { renderMarkdown } from '../markdown-render'
 
 const forumPath = '/forum'
 const comments = ref([])

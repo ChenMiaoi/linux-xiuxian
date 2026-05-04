@@ -16,7 +16,7 @@
           <span>{{ labelKind(message.kind) }}</span>
           <time>{{ formatTime(message.createdAt) }}</time>
         </header>
-        <p>{{ message.body }}</p>
+        <div class="mailbox-markdown markdown-content" v-html="renderMarkdown(message.body)" />
         <button v-if="!message.readAt" type="button" @click="markRead(message.id)">标记已读</button>
       </article>
       <div v-if="!loading && !messages.length" class="admin-empty">暂无消息</div>
@@ -28,6 +28,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { apiGet, apiPost, authState, loadMe, refreshMailboxStatus } from '../auth-state'
+import { renderMarkdown } from '../markdown-render'
 
 const loading = ref(true)
 const pending = ref(false)
