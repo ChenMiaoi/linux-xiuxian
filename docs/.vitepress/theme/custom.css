@@ -1143,6 +1143,21 @@ iframe[data-playground-runner] {
   line-height: 16px;
 }
 
+.xiuxian-comment-outline {
+  display: block;
+  margin: 2px 0 8px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 28px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.xiuxian-comment-outline:hover {
+  color: var(--vp-c-brand-1);
+}
+
 .VPDocFooter .prev-next {
   display: none;
 }

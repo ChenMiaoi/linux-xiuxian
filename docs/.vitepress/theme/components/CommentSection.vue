@@ -1,5 +1,5 @@
 <template>
-  <section v-if="show" class="comment-section">
+  <section v-if="show" id="comments" class="comment-section">
     <div class="comment-head">
       <h2>同道留言</h2>
       <span>{{ comments.length }} 条</span>
@@ -123,6 +123,7 @@ import { useRoute } from 'vitepress'
 import { apiGet, apiPost, authState, loadMe } from '../auth-state'
 import { rankForPoints } from '../rank-utils'
 import { renderMarkdown } from '../markdown-render'
+import { GATE_CHANGE_EVENT, NOVEL_PROGRESS_EVENT, isNovelChapterPath, normalizePath } from '../novel-progress'
 
 const route = useRoute()
 const comments = ref([])
@@ -135,6 +136,7 @@ const replyTarget = ref(null)
 const reportTarget = ref(null)
 const reportReason = ref('spam')
 const reportDetails = ref('')
+const commentUnlocked = ref(true)
 const emojis = ['😀', '😂', '👍', '🙏', '🔥', '💡', '🎉', '🤔']
 const reportReasons = [
   { value: 'spam', label: '垃圾广告' },
@@ -154,7 +156,7 @@ const pagePath = computed(() => {
 
 const show = computed(() => {
   const path = pagePath.value
-  return !isCommentDisabledPath(path)
+  return !isCommentDisabledPath(path) && commentUnlocked.value
 })
 
 const commentTree = computed(() => {
@@ -177,15 +179,41 @@ onMounted(() => {
   if (!authState.ready) loadMe().catch(() => {
     authState.ready = true
   })
+  updateCommentUnlocked()
   loadComments()
   window.addEventListener('xiuxian-auth-change', loadComments)
+  window.addEventListener(GATE_CHANGE_EVENT, handleProgressChange)
+  window.addEventListener(NOVEL_PROGRESS_EVENT, handleProgressChange)
 })
 
 onUnmounted(() => {
   window.removeEventListener('xiuxian-auth-change', loadComments)
+  window.removeEventListener(GATE_CHANGE_EVENT, handleProgressChange)
+  window.removeEventListener(NOVEL_PROGRESS_EVENT, handleProgressChange)
 })
 
-watch(() => route.path, loadComments)
+watch(() => route.path, () => {
+  updateCommentUnlocked()
+  loadComments()
+})
+
+function handleProgressChange() {
+  updateCommentUnlocked()
+  loadComments()
+}
+
+function updateCommentUnlocked() {
+  if (typeof window === 'undefined') {
+    commentUnlocked.value = true
+    return
+  }
+  const path = normalizePath(window.location.pathname)
+  if (!isNovelChapterPath(path)) {
+    commentUnlocked.value = true
+    return
+  }
+  commentUnlocked.value = !document.querySelector('.section-gate[data-solved="false"], .chapter-gate[data-solved="false"]')
+}
 
 async function loadComments() {
   if (!show.value) {

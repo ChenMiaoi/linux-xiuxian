@@ -86,13 +86,45 @@ function installSectionGates(): void {
   const path = currentPath()
   if (!isNovelChapterPath(path)) {
     updateSidebarLocks()
+    updateCommentOutlineLink()
     return
   }
 
   updatePageCompletion()
   updateSidebarLocks()
+  updateCommentOutlineLink()
   window.clearTimeout(scrollTimer)
   scrollTimer = window.setTimeout(clampScroll, 80)
+}
+
+function updateCommentOutlineLink(): void {
+  const existing = document.querySelector<HTMLAnchorElement>('.xiuxian-comment-outline')
+  const path = currentPath()
+  const unlocked = isNovelChapterPath(path) && !firstUnsolvedGate()
+
+  if (!unlocked) {
+    existing?.remove()
+    return
+  }
+
+  const outline = document.querySelector<HTMLElement>('.VPDocAsideOutline .content')
+  if (!outline) return
+
+  const link = existing ?? document.createElement('a')
+  link.className = 'xiuxian-comment-outline'
+  link.href = '#comments'
+  link.textContent = '同道留言'
+  link.setAttribute('aria-label', '跳转到同道留言')
+  link.onclick = (event) => {
+    event.preventDefault()
+    document.getElementById('comments')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    history.replaceState(null, '', '#comments')
+  }
+
+  if (!existing) {
+    const title = outline.querySelector('.outline-title')
+    title?.insertAdjacentElement('afterend', link)
+  }
 }
 
 function updateSidebarLocks(): void {
@@ -148,6 +180,7 @@ function refresh(): void {
   const run = () => {
     guardDirectRoute()
     installSectionGates()
+    updateCommentOutlineLink()
   }
 
   nextTick(run)
@@ -165,6 +198,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.clearTimeout(refreshTimer)
+  document.querySelector<HTMLAnchorElement>('.xiuxian-comment-outline')?.remove()
   removeSidebarHandler?.()
   window.removeEventListener('scroll', clampScroll)
   window.removeEventListener(GATE_CHANGE_EVENT, refresh)

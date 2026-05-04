@@ -25,7 +25,7 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'nav-bar-content-after': navTools,
       'nav-screen-content-after': navTools,
-      'doc-after': () => h(CommentSection),
+      'doc-footer-before': () => h(CommentSection),
       'layout-bottom': () => h(CodeFontSettings),
       'layout-top': () => h(NovelProgressGuard),
     })
