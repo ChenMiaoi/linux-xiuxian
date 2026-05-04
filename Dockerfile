@@ -9,7 +9,7 @@ WORKDIR /app
 ARG SITE_BASE=/
 ENV SITE_BASE=${SITE_BASE}
 COPY . .
-RUN VITEPRESS_LAST_UPDATED=false npm run build:docker
+RUN NODE_OPTIONS=--max-old-space-size=4096 VITEPRESS_LAST_UPDATED=false npm run build:docker
 
 FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
