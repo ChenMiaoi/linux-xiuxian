@@ -1,0 +1,57 @@
+# Linux 内核修仙传 Nginx 反代模板，适配腾讯云 Lighthouse 常见 HTTPS 配置
+# 使用方式:
+# 1. 将 __DOMAIN__ 替换为你的域名，例如 linux-xiuxian.asia
+# 2. 将 __UPSTREAM__ 替换为 Node/Docker 服务地址，例如 127.0.0.1:8080
+# 3. 将 __CERT_FILE__ 和 __CERT_KEY_FILE__ 替换为证书文件路径或文件名
+# 4. 如果未启用 HTTPS，可删除 80 跳转段，并把 443 段改为 listen 80，同时删除 ssl_* 配置
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+upstream linux_xiuxian_app {
+  server __UPSTREAM__;
+  keepalive 32;
+}
+
+server {
+  listen 80;
+  server_name __DOMAIN__;
+
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  server_tokens off;
+  keepalive_timeout 5;
+  server_name __DOMAIN__;
+
+  access_log logs/linux-xiuxian.log;
+  error_log logs/linux-xiuxian.error.log;
+
+  ssl_certificate __CERT_FILE__;
+  ssl_certificate_key __CERT_KEY_FILE__;
+  ssl_session_timeout 5m;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+  ssl_prefer_server_ciphers on;
+
+  client_max_body_size 2m;
+
+  location / {
+    proxy_pass http://linux_xiuxian_app;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_read_timeout 60s;
+    proxy_send_timeout 60s;
+  }
+}

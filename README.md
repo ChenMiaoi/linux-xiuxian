@@ -27,6 +27,62 @@ npm run dev
 npm run build
 ```
 
+## 部署
+
+项目默认支持根路径部署，适合直接通过域名访问，例如 `https://linux-xiuxian.asia/`。
+
+```bash
+# 构建并启动 Docker 服务，默认监听宿主机 8080 端口
+npm run deploy
+```
+
+如果前面有 HTTPS Nginx 反代，请在本机 `.deploy.yaml` 中确认：
+
+```yaml
+site_base: /
+trust_proxy: true
+cookie:
+  secure: true
+app_origin: https://linux-xiuxian.asia
+```
+
+Nginx 模板见 `deploy/nginx-linux-xiuxian.conf.template`，将其中的 `__DOMAIN__` 和 `__UPSTREAM__` 替换后即可使用。
+
+腾讯云 Lighthouse 这类证书文件部署方式，可按下面替换：
+
+```nginx
+server {
+    listen 443 ssl;
+    server_tokens off;
+    keepalive_timeout 5;
+    server_name linux-xiuxian.asia;
+    access_log logs/linux-xiuxian.log;
+    error_log logs/linux-xiuxian.error.log;
+
+    ssl_certificate linux-xiuxian.asia_bundle.crt;
+    ssl_certificate_key linux-xiuxian.asia.key;
+    ssl_session_timeout 5m;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+    ssl_prefer_server_ciphers on;
+
+    client_max_body_size 2m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_read_timeout 60s;
+        proxy_send_timeout 60s;
+    }
+}
+```
+
 ## 项目结构
 
 ```
