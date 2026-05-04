@@ -319,9 +319,11 @@ function isCommentDisabledPath(path) {
     || normalized === '/en/rank'
     || normalized === '/admin'
     || normalized === '/mailbox'
+    || normalized === '/titles'
     || normalized === '/forum'
     || normalized.startsWith('/admin/')
     || normalized.startsWith('/mailbox/')
+    || normalized.startsWith('/titles/')
     || normalized.startsWith('/forum/')
     || normalized.endsWith('/404')
 }

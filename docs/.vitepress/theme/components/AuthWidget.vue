@@ -19,16 +19,6 @@
           <strong>{{ authState.user.title.name }}</strong>
           <span>{{ authState.user.title.description }}</span>
           <small>已解锁 {{ authState.user.titles?.count || 1 }} 个称号</small>
-          <div v-if="authState.user.titles?.unlocked?.length" class="auth-title-shelf">
-            <span
-              v-for="title in authState.user.titles.unlocked.slice(-8)"
-              :key="title.name"
-              class="cultivation-title-badge"
-              :title="title.description"
-            >
-              {{ title.name }}
-            </span>
-          </div>
         </div>
         <a v-if="authState.unreadRiskWarnings" class="auth-warning-link" href="/linux-xiuxian/mailbox">
           <strong>系统警告待查看</strong>
@@ -39,6 +29,7 @@
           <span v-if="authState.user.github" class="auth-github">@{{ authState.user.github.login }}</span>
           <span v-else class="auth-muted">未绑定</span>
         </div>
+        <a class="auth-secondary auth-link-button" href="/linux-xiuxian/titles">称号</a>
         <a class="auth-secondary auth-link-button" href="/linux-xiuxian/mailbox">信箱</a>
         <button v-if="authState.user.github" class="auth-secondary" type="button" @click.stop.prevent="handleGitHubUnlink">解绑 GitHub</button>
         <button v-else class="auth-secondary" type="button" @click.stop.prevent="handleGitHubLink">绑定 GitHub</button>

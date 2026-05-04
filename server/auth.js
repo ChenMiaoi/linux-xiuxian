@@ -37,6 +37,10 @@ export const loginSchema = z.object({
   password: z.string().min(1).max(128),
 })
 
+const titleSelectionSchema = z.object({
+  titleName: z.string().trim().max(80).nullable().optional(),
+})
+
 export function hashToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex')
 }
@@ -229,6 +233,30 @@ export function registerAuthRoutes(app) {
   })
 
   app.get('/api/auth/me', async (request) => ({ user: getCurrentUser(request) }))
+
+  app.post('/api/auth/title', async (request, reply) => {
+    const user = requireUser(request, reply)
+    if (!user) return
+
+    const parsed = titleSelectionSchema.safeParse(request.body || {})
+    if (!parsed.success) {
+      return reply.code(400).send({ error: 'BAD_REQUEST', message: '称号选择不正确' })
+    }
+
+    const titleName = parsed.data.titleName || null
+    if (titleName && !user.titles?.unlocked?.some((title) => title.name === titleName)) {
+      return reply.code(400).send({ error: 'TITLE_LOCKED', message: '该称号尚未解锁' })
+    }
+
+    db.prepare(`
+      UPDATE users
+      SET selected_title_name = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(titleName, user.id)
+
+    const freshRow = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id)
+    return { user: publicUser(freshRow) }
+  })
 
   app.post('/api/auth/seed-points', async (request, reply) => {
     if (process.env.NODE_ENV === 'production') return reply.code(404).send({ error: 'NOT_FOUND' })

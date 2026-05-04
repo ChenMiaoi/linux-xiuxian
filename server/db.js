@@ -136,6 +136,9 @@ if (!userColumnSet.has('muted_until')) {
 if (!userColumnSet.has('moderation_note')) {
   db.exec('ALTER TABLE users ADD COLUMN moderation_note TEXT')
 }
+if (!userColumnSet.has('selected_title_name')) {
+  db.exec('ALTER TABLE users ADD COLUMN selected_title_name TEXT')
+}
 db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_github_id ON users(github_id) WHERE github_id IS NOT NULL')
 const duplicateUsernames = db.prepare(`
   SELECT lower(username) AS normalized, COUNT(*) AS count
@@ -173,6 +176,7 @@ export function publicUser(row) {
     rank: rankForPoints(row.cultivation_points),
     title: titles.primary,
     titles,
+    selectedTitleName: row.selected_title_name,
     github: row.github_id ? {
       id: row.github_id,
       login: row.github_login,

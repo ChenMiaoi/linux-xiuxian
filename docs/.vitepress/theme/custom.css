@@ -2264,6 +2264,134 @@ iframe[data-playground-runner] {
   cursor: pointer;
 }
 
+/* ===== 称号页 ===== */
+
+.title-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.title-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 2px solid var(--xiuxian-gold);
+  padding-bottom: 16px;
+}
+
+.title-hero span {
+  color: var(--xiuxian-gold);
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.title-hero h1 {
+  margin: 2px 0 0;
+  border: 0;
+  padding: 0;
+}
+
+.title-hero p {
+  margin: 8px 0 0;
+  color: var(--vp-c-text-2);
+}
+
+.title-hero a,
+.title-card button {
+  min-height: 34px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 0 12px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  font: inherit;
+  line-height: 34px;
+  text-decoration: none;
+}
+
+.title-current,
+.title-card,
+.title-empty {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--vp-c-bg) 94%, var(--vp-c-bg-alt));
+}
+
+.title-current {
+  display: grid;
+  gap: 6px;
+  border-color: rgba(234, 179, 8, 0.5);
+  background: rgba(234, 179, 8, 0.08);
+}
+
+.title-current span,
+.title-card small {
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+}
+
+.title-current strong {
+  color: var(--xiuxian-gold);
+  font-size: 20px;
+}
+
+.title-current p,
+.title-card p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+}
+
+.title-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.title-card {
+  display: grid;
+  gap: 12px;
+}
+
+.title-card.active {
+  border-color: var(--xiuxian-gold);
+  box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.18);
+}
+
+.title-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title-card button {
+  justify-self: start;
+}
+
+.title-card button:not(:disabled):hover,
+.title-hero a:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+
+.title-card button:disabled {
+  border-color: var(--xiuxian-gold);
+  background: var(--xiuxian-gold-soft);
+  color: var(--xiuxian-gold);
+  cursor: default;
+}
+
+.title-empty,
+.title-message {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
 /* ===== 问道坛 ===== */
 
 .forum-board {
@@ -2735,6 +2863,17 @@ iframe[data-playground-runner] {
   .admin-risk {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .title-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .title-hero a {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
   }
 
   .forum-compose-head,

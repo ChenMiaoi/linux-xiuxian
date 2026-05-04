@@ -97,7 +97,8 @@ export function buildUserTitles(user, stats = {}) {
   }
 
   const deduped = [...new Map(titles.map((title) => [title.name, title])).values()]
-  const primary = deduped.at(-1) || { name: '无名散修', description: '尚未留下足够道痕。', source: '初始', tone: 'normal', threshold: 0 }
+  const selected = deduped.find((title) => title.name === user.selected_title_name)
+  const primary = selected || deduped.at(-1) || { name: '无名散修', description: '尚未留下足够道痕。', source: '初始', tone: 'normal', threshold: 0 }
   return {
     primary,
     unlocked: deduped,
