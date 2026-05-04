@@ -29,6 +29,10 @@
           <span>已删评论</span>
           <strong>{{ summary.deletedComments }}</strong>
         </div>
+        <div>
+          <span>被举报评论</span>
+          <strong>{{ summary.reportedComments }}</strong>
+        </div>
       </div>
 
       <section v-if="tab === 'users'" class="admin-section">
@@ -83,17 +87,23 @@
       </section>
 
       <section v-if="tab === 'comments'" class="admin-section">
-        <h2>评论</h2>
+        <h2>被举报评论</h2>
         <div class="admin-comments">
           <article v-for="comment in comments" :key="comment.id" class="admin-comment">
             <header>
               <strong>{{ comment.author.displayName }}</strong>
               <span>{{ comment.pagePath }}</span>
+              <span>举报 {{ comment.reportCount }}</span>
+              <span>{{ reportReasonText(comment.reportReasons) }}</span>
               <time>{{ formatTime(comment.createdAt) }}</time>
             </header>
             <p>{{ comment.content }}</p>
-            <button type="button" @click="deleteComment(comment.id)">删除评论</button>
+            <div class="admin-user-actions">
+              <button type="button" @click="deleteComment(comment.id)">删除并采纳举报</button>
+              <button type="button" @click="rejectReports(comment.id)">驳回举报</button>
+            </div>
           </article>
+          <div v-if="!comments.length" class="admin-empty">暂无被举报评论</div>
         </div>
       </section>
 
@@ -145,7 +155,7 @@ import { apiGet, apiPost, authState, loadMe } from '../auth-state'
 
 const loading = ref(true)
 const message = ref('')
-const summary = ref({ users: 0, comments: 0, deletedComments: 0 })
+const summary = ref({ users: 0, comments: 0, deletedComments: 0, reportedComments: 0 })
 const users = ref([])
 const comments = ref([])
 const adminMessages = ref([])
@@ -198,6 +208,16 @@ async function deleteComment(id) {
     ...summary.value,
     comments: Math.max(0, summary.value.comments - 1),
     deletedComments: summary.value.deletedComments + 1,
+    reportedComments: Math.max(0, summary.value.reportedComments - 1),
+  }
+}
+
+async function rejectReports(id) {
+  await apiPost(`/api/admin/comments/${id}/reject-reports`, {})
+  comments.value = comments.value.filter((comment) => comment.id !== id)
+  summary.value = {
+    ...summary.value,
+    reportedComments: Math.max(0, summary.value.reportedComments - 1),
   }
 }
 
@@ -246,6 +266,18 @@ function statusLabel(status) {
 
 function statusText(status) {
   return status === 'closed' ? '已关闭' : '待处理'
+}
+
+function reportReasonText(reasons = []) {
+  const labels = {
+    spam: '垃圾广告',
+    abuse: '人身攻击',
+    illegal: '违法内容',
+    spoiler: '剧透刷屏',
+    offtopic: '严重跑题',
+    other: '其他违规',
+  }
+  return reasons.map((reason) => labels[reason] || reason).join('、') || '未分类'
 }
 
 function formatTime(value) {

@@ -36,6 +36,19 @@
       </div>
     </form>
 
+    <form v-if="reportTarget" class="comment-report-form" @submit.prevent="submitReport">
+      <div>
+        <strong>举报 {{ reportTarget.author.displayName }} 的评论</strong>
+        <button type="button" @click="cancelReport">取消</button>
+      </div>
+      <p>可举报：垃圾广告、人身攻击、违法内容、剧透刷屏、严重跑题。恶意或高频误报可能被限制举报、禁言或封禁。</p>
+      <select v-model="reportReason" :disabled="reportPending">
+        <option v-for="reason in reportReasons" :key="reason.value" :value="reason.value">{{ reason.label }}</option>
+      </select>
+      <textarea v-model.trim="reportDetails" :disabled="reportPending" maxlength="300" rows="3" placeholder="补充说明，可选" />
+      <button type="submit" :disabled="reportPending">{{ reportPending ? '提交中' : '提交举报' }}</button>
+    </form>
+
     <div v-if="loading" class="comment-empty">读取留言中</div>
     <div v-else-if="commentTree.length" class="comment-list">
       <article v-for="comment in commentTree" :key="comment.id" class="comment-thread">
@@ -54,6 +67,9 @@
               {{ comment.likedByMe ? '已赞' : '点赞' }} {{ comment.likeCount || 0 }}
             </button>
             <button type="button" :disabled="!authState.user" @click="startReply(comment)">回复</button>
+            <button type="button" :disabled="!authState.user || comment.reportedByMe || authState.user.id === comment.author.id" @click="startReport(comment)">
+              {{ comment.reportedByMe ? '已举报' : '举报' }} <span v-if="comment.reportCount">{{ comment.reportCount }}</span>
+            </button>
             <button
               v-if="authState.user && (authState.user.id === comment.author.id || authState.user.role === 'admin')"
               class="comment-delete"
@@ -81,6 +97,9 @@
                 {{ reply.likedByMe ? '已赞' : '点赞' }} {{ reply.likeCount || 0 }}
               </button>
               <button type="button" :disabled="!authState.user" @click="startReply(comment)">回复</button>
+              <button type="button" :disabled="!authState.user || reply.reportedByMe || authState.user.id === reply.author.id" @click="startReport(reply)">
+                {{ reply.reportedByMe ? '已举报' : '举报' }} <span v-if="reply.reportCount">{{ reply.reportCount }}</span>
+              </button>
               <button
                 v-if="authState.user && (authState.user.id === reply.author.id || authState.user.role === 'admin')"
                 class="comment-delete"
@@ -110,8 +129,20 @@ const content = ref('')
 const message = ref('')
 const loading = ref(false)
 const pending = ref(false)
+const reportPending = ref(false)
 const replyTarget = ref(null)
+const reportTarget = ref(null)
+const reportReason = ref('spam')
+const reportDetails = ref('')
 const emojis = ['😀', '😂', '👍', '🙏', '🔥', '💡', '🎉', '🤔']
+const reportReasons = [
+  { value: 'spam', label: '垃圾广告' },
+  { value: 'abuse', label: '人身攻击' },
+  { value: 'illegal', label: '违法内容' },
+  { value: 'spoiler', label: '剧透刷屏' },
+  { value: 'offtopic', label: '严重跑题' },
+  { value: 'other', label: '其他违规' },
+]
 
 const pagePath = computed(() => {
   const rawPath = typeof window === 'undefined'
@@ -229,8 +260,44 @@ function startReply(comment) {
   content.value = content.value || `@${comment.author.displayName} `
 }
 
+function startReport(comment) {
+  if (!authState.user) {
+    message.value = '登录后可举报'
+    return
+  }
+  reportTarget.value = comment
+  reportReason.value = 'spam'
+  reportDetails.value = ''
+}
+
+async function submitReport() {
+  if (!reportTarget.value) return
+  reportPending.value = true
+  message.value = ''
+  try {
+    const data = await apiPost(`/api/comments/${reportTarget.value.id}/report`, {
+      reason: reportReason.value,
+      details: reportDetails.value,
+    })
+    comments.value = comments.value.map((item) => {
+      if (item.id !== reportTarget.value.id) return item
+      return { ...item, reportedByMe: data.reportedByMe, reportCount: data.reportCount }
+    })
+    reportTarget.value = null
+    message.value = '举报已提交，管理员采纳后将获得修为。'
+  } catch (error) {
+    message.value = error.message
+  } finally {
+    reportPending.value = false
+  }
+}
+
 function cancelReply() {
   replyTarget.value = null
+}
+
+function cancelReport() {
+  reportTarget.value = null
 }
 
 function insertEmoji(emoji) {

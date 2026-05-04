@@ -50,6 +50,18 @@ CREATE TABLE IF NOT EXISTS comment_likes (
   PRIMARY KEY (comment_id, user_id)
 );
 
+CREATE TABLE IF NOT EXISTS comment_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+  reporter_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reason TEXT NOT NULL,
+  details TEXT,
+  status TEXT NOT NULL DEFAULT 'open',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  resolved_at TEXT,
+  UNIQUE(comment_id, reporter_user_id)
+);
+
 CREATE TABLE IF NOT EXISTS point_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -93,6 +105,8 @@ CREATE INDEX IF NOT EXISTS idx_sessions_token_hash ON sessions(token_hash);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_comments_page_path ON comments(page_path, created_at);
 CREATE INDEX IF NOT EXISTS idx_comment_likes_user_id ON comment_likes(user_id);
+CREATE INDEX IF NOT EXISTS idx_comment_reports_comment_status ON comment_reports(comment_id, status);
+CREATE INDEX IF NOT EXISTS idx_comment_reports_reporter_created ON comment_reports(reporter_user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_point_events_user_source_created ON point_events(user_id, source, created_at);
 CREATE INDEX IF NOT EXISTS idx_moderation_events_user ON user_moderation_events(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_system_messages_user ON system_messages(user_id, created_at);
@@ -248,6 +262,27 @@ export function awardCommentPoints(userId, commentId) {
     points: POINT_RULES.comment.points,
     refType: 'comment',
     refId: commentId,
+  })
+}
+
+export function awardReportAcceptedPoints(userId, reportId) {
+  const todayCount = db.prepare(`
+    SELECT COUNT(*) AS count
+    FROM point_events
+    WHERE user_id = ?
+      AND source = 'comment_report_accepted'
+      AND date(created_at, 'localtime') = date('now', 'localtime')
+  `).get(userId).count
+
+  if (todayCount >= POINT_RULES.reportAccepted.dailyCap) {
+    return { awarded: false, points: 0, reason: 'daily_cap' }
+  }
+
+  return awardPoints(userId, {
+    source: 'comment_report_accepted',
+    points: POINT_RULES.reportAccepted.points,
+    refType: 'comment_report',
+    refId: reportId,
   })
 }
 

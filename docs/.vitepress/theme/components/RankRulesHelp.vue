@@ -45,6 +45,7 @@ const zh = {
   rules: [
     '注册入山：获得 10 修为。',
     '评论发言：每条有效评论获得 2 修为；每天最多 5 条计入修为。',
+    '举报采纳：被管理员采纳的评论举报获得 3 修为；每天最多 10 条计入修为。',
     '章节解锁：每完成并解锁一章获得 10 修为；每章仅计一次。',
     'GitHub 有效 Issue：后续接入 GitHub 关联后开放，每个有效 Issue 获得 10 修为，不设上限。',
     'GitHub PR 成功 Merge：后续接入 GitHub 关联后开放，每次 Merge 获得 80 修为，不设上限。',
@@ -57,6 +58,7 @@ const en = {
   rules: [
     'Registration: +10 points.',
     'Commenting: +2 points for each valid comment; only the first 5 comments per day count.',
+    'Accepted report: +3 points when a comment report is accepted by an admin; only the first 10 accepted reports per day count.',
     'Chapter unlock: +10 points after completing a chapter; each chapter counts once.',
     'Valid GitHub Issue: +10 points after GitHub linking is added, with no cap.',
     'Merged GitHub PR: +80 points after GitHub linking is added, with no cap.',

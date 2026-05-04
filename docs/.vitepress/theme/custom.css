@@ -1614,6 +1614,41 @@ iframe[data-playground-runner] {
   margin-bottom: 22px;
 }
 
+.comment-report-form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--vp-c-bg) 92%, var(--vp-c-bg-alt));
+}
+
+.comment-report-form div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.comment-report-form p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.comment-report-form select,
+.comment-report-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font: inherit;
+}
+
 .comment-replying {
   display: flex;
   align-items: center;
@@ -1629,7 +1664,8 @@ iframe[data-playground-runner] {
 
 .comment-replying button,
 .comment-emoji-row button,
-.comment-tools button {
+.comment-tools button,
+.comment-report-form button {
   border: 1px solid var(--vp-c-divider);
   border-radius: 6px;
   background: transparent;
@@ -1659,7 +1695,8 @@ iframe[data-playground-runner] {
 
 .comment-emoji-row button:hover,
 .comment-tools button:hover,
-.comment-tools button.active {
+.comment-tools button.active,
+.comment-report-form button:hover {
   border-color: var(--vp-c-brand-1);
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
@@ -1682,6 +1719,11 @@ iframe[data-playground-runner] {
   min-width: 72px;
   min-height: 34px;
   padding: 0 14px;
+}
+
+.comment-report-form button {
+  min-height: 32px;
+  padding: 0 12px;
 }
 
 .comment-actions button:disabled,
@@ -1851,7 +1893,7 @@ iframe[data-playground-runner] {
 
 .admin-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 

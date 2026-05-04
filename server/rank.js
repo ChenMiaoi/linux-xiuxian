@@ -14,6 +14,7 @@ export const RANK_LEVELS = [
 export const POINT_RULES = {
   register: { points: 10 },
   comment: { points: 2, dailyCap: 5 },
+  reportAccepted: { points: 3, dailyCap: 10 },
   chapterUnlock: { points: 10 },
   githubIssueAccepted: { points: 10 },
   githubPrMerged: { points: 80 },

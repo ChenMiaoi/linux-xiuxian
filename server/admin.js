@@ -1,4 +1,4 @@
-import { db, publicUser } from './db.js'
+import { awardReportAcceptedPoints, db, publicUser } from './db.js'
 import { requireAdmin } from './auth.js'
 import { softDeleteCommentTree } from './comment-store.js'
 import { RANK_LEVELS, rankForPoints } from './rank.js'
@@ -14,6 +14,9 @@ function adminCommentRow(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     likeCount: row.like_count || 0,
+    reportCount: row.report_count || 0,
+    reportReasons: row.report_reasons ? row.report_reasons.split(',') : [],
+    latestReportAt: row.latest_report_at,
     author: {
       id: row.user_id,
       username: row.username,
@@ -56,6 +59,14 @@ function adminUserRow(row) {
     riskScore = 100
     riskReasons.push('尝试访问管理员权限接口')
   }
+  if (row.rejected_report_count >= 3) {
+    riskScore += 30
+    riskReasons.push('多次举报未被采纳')
+  }
+  if (row.recent_report_count >= 20) {
+    riskScore += 35
+    riskReasons.push('24 小时内举报过于频繁')
+  }
 
   const finalScore = Math.min(100, riskScore)
   if (finalScore >= 90) {
@@ -68,6 +79,9 @@ function adminUserRow(row) {
     recentCommentCount: row.recent_comment_count || 0,
     moderationEventCount: row.moderation_event_count || 0,
     adminPrivilegeAttemptCount: row.admin_privilege_attempt_count || 0,
+    reportCount: row.report_count || 0,
+    rejectedReportCount: row.rejected_report_count || 0,
+    recentReportCount: row.recent_report_count || 0,
     riskScore: finalScore,
     riskLevel: finalScore >= 90 ? '高风险' : finalScore >= 60 ? '可疑' : finalScore >= 30 ? '关注' : '正常',
     riskReasons,
@@ -93,6 +107,17 @@ export function registerAdminRoutes(app) {
       users: db.prepare('SELECT COUNT(*) AS count FROM users').get().count,
       comments: db.prepare("SELECT COUNT(*) AS count FROM comments WHERE status = 'active'").get().count,
       deletedComments: db.prepare("SELECT COUNT(*) AS count FROM comments WHERE status = 'deleted'").get().count,
+      reportedComments: db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM comments
+        WHERE status = 'active'
+          AND EXISTS (
+            SELECT 1
+            FROM comment_reports
+            WHERE comment_reports.comment_id = comments.id
+              AND comment_reports.status = 'open'
+          )
+      `).get().count,
     }
   })
 
@@ -127,10 +152,14 @@ export function registerAdminRoutes(app) {
         COUNT(DISTINCT CASE WHEN comments.status = 'deleted' THEN comments.id END) AS deleted_comment_count,
         COUNT(DISTINCT CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN comments.id END) AS recent_comment_count,
         COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count,
-        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count
+        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count,
+        COUNT(DISTINCT comment_reports.id) AS report_count,
+        COUNT(DISTINCT CASE WHEN comment_reports.status = 'rejected' THEN comment_reports.id END) AS rejected_report_count,
+        COUNT(DISTINCT CASE WHEN comment_reports.created_at >= datetime('now', '-1 day') THEN comment_reports.id END) AS recent_report_count
       FROM users
       LEFT JOIN comments ON comments.user_id = users.id
       LEFT JOIN user_moderation_events ON user_moderation_events.user_id = users.id
+      LEFT JOIN comment_reports ON comment_reports.reporter_user_id = users.id
       ${where}
       GROUP BY users.id
       ORDER BY created_at DESC
@@ -193,10 +222,14 @@ export function registerAdminRoutes(app) {
         COUNT(DISTINCT CASE WHEN comments.status = 'deleted' THEN comments.id END) AS deleted_comment_count,
         COUNT(DISTINCT CASE WHEN comments.created_at >= datetime('now', '-1 day') THEN comments.id END) AS recent_comment_count,
         COUNT(DISTINCT user_moderation_events.id) AS moderation_event_count,
-        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count
+        COUNT(DISTINCT CASE WHEN user_moderation_events.action = 'admin_privilege_attempt' THEN user_moderation_events.id END) AS admin_privilege_attempt_count,
+        COUNT(DISTINCT comment_reports.id) AS report_count,
+        COUNT(DISTINCT CASE WHEN comment_reports.status = 'rejected' THEN comment_reports.id END) AS rejected_report_count,
+        COUNT(DISTINCT CASE WHEN comment_reports.created_at >= datetime('now', '-1 day') THEN comment_reports.id END) AS recent_report_count
       FROM users
       LEFT JOIN comments ON comments.user_id = users.id
       LEFT JOIN user_moderation_events ON user_moderation_events.user_id = users.id
+      LEFT JOIN comment_reports ON comment_reports.reporter_user_id = users.id
       WHERE users.id = ?
       GROUP BY users.id
     `).get(id)
@@ -214,13 +247,17 @@ export function registerAdminRoutes(app) {
         users.username,
         users.display_name,
         users.cultivation_points,
-        COUNT(comment_likes.user_id) AS like_count
+        COUNT(DISTINCT comment_likes.user_id) AS like_count,
+        COUNT(DISTINCT comment_reports.id) AS report_count,
+        GROUP_CONCAT(DISTINCT comment_reports.reason) AS report_reasons,
+        MAX(comment_reports.created_at) AS latest_report_at
       FROM comments
       JOIN users ON users.id = comments.user_id
       LEFT JOIN comment_likes ON comment_likes.comment_id = comments.id
+      JOIN comment_reports ON comment_reports.comment_id = comments.id AND comment_reports.status = 'open'
       WHERE comments.status = 'active'
       GROUP BY comments.id
-      ORDER BY comments.created_at DESC
+      ORDER BY report_count DESC, latest_report_at DESC, comments.created_at DESC
       LIMIT 100
     `).all()
 
@@ -236,9 +273,41 @@ export function registerAdminRoutes(app) {
       return reply.code(400).send({ error: 'BAD_REQUEST', message: '评论 ID 不正确' })
     }
 
-    const result = softDeleteCommentTree(id)
+    const result = db.transaction(() => {
+      const deleteResult = softDeleteCommentTree(id)
+      const reports = db.prepare(`
+        SELECT id, reporter_user_id
+        FROM comment_reports
+        WHERE comment_id = ? AND status = 'open'
+      `).all(id)
+      db.prepare(`
+        UPDATE comment_reports
+        SET status = 'accepted', resolved_at = CURRENT_TIMESTAMP
+        WHERE comment_id = ? AND status = 'open'
+      `).run(id)
+      const pointAwards = reports.map((report) => awardReportAcceptedPoints(report.reporter_user_id, report.id))
+      return { changes: deleteResult.changes, pointAwards }
+    })()
 
-    return { ok: true, deletedCount: result.changes }
+    return { ok: true, deletedCount: result.changes, pointAwards: result.pointAwards }
+  })
+
+  app.post('/api/admin/comments/:id/reject-reports', async (request, reply) => {
+    const admin = requireAdmin(request, reply)
+    if (!admin) return
+
+    const id = Number(request.params.id)
+    if (!Number.isInteger(id) || id <= 0) {
+      return reply.code(400).send({ error: 'BAD_REQUEST', message: '评论 ID 不正确' })
+    }
+
+    const result = db.prepare(`
+      UPDATE comment_reports
+      SET status = 'rejected', resolved_at = CURRENT_TIMESTAMP
+      WHERE comment_id = ? AND status = 'open'
+    `).run(id)
+
+    return { ok: true, rejectedCount: result.changes }
   })
 }
 
