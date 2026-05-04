@@ -66,6 +66,7 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '修仙指南', link: '/guide/introduction' },
+      { text: '问道坛', link: '/forum' },
       {
         text: '正文',
         items: [

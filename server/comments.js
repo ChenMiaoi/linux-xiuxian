@@ -9,7 +9,9 @@ const commentSchema = z.object({
   pagePath: pagePathSchema,
   parentId: z.number().int().positive().nullable().optional(),
   content: z.string().trim().min(1).max(1000),
+  knowledgeAccepted: z.boolean().optional(),
 })
+const forumPath = '/forum'
 const reportReasons = new Set(['spam', 'abuse', 'illegal', 'spoiler', 'offtopic', 'other'])
 const reportSchema = z.object({
   reason: z.string().trim().refine((value) => reportReasons.has(value)),
@@ -103,6 +105,11 @@ export function registerCommentRoutes(app) {
     }
 
     const pagePath = normalizePagePath(parsed.data.pagePath)
+    const isForumPost = pagePath === forumPath && !parsed.data.parentId
+    if (isForumPost && parsed.data.knowledgeAccepted !== true) {
+      return reply.code(400).send({ error: 'KNOWLEDGE_REQUIRED', message: '发帖前请先阅读并确认必读知识' })
+    }
+
     const result = db.prepare(`
       INSERT INTO comments (page_path, user_id, parent_id, content)
       VALUES (?, ?, ?, ?)

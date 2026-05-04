@@ -13,6 +13,7 @@ import RankLeaderboard from './components/RankLeaderboard.vue'
 import RankRulesHelp from './components/RankRulesHelp.vue'
 import AdminPanel from './components/AdminPanel.vue'
 import MailboxPanel from './components/MailboxPanel.vue'
+import ForumBoard from './components/ForumBoard.vue'
 import type { EnhanceAppContext } from 'vitepress'
 import { h } from 'vue'
 
@@ -41,5 +42,6 @@ export default {
     app.component('RankRulesHelp', RankRulesHelp)
     app.component('AdminPanel', AdminPanel)
     app.component('MailboxPanel', MailboxPanel)
+    app.component('ForumBoard', ForumBoard)
   },
 }
