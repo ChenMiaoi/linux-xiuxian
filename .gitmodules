@@ -2,3 +2,4 @@
 	path = vendor/linux
 	url = https://github.com/ChenMiaoi/linux.git
 	branch = linux-xiuxian
+	shallow = true
