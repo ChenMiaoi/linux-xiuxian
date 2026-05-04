@@ -20,6 +20,7 @@
         <div class="forum-knowledge-body">
           <ol>
             <li>只讨论学习、调试、阅读源码、环境搭建和章节理解中的具体困难。</li>
+            <li>发帖前先搜索相同或相近问题；已有帖子能继续讨论时，不要重复发帖。</li>
             <li>不要发布攻击、辱骂、歧视、色情、赌博、广告、引流、侵权或违法内容。</li>
             <li>安全相关问题只能用于防护、学习和复现公开资料，不要索要或提供攻击目标、绕过手段、恶意代码。</li>
             <li>提问时给出上下文、报错、环境和已尝试方法；不刷屏，不重复顶帖。</li>
@@ -53,6 +54,17 @@
           rows="6"
           :placeholder="authState.user ? '描述背景、环境、报错、已尝试方法，以及希望同道帮你确认什么' : '登录后可发帖'"
         />
+        <div v-if="similarPosts.length" class="forum-similar">
+          <strong>可能已有相似帖子</strong>
+          <button
+            v-for="post in similarPosts"
+            :key="post.id"
+            type="button"
+            @click="focusSearch(parsePost(post).title)"
+          >
+            {{ parsePost(post).title }}
+          </button>
+        </div>
         <div class="forum-actions">
           <span v-if="message" class="forum-message">{{ message }}</span>
           <button type="submit" :disabled="!canSubmitPost">
@@ -74,9 +86,19 @@
       <button type="submit" :disabled="reportPending">{{ reportPending ? '提交中' : '提交举报' }}</button>
     </form>
 
+    <section class="forum-search" aria-label="搜索问道坛帖子">
+      <input
+        v-model.trim="searchQuery"
+        type="search"
+        placeholder="搜索标题、正文、分类、作者或回复"
+      />
+      <button v-if="searchQuery" type="button" @click="searchQuery = ''">清空</button>
+      <span>{{ searchQuery ? `${filteredPosts.length} / ${posts.length} 帖` : `共 ${posts.length} 帖` }}</span>
+    </section>
+
     <div v-if="loading" class="forum-empty">读取帖子中</div>
-    <div v-else-if="posts.length" class="forum-list">
-      <article v-for="post in posts" :key="post.id" class="forum-post">
+    <div v-else-if="filteredPosts.length" class="forum-list">
+      <article v-for="post in filteredPosts" :key="post.id" class="forum-post">
         <header class="forum-post-head">
           <div>
             <span class="forum-category">{{ parsePost(post).category }}</span>
@@ -146,7 +168,7 @@
         </div>
       </article>
     </div>
-    <div v-else class="forum-empty">还没有帖子。</div>
+    <div v-else class="forum-empty">{{ searchQuery ? '没有找到匹配的帖子。' : '还没有帖子。' }}</div>
   </section>
 </template>
 
@@ -166,6 +188,7 @@ const knowledgeAccepted = ref(false)
 const category = ref('求助')
 const title = ref('')
 const body = ref('')
+const searchQuery = ref('')
 const replyTarget = ref(null)
 const replyContent = ref('')
 const reportTarget = ref(null)
@@ -195,6 +218,20 @@ const posts = computed(() => {
 
 const canSubmitPost = computed(() => {
   return Boolean(authState.user && !postPending.value && knowledgeAccepted.value && title.value && body.value)
+})
+
+const filteredPosts = computed(() => {
+  const query = normalizeSearch(searchQuery.value)
+  if (!query) return posts.value
+  return posts.value.filter((post) => searchableText(post).includes(query))
+})
+
+const similarPosts = computed(() => {
+  const query = normalizeSearch(title.value)
+  if (query.length < 4) return []
+  return posts.value
+    .filter((post) => searchableText(post).includes(query))
+    .slice(0, 3)
 })
 
 onMounted(() => {
@@ -320,11 +357,25 @@ function cancelReport() {
   reportTarget.value = null
 }
 
+function focusSearch(value) {
+  searchQuery.value = value
+}
+
 function parsePost(post) {
   const match = post.content.match(/^【(.+?)】(.+?)\n\n([\s\S]*)$/)
   if (match) return { category: match[1], title: match[2], body: match[3] }
   const [firstLine, ...rest] = post.content.split('\n')
   return { category: '问道', title: firstLine || '无题', body: rest.join('\n') || post.content }
+}
+
+function searchableText(post) {
+  const parsed = parsePost(post)
+  const replies = post.children?.map((reply) => `${reply.content} ${reply.author.displayName}`).join(' ') || ''
+  return normalizeSearch(`${parsed.category} ${parsed.title} ${parsed.body} ${post.author.displayName} ${replies}`)
+}
+
+function normalizeSearch(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ')
 }
 
 function formatTime(value) {

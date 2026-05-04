@@ -2314,6 +2314,8 @@ iframe[data-playground-runner] {
 .forum-form,
 .forum-report,
 .forum-list,
+.forum-search,
+.forum-similar,
 .forum-replies,
 .forum-reply-form {
   display: grid;
@@ -2329,6 +2331,7 @@ iframe[data-playground-runner] {
 .forum-form input,
 .forum-form select,
 .forum-form textarea,
+.forum-search input,
 .forum-report select,
 .forum-report textarea,
 .forum-reply-form textarea {
@@ -2354,6 +2357,8 @@ iframe[data-playground-runner] {
 
 .forum-actions button,
 .forum-tools button,
+.forum-search button,
+.forum-similar button,
 .forum-report button {
   min-height: 32px;
   border: 1px solid var(--vp-c-divider);
@@ -2381,6 +2386,47 @@ iframe[data-playground-runner] {
 .forum-empty {
   color: var(--vp-c-text-2);
   font-size: 13px;
+}
+
+.forum-similar {
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(234, 179, 8, 0.08);
+}
+
+.forum-similar strong {
+  color: var(--xiuxian-gold);
+  font-size: 13px;
+}
+
+.forum-similar button {
+  justify-self: start;
+  max-width: 100%;
+  min-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forum-search {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--vp-c-bg) 94%, var(--vp-c-bg-alt));
+}
+
+.forum-search input {
+  min-height: 36px;
+}
+
+.forum-search span {
+  color: var(--vp-c-text-2);
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .forum-post {
@@ -2579,6 +2625,10 @@ iframe[data-playground-runner] {
   }
 
   .forum-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .forum-search {
     grid-template-columns: 1fr;
   }
 
