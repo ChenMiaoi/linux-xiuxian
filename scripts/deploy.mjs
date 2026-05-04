@@ -7,8 +7,8 @@ import YAML from 'yaml'
 const imageName = process.env.IMAGE_NAME || 'linux-xiuxian:latest'
 const containerName = process.env.CONTAINER_NAME || 'linux-xiuxian'
 const volumeName = process.env.VOLUME_NAME || 'linux-xiuxian-data'
-const hostPort = process.env.HOST_PORT || '3000'
-const containerPort = process.env.CONTAINER_PORT || '3000'
+const hostPort = process.env.HOST_PORT || '8080'
+const containerPort = process.env.CONTAINER_PORT || '8080'
 const configFile = process.env.DEPLOY_CONFIG_FILE || '.deploy.yaml'
 
 function run(command, args, options = {}) {
