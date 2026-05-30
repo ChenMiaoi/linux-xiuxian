@@ -57,7 +57,7 @@ export default defineConfig({
         outline: [2, 3],
         footer: {
           message: 'Enlightenment of the kernel through cultivation',
-          copyright: 'Linux Kernel Cultivation Chronicle',
+          copyright: 'Linux Kernel Cultivation Chronicle · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">渝ICP备2026009124号-1</a>',
         },
       },
     },
@@ -98,7 +98,7 @@ export default defineConfig({
     outline: [2, 3],
     footer: {
       message: '以修仙之名，悟内核之道',
-      copyright: 'Linux 内核修仙传',
+      copyright: 'Linux 内核修仙传 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">渝ICP备2026009124号-1</a>',
     },
   },
 })
